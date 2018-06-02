@@ -387,8 +387,8 @@
 
     <div class="post-header index">
         <h1 class="title">
-            <a href="/2017/08/01/waf-for-modsecurity/">
-                ModSecurity 生产级WAF部署优化 [一]
+            <a href="/2017/08/01/bypasswaf-on-database/">
+                bypasswaf for mysql [数据库层面之特殊字符篇]
             </a>
         </h1>
         <div class="post-info">
@@ -398,7 +398,7 @@
             
             
                 <span class="category">
-                    <a href="/categories/ModSecurity/">ModSecurity</a>
+                    <a href="/categories/bypasswaf/">bypasswaf</a>
                 </span>
             
         </div>
@@ -406,13 +406,43 @@
 
     
         <div class="content">
-            <p><br><br>0x01 用大白话来简单说明 WAF 最基本的工作流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">捕获客户端的各种请求 -&gt; 匹配WAF拦截规则 -&gt; 命中规则后的处理动作 -&gt; 将整个拦截过程记录到指定的日志文件中 -&gt; 脚本绘制实时攻击图表</span><br></pre></td></tr></table></figure></p>
-<p>0x02 关于modsecurity<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">一款老牌的开源 WAF,相信经常搞渗透的朋友,对市面上经常用的几款WAF,都早已非常熟悉,废话不多说,咱们直奔主题</span><br><span class="line">本次,我们只是单单把它部署到可用的状态,关于规则深度定制,绕过以及白名单设置是我们面的事情</span><br><span class="line">个人非常不建议把modsecurity和nginx一起用,实际测试中,问题还非常的多,关于nginx更推荐用naxsi[后面再单独说]</span><br><span class="line">至于源码包,可自行去 modsecurity 的官方站点下载  www.modsecurity.org</span><br></pre></td></tr></table></figure></p>
-<p>0x03 首先,先编译安装好基本的LAMP环境 [具体编译安装过程,可自行参考博客相关文章] ,这里暂时就直接用之前编译好的环境来演示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpd 2.4.27 + php 5.6.31 + mysql 5.5.57 + centOS6.8_x64</span><br></pre></td></tr></table></figure></p>
-<p>0x04 先停掉apache,因为等会儿要编译modsecurity生成对应的库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># pkill httpd</span><br></pre></td></tr></table></figure></p>
-<p>0x05 开始编译安装 modsecurity,一如往常,务必先装好一些必要的依赖库,不然中间会有很多的麻烦<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># yum install httpd-devel apr apr-util-devel apr-devel pcre pcre-devel libxml2 libxml2-devel curl-devel zlib zlib-devel openssl openssl-devel -y</span><br><span class="line"># cd modsecurity-2.9.2</span><br><span class="line"># ./configure --with-apxs=/usr/local/httpd/bin/apxs   生成modsecurity的so</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
+            <p><br><br>0x01 先准备好用于测试库表及数据:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create database injection;</span><br><span class="line">mysql&gt; use injection;</span><br><span class="line">mysql&gt; CREATE TABLE IF NOT EXISTS `user`(</span><br><span class="line">	`id` INT UNSIGNED AUTO_INCREMENT,</span><br><span class="line">	`username` VARCHAR(30) NOT NULL,</span><br><span class="line">	`password` VARCHAR(40) NOT NULL,</span><br><span class="line">	`email` VARCHAR(40) NOT NULL,</span><br><span class="line">	PRIMARY KEY ( `id` )</span><br><span class="line">	)ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br><span class="line">mysql&gt; insert into user(username,password,email) values(&apos;gentoo&apos;,&apos;superman&apos;,&apos;sec@rootkit.org&apos;);</span><br><span class="line">mysql&gt; insert into user(username,password,email) values(&apos;arch&apos;,&apos;welcome&apos;,&apos;lin@hook.org&apos;);</span><br><span class="line">mysql&gt; insert into user(username,password,email) values(&apos;admin&apos;,&apos;loginpass&apos;,&apos;xlion@priv.org&apos;);</span><br></pre></td></tr></table></figure></p>
         </div>
-        <a href="/2017/08/01/waf-for-modsecurity/" class="read-more">Read More</a>
+        <a href="/2017/08/01/bypasswaf-on-database/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/08/01/https-learn/">
+                深入理解 https 通信加密过程
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-01</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/https/">https</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 对<code>对称加密</code>的通俗理解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">即通信的双方都使用同一个秘钥进行加解密</span><br></pre></td></tr></table></figure></p>
+<p>0x02 对非对称加密算法的通俗理解 [ <code>RSA</code> ]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">私钥 + 公钥= 密钥对</span><br><span class="line">即用私钥加密的数据,只有对应的公钥才能解密,用公钥加密的数据,只有对应的私钥才能解密</span><br><span class="line">其实这个很容易理解,因为通信双方的手里都有一套自己的密钥对,通信之前双方会先把自己的公钥都先发给对方</span><br><span class="line">然后对方再拿着这个公钥来加密数据响应给对方,等到到了对方那里,对方再用自己的私钥进行解密,就这么简单</span><br></pre></td></tr></table></figure></p>
+<p>0x03 非对称加密所造成的速度慢的问题解决办法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 先生成一个对称加密算法的密钥,用RSA的方式先安全的发给对方  </span><br><span class="line">(2) 随后就不再用RSA了,只用这个对称加密的密钥来互相通信</span><br></pre></td></tr></table></figure></p>
+<p>0x04 不过,以上方式存在明显的中间人问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设,此时在客户端和服务器之间存在一个中间人,这个中间人只需要把原本双方通信互发的公钥,换成自己的公钥,这样中间人就可以轻松解密通信双方所发送的所有数据</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/08/01/https-learn/" class="read-more">Read More</a>
     
 
 </div>
@@ -448,40 +478,6 @@
 <p>0x03 最终目的,实现双内网通信,即在我自己的内网中操作目标内网中的机器,当然,实现双内网通信的方式还有非常多,比如常用的几种方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">最传统的是通过在vps利用lcx listen做转发,然后再在本地bind上去</span><br><span class="line">另外,还是通过vps搭建vpn,本地先连到vpn内网中,再在vps上用lcx tran通过vpn内网转发到本地</span><br><span class="line">还有,利用meterpreter自带的端口转发功能,当然啦,那个是通过meterpreter隧道自己来实现的,也就是说你要先把meterpreter的shell先弹回来,因为这个并非今天重点,暂不多做介绍,有兴趣可自行深度挖掘研究</span><br><span class="line">再有,在一些高级点的马中也自带了各种内网代理功能....</span><br><span class="line">最后,就是接下来咱们要详细说明的这种,利用socat和目标DMZ建立双向通道,然后带出目标内网中所有机器的流量</span><br><span class="line">......</span><br></pre></td></tr></table></figure></p>
         </div>
         <a href="/2017/08/01/socat-meterpreter/" class="read-more">Read More</a>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
-            <a href="/2017/08/01/https-learn/">
-                深入理解 https 通信加密过程
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-08-01</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/https/">https</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p><br><br>0x01 对<code>对称加密</code>的通俗理解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">即通信的双方都使用同一个秘钥进行加解密</span><br></pre></td></tr></table></figure></p>
-<p>0x02 对非对称加密算法的通俗理解 [ <code>RSA</code> ]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">私钥 + 公钥= 密钥对</span><br><span class="line">即用私钥加密的数据,只有对应的公钥才能解密,用公钥加密的数据,只有对应的私钥才能解密</span><br><span class="line">其实这个很容易理解,因为通信双方的手里都有一套自己的密钥对,通信之前双方会先把自己的公钥都先发给对方</span><br><span class="line">然后对方再拿着这个公钥来加密数据响应给对方,等到到了对方那里,对方再用自己的私钥进行解密,就这么简单</span><br></pre></td></tr></table></figure></p>
-<p>0x03 非对称加密所造成的速度慢的问题解决办法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 先生成一个对称加密算法的密钥,用RSA的方式先安全的发给对方  </span><br><span class="line">(2) 随后就不再用RSA了,只用这个对称加密的密钥来互相通信</span><br></pre></td></tr></table></figure></p>
-<p>0x04 不过,以上方式存在明显的中间人问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设,此时在客户端和服务器之间存在一个中间人,这个中间人只需要把原本双方通信互发的公钥,换成自己的公钥,这样中间人就可以轻松解密通信双方所发送的所有数据</span><br></pre></td></tr></table></figure></p>
-        </div>
-        <a href="/2017/08/01/https-learn/" class="read-more">Read More</a>
     
 
 </div>
@@ -528,11 +524,11 @@
         <ul>
             
             <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
             </li>
             
             <li>
@@ -540,7 +536,7 @@
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/12/26/modify-webshell/">实时精准侦测站点目录中的各类 webshell</a>
+                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
             </li>
             
         </ul>
@@ -554,19 +550,19 @@
     <ul>
         
         <li>
-            <a class="footer-post" href="/categories/接下来的路/">接下来的路</a>
+            <a class="footer-post" href="/categories/other/">other</a>
         </li>
         
         <li>
-            <a class="footer-post" href="/categories/privilege/">privilege</a>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/PS1/">PS1</a>
         </li>
         
         <li>
             <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/python-basic/">python basic</a>
         </li>
         
     </ul>

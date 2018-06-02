@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 首先,购买并组装好所有硬件,插上网线,加电开始测试,仔细观察机器硬件是否都工作正常,确认没问题后,再继续后面的步骤,本次自己用于测试的所有硬件具体型号如下,一套下来三万五左右,说实话这个配置作为GPU破解来讲并不算高 [属于偏下等],如果你不缺钱,完全可以买更好的 ^_^12345supermicro超微7048GR-TR准系统 双路塔式工作站4 GPU运算服务器		|一台Intel/英特尔 XEON至强 E5-2620 V3 15M 2.4G 6核12线			|2颗金士顿 16G DDR4 REG ECC 2133 服务器内存条					|2根三星(SAMSUNG) 850 PRO 512G SATA3 固态硬盘				|2块NVIDIA技嘉GTX1070 Founders Edition 8G					|4张 32G GPU
+0x02 下载安装 ubuntu-14.04.5-desktop-amd64,这里为了方便,可以直接将其做成系统启动U盘进行安装,镜像下载地址如下1http://releases.ubuntu.com/14.04/ubuntu-14.04.5-desktop-amd64.iso
+系统安装完以后还需要进行一些必要的准备工作,首先,全面更新系统1234# apt-get update &amp;amp;&amp;amp; apt-get upgrade -y # shutdown -r now	像这样的大规模更新完成后,务必立即重启系统# apt-get install linux-headers-`uname -r` -y	为了防止下面编译过程中出错,这里我就提前把对应的内核头文件都装上了# shutdown -r now">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="高速GPU hash破解工作站部署备忘"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>高速GPU hash破解工作站部署备忘 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/05/01/GPU-HASH-CRACK/">
+                高速GPU hash破解工作站部署备忘
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-05-01</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/hash-crack/">hash crack</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 首先,购买并组装好所有硬件,插上网线,加电开始测试,仔细观察机器硬件是否都工作正常,确认没问题后,再继续后面的步骤,本次自己用于测试的所有硬件具体型号如下,一套下来三万五左右,说实话这个配置作为GPU破解来讲并不算高 [属于偏下等],如果你不缺钱,完全可以买更好的 ^_^<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">supermicro超微7048GR-TR准系统 双路塔式工作站4 GPU运算服务器		|一台</span><br><span class="line">Intel/英特尔 XEON至强 E5-2620 V3 15M 2.4G 6核12线			|2颗</span><br><span class="line">金士顿 16G DDR4 REG ECC 2133 服务器内存条					|2根</span><br><span class="line">三星(SAMSUNG) 850 PRO 512G SATA3 固态硬盘				|2块</span><br><span class="line">NVIDIA技嘉GTX1070 Founders Edition 8G					|4张 32G GPU</span><br></pre></td></tr></table></figure></p>
+<p>0x02 下载安装 ubuntu-14.04.5-desktop-amd64,这里为了方便,可以直接将其做成系统启动U盘进行安装,镜像下载地址如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://releases.ubuntu.com/14.04/ubuntu-14.04.5-desktop-amd64.iso</span><br></pre></td></tr></table></figure></p>
+<p>系统安装完以后还需要进行一些必要的准备工作,首先,全面更新系统<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># apt-get update &amp;&amp; apt-get upgrade -y </span><br><span class="line"># shutdown -r now	像这样的大规模更新完成后,务必立即重启系统</span><br><span class="line"># apt-get install linux-headers-`uname -r` -y	为了防止下面编译过程中出错,这里我就提前把对应的内核头文件都装上了</span><br><span class="line"># shutdown -r now</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>上面重启没问题后,再安装一些必要的工具,主要是opencl头文件和opencl相关的工具集…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># apt-get install build-essential lsb-core clinfo ocl-icd-opencl-dev opencl-headers ocl-icd-libopencl1 gcc git -y</span><br></pre></td></tr></table></figure></p>
+<p>0x03 下载编译安装 Intel OpenCL 驱动,具体地址如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://registrationcenter-download.intel.com/akdlm/irc_nas/9019/opencl_runtime_16.1_x64_ubuntu_5.2.0.10002.tgz</span><br></pre></td></tr></table></figure></p>
+<p>具体的安装过程就非常简单了,基本全程一键傻瓜化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># tar xf opencl_runtime_16.1_x64_ubuntu_5.2.0.10002.tgz</span><br><span class="line"># cd opencl_runtime_16.1_x64_ubuntu_5.2.0.10002/</span><br><span class="line"># bash install.sh</span><br><span class="line"># shutdown -r now 	还是那句话,务必在装完以后立马重启机器</span><br><span class="line"># clinfo		重启后看看系统有没有真正识别opencl套件,如果没识别,请先把问题解决了再往下继续,否则都是徒劳</span><br></pre></td></tr></table></figure></p>
+<p>0x04 接着,准备安装英伟达显卡驱动</p>
+<p>重启以后,记得先不要登录到图形界面中,直接按Ctrl + Alt + F1 进入字符终端模式,进到内核模块目录,通过配置文件的方式,禁用nouveau驱动,操作如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># cd /etc/modprobe.d/</span><br><span class="line"># touch blacklist-nouveau.conf</span><br><span class="line"># vi blacklist-nouveau.conf</span><br><span class="line">  blacklist nouveau</span><br><span class="line">  options nouveau modeset=0</span><br><span class="line"># update-initramfs -u</span><br><span class="line"># shutdown -r now 	修改完配置以后立马重启机器</span><br></pre></td></tr></table></figure></p>
+<p>0x05 下载安装英伟达显卡驱动,在安装过程中会有很多交互,可根据实际需求进行选择</p>
+<p>同上,先不要登录到图形界面,按 Ctrl + Alt + F1 进到字符终端模式,并停掉相关的图形服务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># /etc/init.d/lightdm stop 	lightdm是一个Linux桌面显示管理器,在安装显卡驱动过程中需要把相关的图形服务全部停掉,安装完以后再起起来</span><br><span class="line"># chmod +x NVIDIA-Linux-x86_64-375.20.run </span><br><span class="line"># bash NVIDIA-Linux-x86_64-375.20.run --no-opengl-files</span><br><span class="line"># modprobe nvidia</span><br><span class="line"># /etc/init.d/lightdm start</span><br><span class="line"># shutdown -r now  	此时重启后就可以回到图形界面了</span><br></pre></td></tr></table></figure></p>
+<p>0x06 下载编译安装最新版的 hashcat,具体的编译安装方法在压缩包的 BUILD.md 文件中[不过这个似乎还有些问题]已有说明,可先用下面的方法来装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># git clone https://github.com/hashcat/hashcat.git</span><br><span class="line"># cd hashcat/</span><br><span class="line"># git submodule update --init --recursive	为了防止下载缺少文件,请执行该语句</span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># echo $?</span><br><span class="line"># shutdown -r now 	务必在装完以后立马重启机器</span><br></pre></td></tr></table></figure></p>
+<p>0x07 运行 hashcat 测试破解速度,调整GPU参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># hashcat -b</span><br></pre></td></tr></table></figure></p>
+<p>0x08 准备好各种散列hash,进行实际的hash破解测试,看看常用加密算法的实际破解速度如何,其实像md5,ntlm,mysql这种基础加密,实际中的爆破速度在这个配置下还是非常快的,实在不好意思,忘了截图了,尴尬 :(</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/hash-crack/">#hash crack</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

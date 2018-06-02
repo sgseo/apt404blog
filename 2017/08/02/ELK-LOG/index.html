@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 首先,快速安装配置好jdk 1.8,因为ES基于java:1234567891011121314# export LANG=en# tar xf jdk-8u131-linux-x64.tar.gz# mv jdk1.8.0_131/ /usr/local/jdk# ll /usr/local/jdk# chown -R root.root /usr/local/jdk/# ll /usr/local/jdk# vi /etc/profile  export JAVA_HOME=/usr/local/jdk/  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar  export TOMCAT_HOME=/usr/local/tomcat# source /etc/profile# java -version# javac
+0x02 再来熟悉一些必要的关于elasticsearch的基础概念:1索引 -&amp;gt; 文档 -&amp;gt; 分片和副本
+0x03 下载配置 elasticsearch:1234# wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.2.tar.gz# tar -xf elasticsearch-1.7.2.tar.gz# mv elasticsearch-1.7.2 /usr/local/# ln -s /usr/local/elasticsearch-1.7.2/ /usr/local/elasticsearch">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="利用 ELK 深度定制实时入侵日志分析平台初步"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>利用 ELK 深度定制实时入侵日志分析平台初步 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/08/02/ELK-LOG/">
+                利用 ELK 深度定制实时入侵日志分析平台初步
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-02</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/ELK/">ELK</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 首先,快速安装配置好jdk 1.8,因为ES基于java:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># export LANG=en</span><br><span class="line"># tar xf jdk-8u131-linux-x64.tar.gz</span><br><span class="line"># mv jdk1.8.0_131/ /usr/local/jdk</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># chown -R root.root /usr/local/jdk/</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># vi /etc/profile</span><br><span class="line">  export JAVA_HOME=/usr/local/jdk/</span><br><span class="line">  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH</span><br><span class="line">  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar</span><br><span class="line">  export TOMCAT_HOME=/usr/local/tomcat</span><br><span class="line"># source /etc/profile</span><br><span class="line"># java -version</span><br><span class="line"># javac</span><br></pre></td></tr></table></figure></p>
+<p>0x02 再来熟悉一些必要的关于elasticsearch的基础概念:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">索引 -&gt; 文档 -&gt; 分片和副本</span><br></pre></td></tr></table></figure></p>
+<p>0x03 下载配置 elasticsearch:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.2.tar.gz</span><br><span class="line"># tar -xf elasticsearch-1.7.2.tar.gz</span><br><span class="line"># mv elasticsearch-1.7.2 /usr/local/</span><br><span class="line"># ln -s /usr/local/elasticsearch-1.7.2/ /usr/local/elasticsearch</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x04 关于 ES 目录下各配置文件作用简要说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"># tree /usr/local/elasticsearch      </span><br><span class="line">|-- LICENSE.txt</span><br><span class="line">|-- NOTICE.txt</span><br><span class="line">|-- README.textile</span><br><span class="line">|-- bin	 elasticsearch	自身工具</span><br><span class="line">|   |-- elasticsearch</span><br><span class="line">|   |-- elasticsearch-service-mgr.exe</span><br><span class="line">|   |-- elasticsearch-service-x64.exe</span><br><span class="line">|   |-- elasticsearch-service-x86.exe</span><br><span class="line">|   |-- elasticsearch.bat</span><br><span class="line">|   |-- elasticsearch.in.bat</span><br><span class="line">|   |-- elasticsearch.in.sh</span><br><span class="line">|   |-- plugin</span><br><span class="line">|   |-- plugin.bat</span><br><span class="line">|   `-- service.bat</span><br><span class="line">|-- config</span><br><span class="line">|   |-- elasticsearch.yml	主配置文件</span><br><span class="line">|   `-- logging.yml			日志配置文件</span><br><span class="line">`-- lib</span><br><span class="line">	|-- antlr-runtime-3.5.jar</span><br><span class="line">	|-- asm-4.1.jar</span><br><span class="line">	|-- asm-commons-4.1.jar</span><br><span class="line">	|-- elasticsearch-1.4.4.jar</span><br><span class="line">	|-- groovy-all-2.3.2.jar</span><br><span class="line">	|-- jna-4.1.0.jar</span><br><span class="line">	|-- jts-1.13.jar</span><br><span class="line">	|-- log4j-1.2.17.jar</span><br><span class="line">	|-- lucene-analyzers-common-4.10.3.jar</span><br><span class="line">	|-- lucene-core-4.10.3.jar</span><br><span class="line">	|-- lucene-expressions-4.10.3.jar</span><br><span class="line">	|-- lucene-grouping-4.10.3.jar</span><br><span class="line">	|-- lucene-highlighter-4.10.3.jar</span><br><span class="line">	|-- lucene-join-4.10.3.jar</span><br><span class="line">	|-- lucene-memory-4.10.3.jar</span><br><span class="line">	|-- lucene-misc-4.10.3.jar</span><br><span class="line">	|-- lucene-queries-4.10.3.jar</span><br><span class="line">	|-- lucene-queryparser-4.10.3.jar</span><br><span class="line">	|-- lucene-sandbox-4.10.3.jar</span><br><span class="line">	|-- lucene-spatial-4.10.3.jar</span><br><span class="line">	|-- lucene-suggest-4.10.3.jar</span><br><span class="line">	|-- sigar</span><br><span class="line">	|   |-- libsigar-amd64-freebsd-6.so</span><br><span class="line">	|   |-- libsigar-amd64-linux.so</span><br><span class="line">	|   |-- libsigar-amd64-solaris.so</span><br><span class="line">	|   |-- libsigar-ia64-linux.so</span><br><span class="line">	|   |-- libsigar-sparc-solaris.so</span><br><span class="line">	|   |-- libsigar-sparc64-solaris.so</span><br><span class="line">	|   |-- libsigar-universal-macosx.dylib</span><br><span class="line">	|   |-- libsigar-universal64-macosx.dylib</span><br><span class="line">	|   |-- libsigar-x86-freebsd-5.so</span><br><span class="line">	|   |-- libsigar-x86-freebsd-6.so</span><br><span class="line">	|   |-- libsigar-x86-linux.so</span><br><span class="line">	|   |-- libsigar-x86-solaris.so</span><br><span class="line">	|   |-- sigar-1.6.4.jar</span><br><span class="line">	|   |-- sigar-amd64-winnt.dll</span><br><span class="line">	|   |-- sigar-x86-winnt.dll</span><br><span class="line">	|   `-- sigar-x86-winnt.lib</span><br><span class="line">	`-- spatial4j-0.4.1.jar</span><br></pre></td></tr></table></figure></p>
+<p>0x05 编辑修改ES主配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/elasticsearch/config/</span><br><span class="line"># vi elasticsearch.yml</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cluster.name: xlion			集群名称</span><br><span class="line">node.name: &quot;klionsec&quot;			节点名称,如果是同一个集群中的节点只需要改此名称即可</span><br><span class="line">node.master: true			将此节点作为 master,具备一些管理功能</span><br><span class="line">node.data: true				是否存储数据,如果只是想做一些管理功能,可以不存储数据,即设为false</span><br><span class="line">index.number_of_shards: 5		主分片</span><br><span class="line">index.number_of_replicas: 1		副本分片</span><br><span class="line">network.host: 192.168.3.139		监听ip,可直监听内网ip</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+<p>定义好一些ES要用到的临时文件路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">path.conf: /usr/local/elasticsearch/conf</span><br><span class="line">path.data: /usr/local/elasticsearch/data</span><br><span class="line">path.work: /usr/local/elasticsearch/work</span><br><span class="line">path.logs: /usr/local/elasticsearch/logs</span><br><span class="line">path.plugins: /usr/local/elasticsearch/plugins</span><br><span class="line">bootstrap.mlockall: true	锁住内存</span><br></pre></td></tr></table></figure></p>
+<p>创建刚才定义的目录,并仔细检查配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># mkdir -p /usr/local/elasticsearch/&#123;conf,data,work,logs,plugins&#125;</span><br><span class="line"># egrep -v &quot;#|^$&quot; elasticsearch.yml</span><br></pre></td></tr></table></figure></p>
+<p>0x06 没什么问题之后,就可以启动ES了,它默认会监听9300和9200端口,9300是集群节点之间的通信端口,9200是提供给外部的api接口端口:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/elasticsearch/bin/elasticsearch	前台启动</span><br><span class="line"># /usr/local/elasticsearch/bin/elasticsearch -d	后台启动</span><br><span class="line"># curl http://192.168.3.139:9200</span><br><span class="line"># jps | grep Elasticsearch</span><br><span class="line"># kill -15 27257		注意如果要关闭elasticsearch,这里直接kill掉jvm进程即可</span><br></pre></td></tr></table></figure></p>
+<p>测试查询,看看ES是否真的已经可用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># curl -i -XGET &apos;http://192.168.3.139:9200/_count?pretty&apos; -d &apos;</span><br><span class="line">&#123;</span><br><span class="line">   &quot;query&quot;:&#123;</span><br><span class="line">	  &quot;match_all&quot;:&#123;&#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">&apos;</span><br></pre></td></tr></table></figure></p>
+<p>0x06 安装一些常用的ES插件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/elasticsearch/bin/plugin -i elasticsearch/marvel/latest	一个图形化的增删改查插件</span><br><span class="line">浏览器访问 http://192.168.3.139:9200/_plugin/marvel/kibana/index.html#/dashboard/file/marvel.overview.json</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/elasticsearch/bin/plugin -i mobz/elasticsearch-head	一个集群管理插件,节点,数据量较少时还是非常好用的</span><br><span class="line">浏览器访问 http://192.168.3.139:9200/_plugin/head/</span><br></pre></td></tr></table></figure>
+<p>0x07 配置 Logstash,相当于数据源和ES之间的通道,Logstash把指定的数据源中的数据读过来,然后再通过Logstash把数据写到ES中,可以说是整个套件中最核心的地方:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># tar xf logstash-1.5.3.tar.gz</span><br><span class="line"># mv logstash-1.5.3 /usr/local/</span><br><span class="line"># ln -s /usr/local/logstash-1.5.3/ /usr/local/logstash</span><br><span class="line"># mkdir /usr/local/logstash/etc/</span><br><span class="line"># /usr/local/logstash/bin/logstash -e &apos;input &#123; stdin&#123;&#125; &#125; output &#123; stdout&#123;codec =&gt; rubydebug&#125; &#125;&apos;</span><br><span class="line"># /usr/local/logstash/bin/logstash -e &apos;input &#123; stdin&#123;&#125; &#125; output &#123; elasticsearch &#123; host =&gt; &quot;192.168.3.139&quot; protocol =&gt; &quot;http&quot;&#125; &#125;&apos;</span><br><span class="line"># vi /usr/local/logstash/etc/logstash.conf</span><br><span class="line"># /usr/local/logstash/bin/logstash -f /usr/local/logstash/etc/logstash.conf 	直接通过配置文件的方式启动</span><br></pre></td></tr></table></figure></p>
+<p>0x08 Logstash[基于jruby] 基本配置语法,还有非常多,更详细的内容请直接参考官方文档,篇幅原因这里不细说了,因为非常重要,所以大家可能要多花些时间来仔细学习:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input[数据源可以是文件,各类数据库...] -&gt; filter -&gt; output[ 一般都是es ]</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/logstash/etc/logstash.conf</span><br><span class="line"></span><br><span class="line">input &#123;</span><br><span class="line">	file &#123;</span><br><span class="line">		path =&gt; &quot;/var/log/messages&quot;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">	file &#123;</span><br><span class="line">		path =&gt; &quot;/tmp/%&#123;+YYYY-MM-dd&#125;.messages.gz&quot;</span><br><span class="line">		gzip =&gt; true</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>0x09 简单配置 Kibana[基于nodejs] 它主要用来搜索es中的数据,并将其可视化,默认监听5601端口:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># tar xf kibana-4.1.1-linux-x64.tar.gz</span><br><span class="line"># mv kibana-4.1.1-linux-x64 /usr/local/</span><br><span class="line"># ln -s /usr/local/kibana-4.1.1-linux-x64/ /usr/local/kibana</span><br><span class="line"># cd /usr/local/kibana/config/</span><br><span class="line"># vi kibana.yml</span><br><span class="line">  elasticsearch_url: &quot;http://192.168.3.139:9200&quot;</span><br><span class="line"># nohup /usr/local/kibana/bin/kibana</span><br><span class="line">访问 http://192.168.3.139:5601/</span><br></pre></td></tr></table></figure></p>
+<p>0x10 平时经常要搜集的一些日志:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">各类系统平台运行日志</span><br><span class="line">各类服务访问,错误日志</span><br><span class="line">各类程序自身的运行日志</span><br><span class="line">基于web和内网的各种攻击特征日志</span><br><span class="line">其它的各类业务日志等...</span><br><span class="line">.....</span><br></pre></td></tr></table></figure></p>
+<p>一点小结:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">这里仅仅也只是先把日志搜集平台大体框架搭起来,中间并未涉及任何具体应用</span><br><span class="line">和运维不同的是,他们可能更偏向于去解决各类系统,服务故障,性能调优以及一些实际的业务规划,架构设计等等....</span><br><span class="line">看日志的大多目的可能也都主要集中在这些点上,安全可能往往只是顺带考虑下而已,毕竟,不是专门做安全的</span><br><span class="line">但作为一名防御者,我们关注更多的,可能还是存在日志中的各种各样的攻击特征</span><br><span class="line">如果能实时捕捉到这些高危入侵特征,并实现可视化及高效报警,我想肯定会是一件非常有意思的事情</span><br><span class="line">但同时也有个非常现实的问题,如果日志量特别大,想做到接近实时就非常困难了</span><br><span class="line">这时,ELK也许会是个非常不错的选择...当然,已经有很多类似的商业产品,如,相对比较成熟的splunk</span><br><span class="line">但splunk并非主要专注安全,不过好在splunk已经提供了非常强大的api</span><br><span class="line">后续我们会再重点介绍它,也是一款非常不错的工具,但就是要收点儿钱</span><br><span class="line">所以,在不想花钱的情况下,ELK绝对是个非常不错的选择</span><br><span class="line">根据自己实际的渗透经验加上py,在此基础上定制一套极具针对性的&quot;入侵日志监控系统&quot;还是非常现实的.....</span><br><span class="line">对了,像ES和logstash,每次这样手工启动,确实比较累,不过别人已经写好对应的系统启动脚本</span><br><span class="line">这里毕竟不是运维,所以也就没仔细说,大家可自行去谷歌上找找,或者自己写写都行....</span><br><span class="line">.....</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/ELK/">#ELK</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

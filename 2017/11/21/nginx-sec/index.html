@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 关于 nginx12345配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低上面这些话的意思也就是说,你的C要牛逼到一定的程度,不然,想做深度二次开发基本是扯淡,真心挺佩服毛子的更多说明,请直接参考官方文档...
+0x02 正确理解 linux 对文件,目录,[ 读 写 执行 ] 权限的真正含义,这东西不能靠干说,因为根本理解不扎实,大家可以自己在系统中创建两个普通用户,不停地切换目录文件权限,以深入仔细体会,后面网站目录权限设置要用到这些基础,如果连这些都搞不清,想灵活应用就难了,耐心点,等透彻理解之后,你就会发现真TM简单 
+目录 读[r / 4] 写[w / 2] 执行[x / 1]123读:   ls , dir ... 			表示可查看该目录下的文件列表写:   rm , mv, cp, mkdir ,touch ...	表示可在该目录下创建,删除,修改文件或者子目录,不过在这之前,一定要先有执行权限,不然进都进不去,又怎么写呢执行: cd  ...				表示可进入该目录
+文件 读[r / 4] 写[w / 2] 执行[x / 1]123读:	cat , tac , more , less ,head , tail ... 表示可查看该文件中的内容写:	vi , nano , echo ...			 只表示可对文件中的 内容 进行增删改,删除文件还要取决于当前用户对该文件所在目录是否有写权限执行:	可执行文件,shell脚本...			 在linux中任何文件都可以有执行权限,但只有可执行文件和脚本才能真正执行">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>从 0 开始构建一个 &#34;固若金汤&#34; 的nginx - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/11/21/nginx-sec/">
+                从 0 开始构建一个 "固若金汤" 的nginx
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-11-21</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/nginxsec/">nginxsec</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>0x01 关于 nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右</span><br><span class="line">支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度</span><br><span class="line">默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低</span><br><span class="line">上面这些话的意思也就是说,你的C要牛逼到一定的程度,不然,想做深度二次开发基本是扯淡,真心挺佩服毛子的</span><br><span class="line">更多说明,请直接参考官方文档...</span><br></pre></td></tr></table></figure></p>
+<p>0x02 正确理解 linux 对文件,目录,<code>[ 读 写 执行 ]</code> 权限的真正含义,这东西不能靠干说,因为根本理解不扎实,大家可以自己在系统中创建两个普通用户,不停地切换目录文件权限,以深入仔细体会,后面网站目录权限设置要用到这些基础,如果连这些都搞不清,想灵活应用就难了,耐心点,等透彻理解之后,你就会发现真TM简单 </p>
+<p>目录 <code>读[r / 4]</code> <code>写[w / 2]</code> <code>执行[x / 1]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读:   ls , dir ... 			表示可查看该目录下的文件列表</span><br><span class="line">写:   rm , mv, cp, mkdir ,touch ...	表示可在该目录下创建,删除,修改文件或者子目录,不过在这之前,一定要先有执行权限,不然进都进不去,又怎么写呢</span><br><span class="line">执行: cd  ...				表示可进入该目录</span><br></pre></td></tr></table></figure></p>
+<p>文件 <code>读[r / 4]</code> <code>写[w / 2]</code> <code>执行[x / 1]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读:	cat , tac , more , less ,head , tail ... 表示可查看该文件中的内容</span><br><span class="line">写:	vi , nano , echo ...			 只表示可对文件中的 内容 进行增删改,删除文件还要取决于当前用户对该文件所在目录是否有写权限</span><br><span class="line">执行:	可执行文件,shell脚本...			 在linux中任何文件都可以有执行权限,但只有可执行文件和脚本才能真正执行</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x03 nginx 容易出现问题的一些点,只要不是直接可以远程利用的,暂不必过于紧张:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx 本身可能存在的一些漏洞,如,各类 敏感信息泄露,RCE,DDOS [根据目前已公开的暂未知]...</span><br><span class="line">各种配置错误,如,目录遍历造成的敏感信息泄露,低版本的解析漏洞...</span><br><span class="line">也有躺枪的可能,第三方模块和库漏洞,如,心脏滴血...</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>0x04 常用功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">web		[ 各类常规web服务功能,如虚拟主机,基本认证... ]</span><br><span class="line">负载均衡		[ 反向代理 ]</span><br><span class="line">缓存		[ web缓存 ]</span><br></pre></td></tr></table></figure></p>
+<p>0x05 在开始说nginx之前,我们先来简单理解下<code>select模型</code> ,<code>poll 模型</code>和<code>epoll 模型</code> ,后续有空咱们会再单独拿出来细说,毕竟不是这次的重点,所以只能先简单科普下,能理解大致工作流程即可 </p>
+<p><code>IO多路复用</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">三种模型同属IO多路复用机制,即同时监视多个描述符,一旦某个描述符读或写就绪,就通知相应的程序进行对应的读写操作</span><br><span class="line">通俗来讲,就是单个进程可以同时处理多个网络连接的IO,原理即通过select,poll,epoll函数不断轮询所负责的所有socket</span><br><span class="line">当某个socket处于就绪状态,就通知指定的用户进程去处理,但select，poll，epoll本质上又都是同步I/O</span><br><span class="line">因为他们都需要在读写事件就绪后自己负责进行读写,也就是说,整个读写过程是处于阻塞状态的</span><br><span class="line">而异步I/O则无需自己负责进行读写,异步I/O的实现会负责把数据从内核拷到用户空间</span><br></pre></td></tr></table></figure></p>
+<p><code>select 模型</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select目前几乎支持所有的平台,同步IO处理读写会一直处于阻塞状态,select就是这样,调用select函数后会一直处于阻塞状态,直到有描述符就绪</span><br><span class="line">但select缺点之一就是,单个进程能够监视的文件描述符的数量有大小限制</span><br><span class="line">在linux上一般为1024,虽然可以通过修改宏定义或者重新编译内核的方式提升这一限制,但这样也会造成效率低下</span><br><span class="line">select对socket进行扫描时属于线性扫描,即逐个轮询,效率较低</span><br></pre></td></tr></table></figure></p>
+<p><code>poll模型</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">poll本质上和select区别不太大,它将用户传入的数组拷贝到内核空间,然后轮询每个描述符对应的设备状态</span><br><span class="line">如果设备就绪,则在设备等待队列中加入一项并继续遍历,如果遍历完所有描述符后没有发现就绪设备</span><br><span class="line">则挂起当前进程,直到设备就绪或者超时,被唤醒后它又要再次遍历描述符,整个过程经历了多次无用的遍历</span><br><span class="line">另外,它不再使用select&quot;key-value&quot;的传递方式,且pollfd没有最大数量限制</span><br></pre></td></tr></table></figure></p>
+<p><code>epoll模型</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">属于select和poll的增强改进版,epoll对文件描述符的操作有两种模式</span><br><span class="line"></span><br><span class="line">LT模式:</span><br><span class="line">当epoll_wait检测到描述符事件发生并将此事件通知应用程序,应用程序可以不立即处理该事件</span><br><span class="line">下次调用epoll_wait时,会再次响应应用程序并通知此事件,效率相对来讲较高</span><br><span class="line"></span><br><span class="line">ET模式: </span><br><span class="line">当epoll_wait检测到描述符事件发生并将此事件通知应用程序,应用程序必须立即处理该事件</span><br><span class="line">如果不处理,下次调用epoll_wait时,不会再次响应应用程序并通知此事件</span><br></pre></td></tr></table></figure></p>
+<p>0x06 此次演示环境,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CentOS6.8 x86_64    最小化,带基础库安装 	eth0: 192.168.3.42 eth1: 192.168.4.14  eth2: 192.168.5.14</span><br><span class="line">nginx-1.12.2.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>0x07 下载,编译安装 nginx 1.12.2 ,注意,这里暂时就用最新版的稳定版本,实际生产环境中版本可以稍低一些,稳定为主,选择版本时应尽量避开一些已知的高危漏洞版本</p>
+<p>创建nginx运行账户,尽量以伪用户身份来运行nginx服务,切记,千万不要直接用root权限来运行nginx,否则别人拿到的webshell权限很可能直接是root权限的 <code>[ 如果你后面的的fastcgi服务端 [php-fpm] 和 nginx使用的是同一用户身份来运行,就很容造成这种情况 ]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># useradd -s /sbin/nologin -M nginx</span><br></pre></td></tr></table></figure></p>
+<p>先安装好所需的各中依赖库和编译器,下载 nginx-1.12.2.tar.gz 源码包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># yum install pcre pcre-devel openssl openssl-devel gcc gcc-c++ automake zlib zlib-devel -y</span><br><span class="line"># wget http://nginx.org/download/nginx-1.12.2.tar.gz</span><br><span class="line"># tar xf nginx-1.12.2.tar.gz</span><br><span class="line"># cd nginx-1.12.2</span><br></pre></td></tr></table></figure></p>
+<p>源码级修改nginx默认版本号,虽然,还可以后续在配置文件中改,但那个改的毕竟不彻底,它只是简单的把详细的版本号给去掉了,<code>nginx</code>字样还留着呢,其实,这里你改成 <code>apache</code> 也许会更具迷惑性,因为通过在url中转换大小写请求依然是可以试出来目标机器到底是linux还是windows平台,大家看到,我这里是直接改成了<code>IIS 8.5</code>,正常来讲 <code>IIS 8.5</code> 所对应的系统平台应该是<code>windows server 2012R2</code>,但如果别人此时试出来我的机器却是linux平台,很可能就会产生怀疑,因为linux平台是不可能装IIS的,起码暂时是不能的,如果你这里换成apache也许对方就信了,因为apache在linux平台部署再正常不过,然后入侵者,可能就会去尝试一些和apache相关的漏洞,也就是说,你把入侵者引向了一条根本不通的路,另外,有很多获取web服务器banner的扫描工具,基本也都是靠截取的http响应头中<code>server</code>字段的内容 <code>真正靠服务器指纹识别的那种不算</code>,这样一来,也顺便把别人的工具都蒙骗了,反正,尽可能在信息搜集阶段就扰乱入侵者的视线,因为有些漏洞只针对特定类型,特定版本,这样可以一定程度上扰乱对方的判断和后续的渗透方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi src/core/nginx.h</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/hidden nginx version.png" alt=""></p>
+<p>查看nginx支持的所有模块,可根据自己的实际需求选择性的启用,对于一些曾经爆过严重漏洞的模块,要格外仔细小心,每个功能模块在其官方文档中都有详细说明及使用样例,具体可参考 <a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">http://nginx.org/en/docs/</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ./configure --help</span><br></pre></td></tr></table></figure></p>
+<p>开始编译安装nginx,具体编译参数,如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ./configure --prefix=/usr/local/nginx-1.12.2 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module</span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/local/nginx-1.12.2/ /usr/local/nginx</span><br></pre></td></tr></table></figure></p>
+<p>编译安装没问题以后,我们先大致看看 nginx 的基本目录结构,初步了解下里面的文件工具都是干什么用的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># tree -L 2 /usr/local/nginx</span><br><span class="line">├── client_body_temp</span><br><span class="line">├── conf	nginx 配置文件目录</span><br><span class="line">│   ├── fastcgi.conf	后端动态脚本接口配置,如,php,java...</span><br><span class="line">│   ├── fastcgi.conf.default</span><br><span class="line">│   ├── fastcgi_params</span><br><span class="line">│   ├── fastcgi_params.default</span><br><span class="line">│   ├── koi-utf</span><br><span class="line">│   ├── koi-win</span><br><span class="line">│   ├── mime.types</span><br><span class="line">│   ├── mime.types.default</span><br><span class="line">│   ├── nginx.conf		nginx 主配置文件</span><br><span class="line">│   ├── nginx.conf.bak</span><br><span class="line">│   ├── nginx.conf.default</span><br><span class="line">│   ├── scgi_params</span><br><span class="line">│   ├── scgi_params.default</span><br><span class="line">│   ├── uwsgi_params</span><br><span class="line">│   ├── uwsgi_params.default</span><br><span class="line">│   └── win-utf</span><br><span class="line">├── fastcgi_temp</span><br><span class="line">├── html		nginx 站点目录</span><br><span class="line">│   ├── 50x.html</span><br><span class="line">│   └── index.html</span><br><span class="line">├── logs		nginx 自身日志目录</span><br><span class="line">│   ├── access.log	访问日志</span><br><span class="line">│   └── error.log	错误日志</span><br><span class="line">├── proxy_temp</span><br><span class="line">├── sbin		nginx 服务管理工具</span><br><span class="line">│   └── nginx</span><br><span class="line">├── scgi_temp</span><br><span class="line">└── uwsgi_temp</span><br></pre></td></tr></table></figure></p>
+<p>再来查看nginx的详细版本,可以看到,我们刚刚在源码中修改的版本号,此时已经生效了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/nginx/sbin/nginx -v</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/hidden nginx version res.png" alt=""></p>
+<p>关于nginx服务管理工具本身的一些用法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/nginx/sbin/nginx -V 	查看编译时的详细参数,如果当初nginx不是你编译的</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/hidden compile args.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># cat /usr/local/nginx/logs/error.log 	nginx错误日志,nginx在运行中有任何错误,都可以尝试去该日志文件中查找原因</span><br><span class="line"># /usr/local/nginx/sbin/nginx -h	查看nginx管理工具使用帮助</span><br><span class="line"># /usr/local/nginx/sbin/nginx		启动nginx服务</span><br><span class="line"># netstat -tulnp | grep &quot;:80&quot;		查看nginx进程是否存在</span><br><span class="line"># /usr/local/nginx/sbin/nginx -s quit	关闭nginx服务</span><br><span class="line"># /usr/local/nginx/sbin/nginx -s reload 平滑重启nginx</span><br><span class="line"># echo &quot;/usr/local/nginx/sbin/nginx&quot; &gt;&gt; /etc/rc.local	加入自启动</span><br><span class="line"># cd /usr/local/nginx/conf/ &amp;&amp; mv nginx.conf nginx.conf.bak &amp;&amp; egrep -v &quot;^$|#&quot; nginx.conf.default &gt; nginx.conf  简化配置文件</span><br></pre></td></tr></table></figure>
+<p>0x08 装完以后,我们就开始真正配置nginx,下面是关于<code>nginx.conf</code>中各标签段用途的简要说明,注意,在配置nginx时,所有语句结尾必须有分号,基本配置语法</p>
+<p><code>main区</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;			# 指定进程个数,一般和实际机器可用的CPU核数保持一致</span><br><span class="line">error_log	  logs/error.log error;	# 指定错误日志存放位置,级别推荐crit或error</span><br><span class="line">pid		  logs/nginx.pid	# 进程id号存放位置</span><br></pre></td></tr></table></figure></p>
+<p><code>事件区</code> 可以在此区域指定处理模型,如,epoll或select<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;	# 每个进程能处理的最大并发连接数</span><br><span class="line">    multi_accept on;</span><br><span class="line">    use epoll;			# 使用epoll模型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>http 区</code> 主要用来配置和http自身相关的一些参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;		# 如果是磁盘IO 重负载业务,可以设为off,如,专门提供下载</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    autoindex off;		# 禁止目录遍历,其实默认就是禁止的</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">    # 一个sever标签段即代表一个站点,这里可能也是我们后续要打交道最多的区域</span><br><span class="line">    # server 标签段实际中也可以单独抠到指定文件中,然后再用include包含到nginx.conf中,如,各类虚拟主机</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;	# 监听的ip和web端口</span><br><span class="line">        server_name  localhost;	# 指定域名</span><br><span class="line">        </span><br><span class="line">	location / &#123;		# 定义站点目录位置和索引文件,location 即表示符合什么样的uri就做什么样的操作</span><br><span class="line">            root   html;	# 这里都是相对目录,都是相对于nginx的安装目录</span><br><span class="line">            index  index.html index.htm;	# 定义好主页索引文件</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">	# 当出现如下响应状态码时,就返回指定的错误页</span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>0x09 配置基于各种类型的虚拟主机,在nginx中,每一个server标签段即表示一个虚拟主机<code>即一个站点</code>,也就是说,在同一台机器上可以同时有N个虚拟主机,只需要在后面接着一直加server段即可,注意,如果客户端直接用ip访问,默认nginx会读取第一个server标签段的配置进行响应,因为nginx无法通过请求头中的host内容来确定是哪个虚拟主机,如果你不在host中指定域名,它默认就会选择第一个</p>
+<p>先处理好nginx.conf<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line">error_log	  logs/error.log error;</span><br><span class="line">pid		  logs/nginx.pid</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">    multi_accept on;</span><br><span class="line">    use epoll;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    autoindex off;</span><br><span class="line">	</span><br><span class="line">    # 包含外部配置文件,简化nginx.conf配置,方便后续维护,推荐把不同的server分别定义再不同的文件中,如下</span><br><span class="line">    include extra/bwapp.conf;	</span><br><span class="line">    include extra/dvws.conf;</span><br><span class="line">    include extra/drupal7.conf;</span><br><span class="line">    include extra/status.conf;</span><br><span class="line">    include extra/rwrites.conf;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置基于域名的虚拟主机,通常都是指需要直接暴露在公网中的站点,即所谓的各种子域</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /usr/local/nginx/conf/extra</span><br><span class="line"># mkdir /usr/local/nginx/html/bwapp</span><br><span class="line"># echo &quot;&lt;h2&gt;Hello bwapp ^_^&lt;/h2&gt;&quot; &gt; /usr/local/nginx/html/bwapp/index.html</span><br><span class="line"># vi /usr/local/nginx/conf/extra/bwapp.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">	</span><br><span class="line">    # 设置别名,其实是可以用url重写来实现的,不过别名效率更高,起码不用再向服务器端请求一次</span><br><span class="line">    server_name  bwapp.org test.bwapp.org;	</span><br><span class="line">    location / &#123;</span><br><span class="line">        root   html/bwapp;</span><br><span class="line">        index  index.html;</span><br><span class="line">    &#125;</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   html/bwapp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/vmmac domain.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/nginx/sbin/nginx -t</span><br><span class="line"># /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+<p>配置基于端口的虚拟主机,主要供内部人员办公使用,如各类oa…访问不同的端口即会访问到不同的站点目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /usr/local/nginx/html/dvws</span><br><span class="line"># echo &quot;&lt;h2&gt;Hello dvws ^_^&lt;/h2&gt;&quot; &gt; /usr/local/nginx/html/dvws/index.html</span><br><span class="line"># cp /usr/local/nginx/conf/extra/bwapp.conf /usr/local/nginx/conf/extra/dvws.conf</span><br><span class="line"># vi /usr/local/nginx/conf/extra/dvws.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       81;</span><br><span class="line">    server_name  test.dvws.org;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root   html/dvws;</span><br><span class="line">        index  index.html;</span><br><span class="line">    &#125;</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   html/dvws;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/nginx/sbin/nginx -t</span><br><span class="line"># /usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<p><img src="/img/vmmac port.png" alt=""></p>
+<p>配置基于ip的虚拟主机,需要一台服务器上同时有多个ip,<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /usr/local/nginx/html/drupal7</span><br><span class="line"># echo &quot;&lt;h2&gt;Hello drupal7 vuln ^_^&lt;/h2&gt;&quot; &gt; /usr/local/nginx/html/drupal7/index.html</span><br><span class="line"># cp /usr/local/nginx/conf/extra/bwapp.conf /usr/local/nginx/conf/extra/drupal7.conf</span><br><span class="line"># vi /usr/local/nginx/conf/extra/drupal7.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    # 默认不给ip的话,表示监听任意ip,也就说,所有ip都可以来连</span><br><span class="line">    listen       192.168.3.42:82;</span><br><span class="line">    server_name  test.drupal7.org;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root   html/drupal7;</span><br><span class="line">        index  index.html;</span><br><span class="line">    &#125;</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   html/drupal7;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/nginx/sbin/nginx -t</span><br><span class="line"># /usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<p><img src="/img/vmmac ip.png" alt=""></p>
+<p>0x10 利用nginx自身提供的状态模块,来监控指定机器的nginx服务运行状态,如下,直接新建一个server标签段,访问指定的域名即可查看对应nginx服务状态<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/conf/extra/status.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  test.status.org;</span><br><span class="line">    location / &#123;</span><br><span class="line">	stub_status on;</span><br><span class="line">        access_log off;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/nginx/sbin/nginx -t</span><br><span class="line"># /usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<p><img src="/img/vmmac domain status.png" alt=""></p>
+<p>0x11 详细配置nginx访问日志格式,日志格式最好定义在http区段中,而access_log最好放在每个server标签段中,为了便于后续审查分析,这里需要同时记录<code>POST</code>和<code>COOKIE</code>中的数据 <code>[可能会造成日志量激增]</code>,因为绝大多数入侵都是基于post请求和cookie机制的,光靠<code>GET</code>很难真正记录到什么有用的东西<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    ...        </span><br><span class="line">    log_format main &apos;$remote_addr - $remote_user  [$time_local]  &apos;</span><br><span class="line">    &apos; &quot;$request&quot; $request_body $status  $body_bytes_sent  &apos;</span><br><span class="line">    &apos; &quot;$http_referer&quot;  &quot;$http_user_agent&quot;  &quot;$http_x_forwarded_for&quot; &quot;$dm_cookie&quot; &apos;;	</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/conf/extra/bwapp.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	</span><br><span class="line">    # 注意,想记录cookie数据,需要先在指定的server标签段中定义,然后再到nginx.conf中的http段去引用</span><br><span class="line">    set $dm_cookie &quot;&quot;;	</span><br><span class="line">    if ($http_cookie ~* &quot;(.+)(?:;|$)&quot;) &#123;</span><br><span class="line">        set $dm_cookie $1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  bwapp.org test.bwapp.org;</span><br><span class="line">    location / &#123;</span><br><span class="line">        root   html/bwapp;</span><br><span class="line">        index  index.html;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    access_log logs/access_bwapp.log main;</span><br><span class="line">#   access_log off;	# 如果不想记录日志,可以手动关闭</span><br><span class="line"></span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   html/bwapp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>0x12 利用shell实现自动轮询nginx访问日志,即,所谓的定时日志切割,下面是按天切,根据你自己的实际需求也可按小时切,按分钟切,相应的改下脚本和定时任务的时间设置即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi nginx_log.sh</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">Dateformat=`date +%Y%m%d -d -1day`</span><br><span class="line">Basedir=&quot;/usr/local/nginx&quot;</span><br><span class="line">Nginxlogdir=&quot;$Basedir/logs&quot;</span><br><span class="line">Logname=&quot;access_bwapp&quot;</span><br><span class="line">[ -d $Nginxlogdir ] &amp;&amp; cd  $Nginxlogdir||exit 1</span><br><span class="line">[ -f $&#123;Logname&#125;.log  ]||exit 1</span><br><span class="line">/bin/mv $&#123;Logname&#125;.log $&#123;Dateformat&#125;_$&#123;Logname&#125;.log</span><br><span class="line">$Basedir/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<p>把刚刚的脚本加到系统计划任务中,实现日志自动轮询切割<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># chmod +x nginx_log.sh</span><br><span class="line"># date -s &quot;2014-09-23&quot;</span><br><span class="line"># /bin/sh nginx_log.sh  # 多修改几次日期,看能不能正常切割</span><br><span class="line"># hwclock --hctosys</span><br><span class="line"># crontab -e</span><br><span class="line">  00 01 * * * /root/nginx_log.sh</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/access log autocut.png" alt=""></p>
+<p>0x13 测试url重写功能是否已经可用<code>典型应用,如,伪静态,域名跳转,禁止访问敏感目录</code>,尽量把不同站点的日志放在对应的server标签段中,防止日志单文件过大<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">permanent   永久跳转,实际中用的较多</span><br><span class="line">redirect    临时跳转</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/conf/extra/rwrites.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name rewrite.org;</span><br><span class="line">    rewrite ^/(.*) https://klionsec.github.io/$1 permanent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/nginx/sbin/nginx -t</span><br><span class="line"># /usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<p><img src="/img/vmmac rwrite.png" alt=""></p>
+<p>0x14 关于 rewrite 基本语法,并非今天的重点,我们后续再单独详细说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rewrite regex replacement [flag];</span><br></pre></td></tr></table></figure></p>
+<p>0x15 nginx的fastcgi_pass模块 <code>[ CGI 即通用网关接口 ]</code> 和 php-fpm 之间的一些工作细节<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nginx的fastcgi主要负责把web服务器和动态脚本进行分离</span><br><span class="line">也就是说 nginx 只要检测到是动态脚本 [ 在nginx.conf判断文件后缀 ] 就直接抛给fastcgi [ 实际上是fastcgi_pass ]</span><br><span class="line">然后fastcgi客户端 [ 即fastcgi_pass ] 会再丢给fastcgi服务端 [ php-fpm ]</span><br><span class="line">wrapper 的意思就是用来监听某个socket,只要监听到指定的socket就自动调用php解析器去处理</span><br><span class="line">说白点,fastcgi 其实就是一个接口,一个和其他应用程序之间通信的接口</span><br><span class="line">顾名思义,在后端脚本 [ 可以是 java,php,.net...] 和 web服务器上都务必要先存在这么一个接口</span><br><span class="line">之后,两端便通过这个接口进行各种数据通信,即所谓的C/S架构,nginx 为客户端[ fastcgi_pass ],后端脚本进程为服务端[ php-fpm ]</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/fastcgi.png" alt=""></p>
+<p>0x16 让nginx和php进行联动,当发现是php的后缀就抛给nginx的fastcgi_pass,再由fastcgi_pass丢给php-fpm去处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/conf/extra/bwapp.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"></span><br><span class="line">    set $dm_cookie &quot;&quot;;</span><br><span class="line">    if ($http_cookie ~* &quot;(.+)(?:;|$)&quot;) &#123;</span><br><span class="line">        set $dm_cookie $1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  bwapp.org test.bwapp.org;</span><br><span class="line">    root   html/bwapp;</span><br><span class="line">    </span><br><span class="line">    location / &#123;</span><br><span class="line">        index  index.html index.php;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    location ~.*\.php?$ &#123;</span><br><span class="line">	fastcgi_pass 127.0.0.1:9000;</span><br><span class="line">	fastcgi_index index.php;</span><br><span class="line">	include fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    access_log logs/access_bwapp.log main;</span><br><span class="line">#   access_log off;</span><br><span class="line"></span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   html/bwapp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/phpinfo.png" alt=""></p>
+<p>0x17 严格控制站点目录权限,对于每个站点所在目录,属主,属组全部丢给root,然后目录一律755,文件一律644,因为上传目录还需要能让用户写,所以要把属主改为nginx,等会儿只需要用nginx来控制上传目录中的php文件不能解析即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># chown -R root.root /usr/local/nginx/html/bwapp/</span><br><span class="line"># find /usr/local/nginx/html/bwapp/ -type f | xargs chmod 644</span><br><span class="line"># find /usr/local/nginx/html/bwapp/ -type d | xargs chmod 755</span><br><span class="line"># chown -R nginx.nginx /usr/local/nginx/html/bwapp/upload</span><br></pre></td></tr></table></figure></p>
+<p>0x18 把用户的所有数据全部死死控制在我们所指定的上传目录中,然后禁止用户在上传目录下执行后端脚本,这里默认是递归应用的,也就是说,即使用户想办法在upload目录下创建了子目录,把webshell传到了子目录里,也依然是无法执行的,当然,不仅仅是上传目录,所有你不想让执行后端脚本的目录,都可以把它加进去,这些配置务必全部加在server标签段的头部位置,注意,下面的配置也全部都是加到server标签段中的,另外,我们要时刻谨记,<code>从客户端过来的一切数据都是有害的</code>,这也是你后续做任何防御的基本准则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/conf/extra/bwapp.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    location ~  /(attachments|upload|static)/.*\.(php|php5|php4|cgi|jsp)?$ &#123; # 你可以把所有可执行的脚本后缀都加进去,注意,linux严格区分大小写</span><br><span class="line">	deny all;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/nginx upload.png" alt=""></p>
+<p>0x19 有时,当你发现,某单个ip瞬间访问过频,很可能就是别人在扫描,此时可直接先用nginx快速封ip,如果单单只是针对web的,大可不必用iptables来搞<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    deny 192.168.3.0/24;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/ip 403.png" alt=""></p>
+<p>0x20 拒绝各种危险请求方法,这里的HEAD方法也可根据实际需求,做适当取舍,下面的意思就是除了GET,POST,HEAD请求方法之外,别的方法一律禁止</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    if ($request_method !~ ^(GET|HEAD|POST)$ ) &#123;</span><br><span class="line">	return    403;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/nginx method.png" alt=""></p>
+<p>0x21 防止各类敏感文件泄露或被下载,下面有些文件后缀可自行根据实际业务需求进行取舍,并非一定要加上所有类型,这里只是简单样例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    location ~* .(txt|conf|bash_history|bash_profile|bashrc|xml|bak|sql|log|gz|zip|svn|git|inc|mdf|sh)$ &#123;</span><br><span class="line">	deny all;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/svn 403.png" alt=""></p>
+<p>0x22 重定向到所有服务端错误到指定的404页面,尽量不要在前端留下任何错误,上线之前把所有的debug功能全部关闭,有错误,直接打log<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    error_page   500 502 503 504  /404.html;</span><br><span class="line">    location = /404.html &#123;</span><br><span class="line">        root   html/bwapp;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>0x23 防止跨目录,把webshell限死在当前站点目录下,让其上一级目录都翻不了,方法很简单,在每个站点根目录下,新建一个.user.ini文件,加入以下语句,open_basedir为当前站点目录的绝对路径,注意此文件权限,只有root能写,另外,关于.user.ini文件用途请直接参考php官方说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/nginx/html/bwapp/.user.ini</span><br><span class="line">  open_basedir=/usr/local/nginx/html/bwapp:/tmp/:/proc/</span><br><span class="line"># chown root.root .user.ini</span><br><span class="line"># chmod 644  .user.ini</span><br></pre></td></tr></table></figure></p>
+<p>0x24 降低溢出风险,在awvs官方站点中有针对此项的详细说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    client_body_buffer_size  1K;</span><br><span class="line">    client_header_buffer_size 1k;</span><br><span class="line">    client_max_body_size 1k;</span><br><span class="line">    large_client_header_buffers 2 1k;</span><br><span class="line">	 </span><br><span class="line">    client_body_timeout   10;</span><br><span class="line">    client_header_timeout 10;</span><br><span class="line">    keepalive_timeout     5 5;</span><br><span class="line">    send_timeout          10;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>0x25 尽可能防止各种恶意爬取及非正常访问,避免造成部分敏感信息泄露<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">     ...</span><br><span class="line">     if ($http_user_agent ~ &quot;Lua&quot;)&#123;</span><br><span class="line">	return 403;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     if ($http_user_agent ~* (Scrapy|Curl|HttpClient)) &#123; # 可以把你所知道的所有爬虫工具都写进去</span><br><span class="line">	return 403;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     if ($http_user_agent ~ ^$) &#123;</span><br><span class="line"> 	return 403;</span><br><span class="line">     &#125;</span><br><span class="line">     ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>0x26 限制各类搜索引擎蜘蛛的抓取频率,先在http标签段中定义好,再在server标签段中引用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">     ...</span><br><span class="line">     limit_req_zone $anti_spider zone=anti_spider:60m rate=100r/m; # 每分钟只能处理100个请求	</span><br><span class="line">     ...	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server&#123;</span><br><span class="line">     ...</span><br><span class="line">     limit_req zone=anti_spider burst=5 nodelay;</span><br><span class="line">     </span><br><span class="line">     if ($http_user_agent ~* &quot;baiduspider|bingbot|Yahoo! Slurp|msnbot&quot;) &#123; # 可以把你知道的所有的搜索引擎蜘蛛都加上</span><br><span class="line">	 set $anti_spider $http_user_agent;</span><br><span class="line">     &#125;</span><br><span class="line">     ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>0x27 简单的防sql注入<code>[实战中极不建议这么干]</code>,可以自行把各种注入语句里面的关键字都加进去,单单这样,还是很容易被bypass掉,比如,<code>大小写</code>,有些朋友可能会说,加个<code>i</code>不就行了,确实,这样是不区分大小写了,不过最好不要直接在nginx配置中这样搞,极易误报,而且设置白名单非常麻烦,这里仅仅只是为了告诉大家,可以用nginx这么玩,但自己真正部署的时候就不要这么干了,毕竟这防不住啥,推荐直接自行去定制各种开源waf<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    if ($request_uri  ~*  (.*)(insert|select|delete|update|count|\*|%|master|truncate|declare|\&apos;|\;|and|or|\(|\)|exec)(.*)$ ) &#123;</span><br><span class="line">  	rewrite ^(.*) https://klionsec.github.io redirect;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>0x28 也可以尝试实时从<code>nginx 访问日志</code>中,快速捕捉各类敏感web攻击特征并预警,详情可参考本博客的另一篇文章 <a href="https://klionsec.github.io/2017/08/01/log-find/" target="_blank" rel="noopener">入侵取证 [ web日志分析初步 ]</a></p>
+<p>0x29 合理配置robots.txt文件,尽量不要把一些敏感比较信息,如,各种账号密码,敏感参数,各种web,vpn入口等…都暴露给各种搜索引擎,另外,各类用于测试的探针<code>如,phpinfo之流</code>,就不用多说了吧,全部清干净,被人扫目录扫出来,前面有些东西就白干了</p>
+<p>0x30 尽可能隐藏住后台,不要用太大众的名字或者网站域名什么的,反正别让用户能随便猜到就行,限制用户直接从公网访问到网站后台,可以在nginx中获取用户原始ip,然后判断只允许指定的内网段才能访问后台</p>
+<p>0x31 利用lsyncd实时监控指定<code>用户上传目录中的create事件</code>,然后,过滤出可执行后缀脚本文件,打成zip,再配合百度WebShell检测引擎提供的扫描接口<a href="https://scanner.baidu.com" target="_blank" rel="noopener">https://scanner.baidu.com</a> 上传zip,初步实现全自动秒删webshell,据朋友反应,实际的检测效果还算不错</p>
+<p><img src="/img/nginx webshell baidu.png" alt=""></p>
+<p>0x32 最后,定期去关注nginx官方发布的各种高危补丁,适时修补即可</p>
+<p>0x33 更多,待续…<br><br></p>
+<p>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;实际部署过程中做好这些最基本的防御措施即可,nginx自身能做事情确实还有很多,但完全想利用nginx实现一个准waf的效果,毕竟不太现实,也真的没那必要,如果对安全性真的有特别要求,建议大家还是自行去深度定制各类开源waf,说这么多,只是想告诉大家,真正的防御并不是盲目的人云亦云,漫无目的的象征性做做样子,你自己也要时刻跟进入侵者的各种猥琐攻击手法,仔细不停地复现分析,适时针对性改进防御策略才行,在安全的字典里,没有一劳永逸,有的是只是永无休止的对抗,唯一的办法就是未雨绸缪,只有比敌人更勤奋,才有占得先机的可能,另外,这里说的单单也只是针对nginx,大家都很清楚,安全本来就是一个面,只是一个节点的安全,根本就算不上安全,另外,关于脚本自身的安全以后还会有非常大篇幅说明,<code>web</code>,作为入侵者的首选途径,也是我们的重点防御对象,如果真正防住了web,基本就防住了绝大部分的外部入侵,话说回来,这一切还都是建立在对方没有手握各种远程0day的情况下,<code>如果人人都像NSA那样,基本也就没啥是安全的了,只需一个端口,就直接捅到你怀疑人生</code>,当然,你的实际价值肯定要先远远要超过买0day的钱,别人才有可能会用0day,毕竟这个东西基本上就是一次性的,万一被被别人的蜜罐套走了,岂不得不偿失,这里突然想起别人说过的一句话<code>0day固然可怕,但,你还不配</code>,哈哈……说一千道一万,nginx的主要作用还是为了更好的提供web服务<code>[ 一切还以满足实际业务需求和高性能为主 ]</code>,总不能一味地为了安全连钱都不挣了吧,好好活下去比什么都重要,今天不自觉废话稍微有点儿多了,大家不要建议哈,祝好运 ^_^</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/nginsec/">#nginsec</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

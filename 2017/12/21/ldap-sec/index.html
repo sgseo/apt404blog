@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 关于 ldap 的一些简单科普1234567`ldap` 基于tcp/ip的轻量级目录访问协议,属于X.500目录协议族的一个简化版本你可以暂时把它粗暴的理解成 `一种特殊类型的数据库` ,通常,这种数据库文件后缀都为`.ldif`,并使用特殊的节点查询语句来获取相应数据实际生产环境中,主要还是用它来做各种查询比较多,既是查询,也就意味着肯定会有大量的读操作虽然,ldap也支持一些简单的更新功能,即写,但一般都不会用,因为它在写方面的效率并不高如果真的是写比较多,直接用各种关系型数据库代替就好了,实在没必要用ldap,毕竟,术业有专攻另外,ldap 跨平台,功能简洁,易管理,配置,读性能也不错,亦可分布式部署`不知道是不是可以把它的分布式理解成windows域的目录树,目录林概念`用的最多的可能就是进行`集中身份验证`,最后,我们还需要知道的是,默认情况下,ldap的所有数据都是直接以明文传输的,容易被截获,不过好在它支持ssl
+0x02 其它的一些常用目录服务工具1234X.500 		过于庞大臃肿ldap  		轻量且配置简单windows活动目录  有平台限制NIS		个人暂时还没接触过
+0x03 了解ldap内部数据的大致存储方式123456和常规关系型数据库不同的是,ldap并非按照常规的库,表,字段方式来存储数据而是按照一种特殊的倒树状结构层级来组织管理数据,此处的树指的就是目录信息树,即`DIT`所谓的目录信息树其实相当于专门用来进行读操作的数据库在DIT内部则由N个条目`entry`所组成,就相当于我们常规数据库表中每条具体的记录而条目的内容则是由具有唯一标识名`DN`的属性[Attribute]及属性对应的值[value]所组成的这么一个集合条目为ldap中最基础的操作单位,通常对ldap的增删改查都是以条目为基本单元进行的">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="初探 LDAP 安全 [ 一 ]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>初探 LDAP 安全 [ 一 ] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/12/21/ldap-sec/">
+                初探 LDAP 安全 [ 一 ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-12-21</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/LDAP安全/">LDAP安全</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>0x01 关于 ldap 的一些简单科普<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">`ldap` 基于tcp/ip的轻量级目录访问协议,属于X.500目录协议族的一个简化版本</span><br><span class="line">你可以暂时把它粗暴的理解成 `一种特殊类型的数据库` ,通常,这种数据库文件后缀都为`.ldif`,并使用特殊的节点查询语句来获取相应数据</span><br><span class="line">实际生产环境中,主要还是用它来做各种查询比较多,既是查询,也就意味着肯定会有大量的读操作</span><br><span class="line">虽然,ldap也支持一些简单的更新功能,即写,但一般都不会用,因为它在写方面的效率并不高</span><br><span class="line">如果真的是写比较多,直接用各种关系型数据库代替就好了,实在没必要用ldap,毕竟,术业有专攻</span><br><span class="line">另外,ldap 跨平台,功能简洁,易管理,配置,读性能也不错,亦可分布式部署`不知道是不是可以把它的分布式理解成windows域的目录树,目录林概念`</span><br><span class="line">用的最多的可能就是进行`集中身份验证`,最后,我们还需要知道的是,默认情况下,ldap的所有数据都是直接以明文传输的,容易被截获,不过好在它支持ssl</span><br></pre></td></tr></table></figure></p>
+<p>0x02 其它的一些常用目录服务工具<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X.500 		过于庞大臃肿</span><br><span class="line">ldap  		轻量且配置简单</span><br><span class="line">windows活动目录  有平台限制</span><br><span class="line">NIS		个人暂时还没接触过</span><br></pre></td></tr></table></figure></p>
+<p>0x03 了解ldap内部数据的大致存储方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">和常规关系型数据库不同的是,ldap并非按照常规的库,表,字段方式来存储数据</span><br><span class="line">而是按照一种特殊的倒树状结构层级来组织管理数据,此处的树指的就是目录信息树,即`DIT`</span><br><span class="line">所谓的目录信息树其实相当于专门用来进行读操作的数据库</span><br><span class="line">在DIT内部则由N个条目`entry`所组成,就相当于我们常规数据库表中每条具体的记录</span><br><span class="line">而条目的内容则是由具有唯一标识名`DN`的属性[Attribute]及属性对应的值[value]所组成的这么一个集合</span><br><span class="line">条目为ldap中最基础的操作单位,通常对ldap的增删改查都是以条目为基本单元进行的</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>如下则是一条完整的条目信息,其实就相当于常规关系型数据库中的一条记录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">dn: cn=aima aima,ou=People,dc=ldapmaster,dc=org</span><br><span class="line">objectClass: posixAccount</span><br><span class="line">objectClass: inetOrgPerson</span><br><span class="line">objectClass: organizationalPerson</span><br><span class="line">objectClass: person</span><br><span class="line">objectClass: shadowAccount</span><br><span class="line">loginShell: /bin/bash</span><br><span class="line">uid: aima</span><br><span class="line">cn: aima aima</span><br><span class="line">uidNumber: 10000</span><br><span class="line">gidNumber: 173</span><br><span class="line">sn: sec</span><br><span class="line">givenName: aima</span><br><span class="line">homeDirectory: /home/aima</span><br><span class="line">shadowLastChange: 17520</span><br><span class="line">userPassword:: e1NTSEF9OExmZ2FyUHQzeGl2K0RscWVOQ09Ma0lxTnkxTWRVeE4=</span><br></pre></td></tr></table></figure></p>
+<p>0x04 认识ldap中常见的一些缩写单词含义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dn  唯一标示,类似linux文件系统的绝对路径,通过dn我们可以快速查找到目录信息树中的任意一个节点</span><br><span class="line">    basedn也就是我们所说的目录信息树的根,rdn 则是相对标示名,即相对路径</span><br><span class="line">dc  一般用于将完整域名划分几部分,如,rootkit.org就会被表示为`dc=rootkit,dc=org`</span><br><span class="line">uid 用户id,通常来源于/etc/passwd</span><br><span class="line">cn  姓名,通常来源于/etc/group</span><br><span class="line">sn  姓</span><br><span class="line">o   组织[公司]名称,像这些只是从逻辑上分开</span><br><span class="line">ou  单位[部门]名称</span><br></pre></td></tr></table></figure></p>
+<p>0x05 和很多服务相同,ldap服务同样也是工作在 C / S 架构模型下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">服务端负责提供整个目录信息树,客户端只需拿着相应的信息树查询工具,向服务端提交查询请求,而后,服务端要么响应给具体的条目数据,要么直接返回一个指针</span><br><span class="line">如果服务端返回的是指针,客户端还需再拿着该指针到指定的ldap服务器上去查询相应的条目数据</span><br></pre></td></tr></table></figure></p>
+<p>此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CentOS6.8_x86_64 	ip: 192.168.3.68	ldapmaster</span><br><span class="line">CentOS6.8_x86_64 	ip: 192.168.3.69	ldapslave</span><br></pre></td></tr></table></figure></p>
+<p>0x06 开始实战部署openldap,关于openldap本身其实并没什么太多好说的,就是ldap协议的一种具体实现而已</p>
+<p>部署前环境准备,<code>安装整个基础环境包,统一所有机器时间,机器名...</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># yum groupinstall &quot;Development Tools&quot; -y</span><br><span class="line"># /usr/sbin/ntpdate time.nist.gov</span><br><span class="line"># crontab -e</span><br><span class="line">  */2 * * * * /usr/sbin/ntpdate time.nist.gov	每两分钟同步一下时间</span><br><span class="line"># crontab -l</span><br><span class="line"># vi /etc/hosts</span><br><span class="line">  192.168.3.68 	ldapmaster.org</span><br><span class="line">  192.168.3.69 	ldapslave.org</span><br></pre></td></tr></table></figure></p>
+<p>安装openldap及其必要的依赖库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># yum install openldap openldap-* -y</span><br><span class="line"># yum -y install nscd nss-pam-ldapd pcre pcre-*</span><br><span class="line"># yum -y update nss-softokn-freebl	此处软件包有冲突,最好分开装</span><br><span class="line"># yum -y install nss-*</span><br><span class="line"># rpm -qa | grep openldap</span><br><span class="line"># id ldap	安装完成后,会自动创建一个名为ldap的系统伪用户,专用用来跑ldap服务</span><br><span class="line"># slapd -V	此处演示的openldap版本为2.4</span><br></pre></td></tr></table></figure></p>
+<p>0x07 以上没问题后,我们开始来配置OpenLdap,此处依然使用兼容2.3版本的配置方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd /etc/openldap/</span><br><span class="line"># cp /usr/share/openldap-servers/slapd.conf.obsolete slapd.conf</span><br><span class="line"># ls -l</span><br></pre></td></tr></table></figure></p>
+<p>设置ldap管理员密码,还是那句话,实际生产环境中,这个密码务必要足够的强壮<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># slappasswd -s klion   生成ldap管理员密码hash,并把它追加到ldap主配置中</span><br><span class="line"># slappasswd -s klion | sed -e &quot;s#&#123;SSHA&#125;#rootpw\t&#123;SSHA&#125;#g&quot; &gt;&gt;/etc/openldap/slapd.conf</span><br><span class="line"># tail -n 1 /etc/openldap/slapd.conf</span><br><span class="line">  rootpw	&#123;SSHA&#125;rkmKIPz4B5y6MmGLqSZbMZy0JMVY/gzK</span><br><span class="line"># cp slapd.conf slapd.conf_`date +%Y%m%d`.bak</span><br></pre></td></tr></table></figure></p>
+<p>修改ldap数据库及日志设置,注意配置文件中的所有配置项必须顶格写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/openldap/slapd.conf</span><br><span class="line">  # 先把默认的数据库配置全部注释掉</span><br><span class="line">  # database definitions	</span><br><span class="line">  # database      bdb</span><br><span class="line">  # suffix        &quot;dc=my-domain,dc=com&quot;</span><br><span class="line">  # checkpoint    1024 15</span><br><span class="line">  # rootdn        &quot;cn=Manager,dc=my-domain,dc=com&quot;</span><br><span class="line">  </span><br><span class="line">  # 再来新增自己的数据库配置</span><br><span class="line">  database        bdb		# 指定使用的数据库格式</span><br><span class="line">  suffix          &quot;dc=ldapmaster,dc=org&quot;			# 指定域名</span><br><span class="line">  rootdn          &quot;cn=klion,dc=ldapmaster,dc=org&quot;	# 指定ldap管理员的dn</span><br><span class="line">  rootpw  &#123;SSHA&#125;rkmKIPz4B5y6MmGLqSZbMZy0JMVY/gzK	# ldap管理员的密码hash,就是我们上面设置的klion</span><br><span class="line">  </span><br><span class="line">  # 设置ldap日志</span><br><span class="line">  loglevel        296		指定日志级别</span><br><span class="line">  cachesize       2000		可以缓存的记录总数</span><br><span class="line">  checkpoint      2048 10	每到2048K或者每10分钟把内存中的数据往数据库中写一次</span><br><span class="line">	</span><br><span class="line">  # 修改ldap默认的ACL,此处,支持直接用正则表示,严禁允许直接匿名访问,非常危险,极易造成大量敏感信息泄露</span><br><span class="line">  # 建议把默认的access项全部注释掉,换成如下权限,所谓的 `ldap未授权` 的根源也就在这里</span><br><span class="line">  # 下面ACL只做简单demo参考,大家可根据自己的实际情况,把to后的*换成更具体的范围,把by 后的权限控制的更精细些</span><br><span class="line">  access to *</span><br><span class="line">    by self write</span><br><span class="line">    by anonymous auth</span><br><span class="line">    by user read</span><br><span class="line">  </span><br><span class="line"># egrep -v &quot;^$|#&quot; /etc/openldap/slapd.conf	最后,检查配置</span><br></pre></td></tr></table></figure></p>
+<p>详细的ACL编写,可直接参考其官方说明,如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.openldap.org/doc/admin24/access-control.html</span><br></pre></td></tr></table></figure></p>
+<p>0x08 让rsyslog记录ldap日志<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># cp /etc/rsyslog.conf /etc/rsyslog.conf_`date +%Y%m%d`.bak</span><br><span class="line"># echo &quot;local4.*                    /var/log/ldap.log&quot; &gt;&gt; /etc/rsyslog.conf</span><br><span class="line"># tail -n 1 /etc/rsyslog.conf</span><br><span class="line"># /etc/init.d/rsyslog restart</span><br></pre></td></tr></table></figure></p>
+<p>0x09 修改ldap数据库的存放路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># grep bdb /etc/openldap/slapd.conf</span><br><span class="line"># cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG</span><br><span class="line"># chown ldap.ldap /var/lib/ldap/DB_CONFIG </span><br><span class="line"># chmod 700 /var/lib/ldap/</span><br><span class="line"># ll /var/lib/ldap/</span><br><span class="line"># egrep -v &quot;#|^$&quot; /var/lib/ldap/DB_CONFIG</span><br><span class="line"># slaptest -u	检查slapd.conf配置是否正确</span><br><span class="line"># egrep -v &quot;^#|^$&quot; /etc/openldap/slapd.conf</span><br></pre></td></tr></table></figure></p>
+<p>0x10 一切配置就绪后,我们尝试启动openldap服务,<code>默认它工作在tcp的389端口</code>,如果是加密通信,默认端口则为636<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># /etc/init.d/slapd start</span><br><span class="line"># netstat -tulnp | grep 389</span><br><span class="line"># ps aux | grep slapd		查看ldap默认的服务运行权限</span><br><span class="line"># chkconfig slapd on</span><br><span class="line"># chkconfig --list | grep slapd</span><br><span class="line"># tail /var/log/ldap.log</span><br><span class="line"></span><br><span class="line"># 查询当前ldap数据库中的所有用户信息,默认肯定是空的,因为我们此时还没有导入任何信息</span><br><span class="line"># ldapsearch -LLL -W -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -b &quot;dc=ldapmaster,dc=org&quot; &quot;(uid=*)&quot;</span><br><span class="line"># rm -rf /etc/openldap/slapd.d/*	上述第一次查询可能会有问题,把该目录下的配置全部删掉,重启服务再查基本就没问题了</span><br><span class="line"># slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d/</span><br><span class="line"># chown -R ldap.ldap /etc/openldap/slapd.d</span><br><span class="line"># /etc/init.d/slapd restart</span><br><span class="line"># netstat -tunlp |grep slapd</span><br></pre></td></tr></table></figure></p>
+<p>0x11 到此为止,ldap基本就算搭建好了,接下来,我们开始往ldap数据库中添加用户数据,在添加之前我们需要先把它转成符合ldap数据库的数据格式,如下</p>
+<p>安装migrationtools工具,因为我们要它来导出本地用户数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># yum install migrationtools -y</span><br><span class="line"># vi /usr/share/migrationtools/migrate_common.ph	修改为自己的域名和BaseDN</span><br><span class="line">  $DEFAULT_MAIL_DOMAIN = &quot;ldapmaster.org&quot;;</span><br><span class="line">  $DEFAULT_BASE = &quot;dc=ldapmaster,dc=org&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>使用migrationtools内置的脚本来进行导出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># export LC_ALL=C</span><br><span class="line"># echo &quot;export LC_ALL=C&quot; &gt;&gt; /etc/profile</span><br><span class="line"># /usr/share/migrationtools/migrate_base.pl &gt; base.ldif</span><br><span class="line"># /usr/share/migrationtools/migrate_passwd.pl /etc/passwd &gt; passwd.ldif</span><br><span class="line"># /usr/share/migrationtools/migrate_group.pl /etc/group &gt; group.ldif</span><br></pre></td></tr></table></figure></p>
+<p>使用ldapadd的添加条目,即 <code>增</code>,往ldap数据库中添加刚刚导出的数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ldapadd -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -W -f base.ldif</span><br><span class="line"># ldapadd -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -W -f passwd.ldif</span><br><span class="line"># ldapadd -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -W -f group.ldif</span><br></pre></td></tr></table></figure></p>
+<p>使用ldapdelete删除指定条目,即 <code>删</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ldapdelete -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -w klion &quot;cn=test,ou=Group,dc=ldapmaster,dc=org&quot;</span><br></pre></td></tr></table></figure></p>
+<p>使用ldapmodify修改指定条目,即 <code>改</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ldapmodify -x -W -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -f fstab.ldif</span><br></pre></td></tr></table></figure></p>
+<p>使用ldapsearch查询指定条目,即 <code>查</code>询指定basedn下的所有条目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ldapsearch -LLL -w klion -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -b &quot;dc=ldapmaster,dc=org&quot;</span><br><span class="line"># ldapsearch -LLL -w klion -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -b &quot;dc=ldapmaster,dc=org&quot; &quot;(uid=aima)&quot;</span><br></pre></td></tr></table></figure></p>
+<p>备份ldap数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ldapsearch -LLL -w klion -x -H ldap://ldapmaster.org -D &quot;cn=klion,dc=ldapmaster,dc=org&quot; -b &quot;dc=ldapmaster,dc=org&quot; &quot;(uid=*)&quot; &gt;bak.ldif</span><br></pre></td></tr></table></figure></p>
+<p>0x12 使用各种ldap客户端管理工具来操作ldap数据库,此处暂以web端管理接口为例进行演示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># yum install httpd php php-ldap php-gd -y</span><br><span class="line"># cd /var/www/html/</span><br><span class="line"># tar xf ldap-account-manager-4.2.tar.gz</span><br><span class="line"># mv ldap-account-manager-4.2 ldap</span><br><span class="line"># cd ldap/config</span><br><span class="line"># cp config.cfg_sample config.cfg_sample.bak</span><br><span class="line"># cp lam.conf_sample lam.conf_sample.bak</span><br><span class="line"># mv config.cfg_sample config.cfg</span><br><span class="line"># mv lam.conf_sample lam.conf</span><br><span class="line">  serverURL: ldap://ldapmaster:389</span><br><span class="line">  admins: cn=klion,dc=ldapmaster,dc=org</span><br><span class="line">  treesuffix: dc=ldapmaster,dc=org</span><br><span class="line">  types: suffix_user: ou=People,dc=ldapmaster,dc=org</span><br><span class="line">  types: suffix_group: ou=group,dc=ldapmaster,dc=org</span><br><span class="line">  types: suffix_host: ou=machines,dc=ldapmaster,dc=org</span><br><span class="line">  types: suffix_smbDomain: dc=ldapmaster,dc=org</span><br><span class="line">  </span><br><span class="line"># chown -R apache.apache /var/www/html/ldap</span><br><span class="line"># vi /etc/httpd/conf/httpd.conf</span><br><span class="line">  &lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin ldapmaster.org</span><br><span class="line">    DocumentRoot /var/www/html/ldap</span><br><span class="line">    ServerName ldapmaster.org</span><br><span class="line">    ErrorLog logs/ldapmaster.org-error_log</span><br><span class="line">    CustomLog logs/ldapmaster.org-access_log common</span><br><span class="line">  &lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line"># /etc/init.d/httpd start</span><br><span class="line"># chkconfig httpd on</span><br><span class="line">http://ldapmaster.org/templates/login.php 做好host解析后访问此url即可全图形化管理ldap</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/ldapadminmaster.png" alt=""></p>
+<p>虽然这种纯图形化的工具貌似是很好用,但个人还是不太建议在实际生产环境中用,验证过于简单,比较危险,毕竟只是个web脚本,很容易被入侵者扫目录,扫域名时扫到,另外,也极易被各类搜索引擎抓到,如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inurl:templates/login.php intitle:LDAP Account Manager</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/ldap account manger.png" alt=""></p>
+<p>0x13 启用sasl,让指定的服务都通过ldap的方式进行集中身份验证<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># yum install *sasl* -y</span><br><span class="line"># rpm -qa | grep sasl</span><br><span class="line"># saslauthd -v			sasl所支持的所有认证类型</span><br><span class="line"># sed -i &apos;s#MECH=pam#MECH=ldap#g&apos; /etc/sysconfig/saslauthd</span><br><span class="line"># grep -i mech /etc/sysconfig/saslauthd</span><br><span class="line">  MECH=ldap</span><br><span class="line"># /etc/init.d/saslauthd start</span><br><span class="line"># chkconfig saslauthd on</span><br><span class="line"># vi /etc/saslauthd.conf</span><br><span class="line">  ldap_bind_dn: cn=klion,dc=ldapmaster,dc=org</span><br><span class="line">  ldap_bind_pw: klion</span><br><span class="line">  ldap_search_base: ou=People,dc=ldapmaster,dc=org</span><br><span class="line">  ldap_filter: uid=%U</span><br><span class="line">  ldap_password_attr: userPassword</span><br><span class="line"># ps -ef | grep sasl</span><br><span class="line"># testsaslauthd -u super -p admin	此时便会用ldap账户来进行验证</span><br></pre></td></tr></table></figure></p>
+<p>0x14 以让svn服务通过ldap进行认证为例,其实非常简单,首先,你需要先在本机快速部署好svn,至于具体的部署方法,请参考之前的相关文章,当然,除了svn,像<code>vsftpd,samba</code>这类的基础服务也都可以通过ldap进行身份验证,并非重点此处不再赘述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"># 让svn通过ldap进行验证,不再走svn自己的验证了</span><br><span class="line"># vi /etc/sasl2/snv.conf</span><br><span class="line">  pwcheck_method: saslauthd</span><br><span class="line">  mech_list: PLAIN LOGIN</span><br><span class="line"></span><br><span class="line"># 编辑svn主配置文件</span><br><span class="line"># vi /svn/svndata/svndoc/conf/svnserve.conf  </span><br><span class="line">  [general]</span><br><span class="line">    anon-access = none</span><br><span class="line">    auth-access = write</span><br><span class="line">    password-db = /svn/svnpasswd/passwd</span><br><span class="line">    authz-db = /svn/svnpasswd/authz</span><br><span class="line">  [sasl]</span><br><span class="line">    use-sasl = true	# 开启svn的sasl验证</span><br><span class="line">	</span><br><span class="line"># 把svn本地用户全部注释掉,因为一旦开启sasl就不再走svn本地验证了</span><br><span class="line"># vi /svn/svnpasswd/passwd</span><br><span class="line">  [users]</span><br><span class="line">  # harry = harryssecret</span><br><span class="line">  # sally = sallyssecret</span><br><span class="line">  # web = 654321</span><br><span class="line">  # webadmin = admin110</span><br><span class="line">  # admin = 123456</span><br><span class="line">  # bakuser = admin</span><br><span class="line">  # guest = svn110</span><br><span class="line">  # svn = svnadmin</span><br><span class="line"></span><br><span class="line"># 另外,还需要把ldap用户加到svn认证文件中,不然,依然是登不上svn的</span><br><span class="line"># 虽然用户密码验证过程不走本地,但权限认证过程还是在本地进行的</span><br><span class="line"># vi /svn/svnpasswd/authz </span><br><span class="line">  [aliases]</span><br><span class="line">  [groups]</span><br><span class="line">  administrator = web</span><br><span class="line">  sec = webadmin,admin</span><br><span class="line">  ldap_user = svnnew,super</span><br><span class="line">  </span><br><span class="line">  [svndoc:/]</span><br><span class="line">  svn = rw</span><br><span class="line">  @administrator = rw</span><br><span class="line">  @ldap_user = rw</span><br><span class="line">  </span><br><span class="line">  [svndoc:/web01]</span><br><span class="line">  bakuser = rw</span><br><span class="line">  </span><br><span class="line">  [svndoc:/web02]</span><br><span class="line">  guest = rw</span><br></pre></td></tr></table></figure></p>
+<p>下面是svn通过ldap进行认证的实际效果</p>
+<p><img src="/img/ldapadminmaster svn log.png" alt=""><br><img src="/img/ldapadminmaster svn log res.png" alt=""></p>
+<p>0x15 关于ldap主从同步,后续有机会再说,这次我们先初步入个门  ^_^</p>
+<p>0x16 最后,我们再来关注下openldap的一些安全问题,最重要的可能就是<code>允许匿名访问</code>,对此的利用没什么好说的,直接用各种ldap客户端工具,如,<code>LDAPSoft Ldap Browser或者JXplorer都行</code>,只需<code>指定正确的ip,端口和dn,然后用匿名的方式连上去即可</code></p>
+<p><img src="/img/ldapadminmaster any.png" alt=""></p>
+<p><br><br>后话:<br>&nbsp;&nbsp;&nbsp;&nbsp;建议实际生产环境中直接使用加密传输,另外,可根据实际业务需求配置更具针对性的ACL,至于针对web层的<code>ldap注入 [ 其实跟sql注入没什么两样,只是查询语言不同而已 ]</code>,篇幅原因,我们在后续的相关章节中还会再做详细说明,待续……</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/LDAP安全/">#LDAP安全</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

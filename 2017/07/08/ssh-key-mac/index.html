@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 利用最原始的 SSH key ,实现批量ssh管理 只适合较小规模集群场景,通常在100台机器以内,要实现的最终效果,如下:12可以批量分发文件,进行常规配置管理可以批量执行shell命令,进行日常维护操作
+演示环境:123SshKeyMaster 	ip: 192.168.5.11	CentOS6.8 x86_64 分发机SshKeySlave5	ip: 192.168.5.13	CentOS5.5 i386   分发客户机SshKeySlave7	ip: 192.168.5.12	CentOS7	  x86_64 分发客户机
+0x02 基于SSH key 的批量ssh管理,具体实现过程:
+以下是在这方面已经相对比较成熟的一些工具框架,后续会再专门针对每一种进行单独说明:1saltstack,ansible,puppet...
+1# rpm -qa openssh openssl 务必确保所有机器均已事先安装好ssh且ssh服务已正常开启
+0x03 先在所有机器上 [ 注意,是所有机器,密码完全一致 ]创建一个普通用户,因为等会儿我们要用此用户身份来进行各种分发操作
+切记,严禁直接用root分发,权限过高,太危险,分发机一旦被攻陷,其它的分发客户机也就随之沦陷了,建议,如果实在有需求可以用sudo或suid [其实也不推荐]来暂时性授权
+12# useradd sysadm# echo &amp;quot;admin&amp;quot; | passwd --stdin sysadm
+0x04 再在分发机上创建好密钥对,准备发到各个客户机上12345# su - sysadm		切到刚刚创建的用户下$ ssh-keygen -t dsa	一路回车即可$ ls -l .ssh/  -rw------- 1 sysadm sysadm 668 Nov 27 14:11 id_dsa	 私钥[钥匙]  -rw-r--r-- 1 sysadm sysadm 609 Nov 27 14:11 id_dsa.pub 公钥[锁],把公钥分发给所有要ssh的机器">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="基于 Ssh Key 的分发安全"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>基于 Ssh Key 的分发安全 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/07/08/ssh-key-mac/">
+                基于 Ssh Key 的分发安全
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-07-08</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/env/">env</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 利用最原始的 SSH key ,实现批量ssh管理 <code>只适合较小规模集群场景,通常在100台机器以内</code>,要实现的最终效果,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可以批量分发文件,进行常规配置管理</span><br><span class="line">可以批量执行shell命令,进行日常维护操作</span><br></pre></td></tr></table></figure></p>
+<p>演示环境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SshKeyMaster 	ip: 192.168.5.11	CentOS6.8 x86_64 分发机</span><br><span class="line">SshKeySlave5	ip: 192.168.5.13	CentOS5.5 i386   分发客户机</span><br><span class="line">SshKeySlave7	ip: 192.168.5.12	CentOS7	  x86_64 分发客户机</span><br></pre></td></tr></table></figure></p>
+<p>0x02 基于SSH key 的批量ssh管理,具体实现过程:</p>
+<p>以下是在这方面已经相对比较成熟的一些工具框架,后续会再专门针对每一种进行单独说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">saltstack,ansible,puppet...</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># rpm -qa openssh openssl 务必确保所有机器均已事先安装好ssh且ssh服务已正常开启</span><br></pre></td></tr></table></figure>
+<p>0x03 先在所有机器上 <code>[ 注意,是所有机器,密码完全一致 ]</code>创建一个普通用户,因为等会儿我们要用此用户身份来进行各种分发操作</p>
+<p><code>切记,严禁直接用root分发,权限过高,太危险,分发机一旦被攻陷,其它的分发客户机也就随之沦陷了,建议,如果实在有需求可以用sudo或suid [其实也不推荐]来暂时性授权</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># useradd sysadm</span><br><span class="line"># echo &quot;admin&quot; | passwd --stdin sysadm</span><br></pre></td></tr></table></figure>
+<p>0x04 再在分发机上创建好密钥对,准备发到各个客户机上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># su - sysadm		切到刚刚创建的用户下</span><br><span class="line">$ ssh-keygen -t dsa	一路回车即可</span><br><span class="line">$ ls -l .ssh/</span><br><span class="line">  -rw------- 1 sysadm sysadm 668 Nov 27 14:11 id_dsa	 私钥[钥匙]</span><br><span class="line">  -rw-r--r-- 1 sysadm sysadm 609 Nov 27 14:11 id_dsa.pub 公钥[锁],把公钥分发给所有要ssh的机器</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x05 最后,批量往所有分发客户机上发送刚刚创建好的公钥<code>把锁丢给别人,钥匙自己拿着</code>, 在初次部署,机器比较多的情况下,也可利用expect的方式进行发送<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id -i ~/.ssh/id_dsa.pub &quot;-p 22 sysadm@192.168.5.12&quot;</span><br><span class="line">$ ssh -p 22 sysadm@192.168.5.12		现在即可无密码ssh登陆</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id -i ~/.ssh/id_dsa.pub &quot;-p 22 sysadm@192.168.5.13&quot;</span><br><span class="line">$ ssh -p 22 sysadm@192.168.5.13</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls .ssh/authorized_keys  这是实际到目标机器上的文件名,只不过过去的时候被改名了,其实跟id_dsa.pub文件中的内容是一模一样的,权限600</span><br></pre></td></tr></table></figure>
+<p>0x06 尝试在远程机器上执行shell命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -p22 sysadm@192.168.5.12 hostname</span><br><span class="line">$ ssh -p22 sysadm@192.168.5.13 hostname</span><br></pre></td></tr></table></figure></p>
+<p>0x07 尝试批量往远程机器上分发文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ scp -P22 -p -r /etc/hosts sysadm@192.168.5.12:~   直接往对方sysadm用户的家目录下发</span><br><span class="line">$ scp -P22 -p -r /etc/hosts sysadm@192.168.5.13:~</span><br></pre></td></tr></table></figure></p>
+<p>0x08 通过脚本进行批量文件分发及shell命令执行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ /bin/sh send_file.sh /etc/hosts</span><br><span class="line">$ /bin/sh send_file.sh ./send_dir/</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">########################## 批量分发文件 ###############################</span><br><span class="line">#!/bin/bash</span><br><span class="line"># use: ssh key commond / file </span><br><span class="line">if [ $# -ne 1 ];then</span><br><span class="line">    echo &quot;use: sh ssh_key.sh file | dir&quot;</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">for n in 12 13</span><br><span class="line">do</span><br><span class="line">    scp -P22 -p -r $1 sysadm@192.168.5.$n:~ &amp;&gt;/dev/null</span><br><span class="line">    if [ $? -eq 0 ];then</span><br><span class="line">        echo -e &quot;$n send ok \n&quot;</span><br><span class="line">    else</span><br><span class="line">        echo -e &quot;$n ,Oh No,send failed \n&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /bin/sh send_cmd.sh &quot;rm -fr /home/sysadm/send_dir&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">########################## 批量执行shell命令 ###############################</span><br><span class="line">#!/bin/bash</span><br><span class="line"># use: ssh key commond / file </span><br><span class="line">if [ $# -ne 1 ];then</span><br><span class="line">    echo &quot;use: sh ssh_cmd.sh cmd&quot;</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line">	</span><br><span class="line">for n in 12 13</span><br><span class="line">do</span><br><span class="line">    echo -e &quot;\n-----------------------------------------------------------------------&quot;</span><br><span class="line">    ssh -p22 sysadm@192.168.5.$n $1</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>0x09 除了分发文件,执行命令,我们也可以尝试利用ssh key 实现免密码rsync数据同步,不过实际基本不会这么做,太危险,因为ssh key同样也可以执行命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># rsync -avzP -e &apos;ssh -p 22&apos; /tmp/ sysadm@192.168.5.4:/tmp/</span><br></pre></td></tr></table></figure></p>
+<p>0x10 分发过程中需要注意的一些的问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">严禁用root的ssh key进行各种分发操作,非常危险,分发机一旦被攻陷,其它的机器也就跟着沦陷了</span><br><span class="line">让普通用户使用sudo来执行特权操作,还是有些危险</span><br><span class="line">也可以用suid来控制,对要执行的命令进行suid,实际中也最好不要用,比较危险</span><br><span class="line">推荐使用各种第三方工具,如,puppet,saltstack</span><br></pre></td></tr></table></figure></p>
+<p>0x11 利用sudo的方式批量执行shell命令,到所有分发机客户机上对sysadm用户添加特权命令,具体操作如下,实际中把上面的稍微改下即可:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;sysadm  ALL=(ALL) NOPASSWD:/usr/bin/rsync&quot; &gt;&gt; /etc/sudoers </span><br><span class="line"># visudo -c</span><br><span class="line"># grep sysadm /etc/sudoers</span><br></pre></td></tr></table></figure></p>
+<p>脚本意思就是先把修改好的系统配置文件推到远程机器上的sysadm家目录下,再用sudo来执行特权操作,说实话,既然都可以操作系统配置文件了,创建个用户又有多难呢,所以,自己觉得这样也并不是特别安全<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /bin/sh send_sudo_file.sh hosts /etc/</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">########################## 利用sudo 来分发文件,执行命令  ###############################</span><br><span class="line">#!/bin/bash</span><br><span class="line"># use: ssh key commond / file </span><br><span class="line">if [ $# -ne 2 ];then</span><br><span class="line">    echo &quot;use: sh ssh_sudo_file.sh localfile remotedir&quot;</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line">	</span><br><span class="line">for n in 12 13</span><br><span class="line">do</span><br><span class="line">    scp -P22 -r -p $1 sysadm@192.168.5.$n:~ &amp;&gt;/dev/null &amp;&amp; \</span><br><span class="line">    ssh -t sysadm@192.168.5.$n sudo rsync $1 $2 &amp;&gt;/dev/null</span><br><span class="line">    if [ $? -eq 0 ];then</span><br><span class="line">	echo -e &quot;$n exec ok !\n&quot;</span><br><span class="line">    else</span><br><span class="line">	echo -e &quot;$n , Oh No ,exec failed! &quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>0x12 至于如何利用suid 进行分发,就更简单了,只需要把你经常要用的一些命令加上suid权限属性就好了,如,我们前面用过的rsync,其实,个人觉得这样等于说就是帮别人留了个后门,上来以后,只需要find下当前系统中所有的suid,一下就能看到rsync,接着再把自己在本地修改好的系统配置文件直接传上来覆盖,后果你懂的,完全通过配置文件就可以创建一个root用户,根本不需要任何命令工具,这就是linux一切皆文件的好处,如果真想用,稍微改下脚本就好了,还是那句话,如果是自己手里的服务器最好还是不要这样搞<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># chmod 4755 /usr/bin/rsync	让rsync具有suid属性</span><br><span class="line"># ls -l /usr/bin/rsync</span><br></pre></td></tr></table></figure></p>
+<p>0x13 最后,利用定时任务执行各种分发任务即可,比较简单,此处就不细说了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># crontab -e</span><br></pre></td></tr></table></figure></p>
+<p>0x14 分发机自身的安全问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">严禁直接把分发机暴露在公网中</span><br><span class="line">只允许特定的跳板机才能访问到分发机</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;关于分发安全,大致就先说到这里,个人还是更推荐直接用saltstack这类的工具来管理,没完,待续……</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/演练环境搭建/">#演练环境搭建</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

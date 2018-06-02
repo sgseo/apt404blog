@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 在说mysql主从复制之前,我们先来大致了解一些关于不同级别的同步方案
+基于文件级别的同步
+非实时同步1scp/sftp/ftp/samba/rsync/union....
+实时同步1NFS/inotify/sersync/lsyncd....
+基于文件系统级别的同步1drbd...
+基于数据库级别的同步,对于数据库而言基本都属于实时同步,但实时并不一定意味着就是同步操作,也可能是用异步的方式在操作1234mysql   replication 虽然异步的,但实现的效果基本上是实时的oracleredismongodb">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="MySQL 主从复制 完全上手指南"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>MySQL 主从复制 完全上手指南 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/10/28/mysql-master-slave/">
+                MySQL 主从复制 完全上手指南
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-10-28</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/MySQL-主从复制/">MySQL 主从复制</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>0x01 在说mysql主从复制之前,我们先来大致了解一些关于不同级别的同步方案</p>
+<p><code>基于文件级别的同步</code></p>
+<p>非实时同步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp/sftp/ftp/samba/rsync/union....</span><br></pre></td></tr></table></figure></p>
+<p>实时同步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NFS/inotify/sersync/lsyncd....</span><br></pre></td></tr></table></figure></p>
+<p><code>基于文件系统级别的同步</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drbd...</span><br></pre></td></tr></table></figure></p>
+<p><code>基于数据库级别的同步</code>,对于数据库而言基本都属于实时同步,但实时并不一定意味着就是同步操作,也可能是用异步的方式在操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql   replication 虽然异步的,但实现的效果基本上是实时的</span><br><span class="line">oracle</span><br><span class="line">redis</span><br><span class="line">mongodb</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p><code>直接利用程序进行 双写</code> 也可实现实时同步的效果</p>
+<p>0x02 关于 mysql 主从复制的一些常用方式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">一主一从,通常情况下,一主3到5个从为宜,另外,我们常说的mysql读写分离,一般都是主写,从读</span><br><span class="line">一主多从</span><br><span class="line">一主一主多从 多层级联,有一定延迟,通常会配合keeplive做高可用</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>0x03 深入理解 mysql 主从复制的内部实现细节,其实,究其原理极其的简单,想必大家也都比较熟练了,这里只做些简要回顾:</p>
+<p><img src="/img/Replication_Latency_Points.png" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">首先,需要在主从库中同时开启mysql的bin log功能</span><br><span class="line">此时,前端只要有任何 `增删改` `即 insert,update,delete,crate,drop,alter` 的操作时</span><br><span class="line">除了到数据库中执行正常的该sql语句之外,它同时也会把该sql语句往bin log日志中写一份</span><br><span class="line">注意,bin log文件是有大小限制的,默认最大会到1.1G,超过之后就会自动再新增一个文件</span><br><span class="line">另外,还有有个单独的索引文件,是用来存放bin log文件名的,后续主要根据它来命中对应的bin log文件中的sql语句</span><br><span class="line">最后,主库会起一个IO线程,主要用来等会儿和从库的IO线程进行数据传输</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">了解完主库,我们再来说从库,从库中此时会起两个线程,一个是IO线程,主要用来到主库中去取sql语句</span><br><span class="line">每取一次就会在本地的master.info中update下对应的索引位置</span><br><span class="line">另一个则是SQL线程,主要用来负责执行从主库过来的sql语句,它貌似并不是立马执行,而是先放到从库本地的relay-log日志中</span><br><span class="line">SQL线程会一直循环从那里面读取执行,基本过程就是这样</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">最后,需要注意的是,如果主从复制直接是从 `0` 开始,也就是说,主从库中的数据事先就是完全一致的</span><br><span class="line">则不需要导库操作的,直接正常开启同步就可以了,如果不一致,就要自己手工把主库的数据先完整导出来,然后再还原到从库中</span><br><span class="line">弄成完全一致之后再做同步,不过,拷之前记得先锁表,然后记录下主库此时bin log的索引位置,从库下次就从这个索引开始继续往下同步</span><br></pre></td></tr></table></figure>
+<p>0x04 演示环境,注意,做主从复制的数据库版本务必完全一致,否则复制时会有一些意外问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MysqlMaster 最小化安装   已配置好的mysql 5.6.27  eth0: 192.168.3.45 eth1: 192.168.4.17  eth2: 192.168.5.17  Master</span><br><span class="line">MysqlSlave  最小化安装   已配置好的mysql 5.6.27  eth0: 192.168.3.46 eth1: 192.168.4.18  eth2: 192.168.5.18  Slave</span><br><span class="line">MysqlSlave1 最小化安装   已配置好的mysql 5.6.27  eth0: 192.168.3.52 eth1: 192.168.4.19  eth2: 192.168.5.19  Slave1</span><br></pre></td></tr></table></figure></p>
+<p>首先,在主从库上同时 <code>开启bin log功能,这样做主要是为了方便后续做级联</code> ,去 <code>mysql的配置文件my.cnf</code> 中修改如下配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/my.cnf    在主库的[mysqld]模块下配置</span><br><span class="line">  log_bin = master_bin	</span><br><span class="line">  server_id = 1</span><br><span class="line">  slave-skip-errors = 1032,1062,1007,1008  为了防止在同步时报错,我们可以提前忽略一些不是非常重要的mysql错误状态码</span><br><span class="line"> </span><br><span class="line"># vi /etc/my.cnf    在从库的[mysqld]模块下配置,此处的id务必保持唯一</span><br><span class="line">  log_bin = slave_bin	</span><br><span class="line">  server_id = 2</span><br><span class="line">  slave-skip-errors = 1032,1062,1007,1008  </span><br><span class="line">  log-slave-updates</span><br><span class="line">  expire_logs_days = 10</span><br><span class="line"></span><br><span class="line"># /etc/init.d/mysqld restart</span><br><span class="line"># mysql -uroot -p</span><br><span class="line">mysql&gt; show variables like &apos;log_bin&apos;;	查看bin log功能有无开启</span><br><span class="line">mysql&gt; show variables like &quot;server_id&quot;; 查看server_id还是不是我们刚刚设置好的</span><br></pre></td></tr></table></figure></p>
+<p>其次,在主库中授权一个专门用于主从复制的数据库用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; grant replication slave on *.* to &apos;rep&apos;@&apos;192.168.3.%&apos; identified by &apos;admin&apos;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; show grants for rep@&apos;192.168.3.%&apos;;	查看指定用户权限</span><br></pre></td></tr></table></figure></p>
+<p>最后,把主库的数据先完整导出来,务必记得,在导之前先手工锁表 <code>[其实,也可以不用锁,具做法往后看]</code>,锁表主要是为了防止在dump时外部再有新数据写入造成索引不对应,锁完表后,当前mysql终端先不要退出,否则锁表就失效了,此时可以再另开一个终端去执行mysqldump操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; flush table with read lock;  锁表</span><br><span class="line">mysql&gt; show master status; 	    记录当前索引位置,以后要从这个位置的这个点进行主从复制,也就是如果binlog文件丢失,数据也就丢失了</span><br><span class="line">+------------------+----------+--------------+------------------+-------------------+</span><br><span class="line">| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |</span><br><span class="line">+------------------+----------+--------------+------------------+-------------------+</span><br><span class="line">| master_bin.000001|      120 |              |                  |                   | </span><br><span class="line">+------------------+----------+--------------+------------------+-------------------+</span><br></pre></td></tr></table></figure></p>
+<p>新起一个终端,打包好主库中的所有数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mysqldump -uroot -padmin --events -A -B|gzip &gt; /opt/master_bak_$(date +%F).sql.gz</span><br></pre></td></tr></table></figure></p>
+<p>这里打包完以后<code>注意下文件大小</code>,有时候文件太小很可能就是没打上,先回去看看什么原因,搞定了以后再继续打,一般很可能都是因为参数选项写错<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ll /opt/</span><br><span class="line"># du -h /opt/master_bak_2017-12-05.sql.gz</span><br></pre></td></tr></table></figure></p>
+<p>确认打完没什么问题后,再回头检查下索引,看看变没,如果没变说明锁的没问题,如果位置变了,说明打包时又有新数据写入了,则此次打包无效,需要回去重打<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show master status;	再次检查索引位置是否和之前有变化</span><br><span class="line">mysql&gt; unlock tables;	  	上面步骤没什么问题就可以解锁了</span><br></pre></td></tr></table></figure></p>
+<p>上面所说的不用手工锁表的语句,如下,<code>-x 选项</code> 其实就是个全局锁,这样干主要是为了方便后续自己写脚本来管理,<code>-F 选项</code>则会生成一个新的bin log文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mysqldump -uroot -padmin  -A -B -F --master-data=2 -x --events  &gt; /opt/master_all.sql</span><br><span class="line"># mysqldump -uroot -padmin  -A -B -F --master-data=2 -x --events|gzip &gt; /opt/master_all.sql.gz</span><br><span class="line"># mysqlbinlog /usr/local/mysql/mysql-bin.000001</span><br></pre></td></tr></table></figure></p>
+<p>0x05 当我们拿到主库的备份文件和索引位置之后,就可以去从库中执行还原操作了,这里纯粹是为了方便所以就直接用scp把备份的文件推到从库机器上了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># scp -P 22 /opt/master_bak_2017-12-05.sql.gz root@192.168.3.46:/opt/ </span><br><span class="line"># cd /opt/ &amp;&amp; ll</span><br><span class="line"># gunzip master_bak_2017-12-05.sql.gz</span><br><span class="line"># mysql -uroot -padmin &lt; /opt/master_bak_2017-12-05.sql</span><br></pre></td></tr></table></figure></p>
+<p>0x06 成功导入主库的备份文件后,需要在从库上配置和主库进行同步的一些必要参数,如下,注意,务必要严格按照下面的格式,防止出现各种空白符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># mysql -uroot -padmin</span><br><span class="line">mysql&gt; CHANGE MASTER TO</span><br><span class="line">-&gt; MASTER_HOST=&apos;192.168.3.45&apos;,	主库ip</span><br><span class="line">-&gt; MASTER_PORT=3306,		主库mysql端口</span><br><span class="line">-&gt; MASTER_USER=&apos;rep&apos;,		用于连接的数据库用户</span><br><span class="line">-&gt; MASTER_PASSWORD=&apos;admin&apos;,   	用户密码</span><br><span class="line">-&gt; MASTER_LOG_FILE=&apos;master_bin.000001&apos;, 从我们上面备份的那个索引id开始</span><br><span class="line">-&gt; MASTER_LOG_POS=120;		索引位置是多少</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/slave confi.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cat /usr/local/mysql/data/master.info	查看刚刚写入的信息</span><br></pre></td></tr></table></figure>
+<p>在从库上开启IO和SQL线程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start slave;	启动slave功能</span><br><span class="line">mysql&gt; stop slave;	关闭slave功能</span><br><span class="line">mysql&gt; show slave status\G;		      查看线程状态</span><br><span class="line">       Slave_IO_State: Connecting to master   看看有没有连上主库</span><br><span class="line">       Slave_IO_Running: Connecting	      IO 线程务必要起来</span><br><span class="line">       Slave_SQL_Running: Yes		      SQL 线程也务必要起来</span><br><span class="line">       Seconds_Behind_Master: NULL	      从库落后主库的秒数,不太准,一般会自己在主从库中设置时间戳进行比较</span><br><span class="line">       Last_IO_Errno: 0		              另外,平时如果出问题,要特别注意下IO和SQL线程的一些错误提示</span><br><span class="line">       Last_IO_Error: </span><br><span class="line">       Last_SQL_Errno: 0</span><br><span class="line">       Last_SQL_Error:</span><br><span class="line">       Last_Errno: 0</span><br><span class="line">       Last_Error:</span><br><span class="line">mysql&gt; show databases;			      最后回到主库中随便增删改,再到从库中看看有没有实时同步过来</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/slave confi succeed.png" alt=""></p>
+<p>0x07 上面是关于一主一从的实现过程,至于一主多从的实现就更简单了,先开启另一个从库的bin log功能,设置好server-id,注意id要保持唯一性,之后只需要把主库完整备份下顺手记录好索引id,然后还原到另一个需要同步的从库中,再加上之前从库的配置即可,注意,配置中的索引位置和文件要根据<code>show master status;</code>的结果做相应的调整:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/my.cnf</span><br><span class="line">  log_bin = slave1_bin</span><br><span class="line">  server_id = 3</span><br><span class="line"># /etc/init.d/mysqld restart</span><br><span class="line"># mysql -uroot -p</span><br><span class="line">mysql&gt; show variables like &apos;log_bin&apos;;</span><br><span class="line">mysql&gt; show variables like &quot;server_id&quot;;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/slave1 confi.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CHANGE MASTER TO</span><br><span class="line">-&gt; MASTER_HOST=&apos;192.168.3.45&apos;,		主库ip</span><br><span class="line">-&gt; MASTER_PORT=3306,			主库mysql端口</span><br><span class="line">-&gt; MASTER_USER=&apos;rep&apos;,			用于连接的数据库用户</span><br><span class="line">-&gt; MASTER_PASSWORD=&apos;admin&apos;,   		用户密码</span><br><span class="line">-&gt; MASTER_LOG_FILE=&apos;master_bin.000003&apos;, 从我们上面备份的那个索引id开始</span><br><span class="line">-&gt; MASTER_LOG_POS=120;			索引位置是多少</span><br><span class="line">mysql&gt; start slave;</span><br><span class="line">mysql&gt; show slave status\G;</span><br><span class="line">mysql&gt; show databases;			最后依然是回到主库中随便增删改,再到从库中看看有没有实时同步过来</span><br></pre></td></tr></table></figure>
+<p><img src="/img/slave1 confi succeed.png" alt=""></p>
+<p>0x08 关于<code>级联</code>和<code>双主[双写,索引id单双分开写]</code>同步,只要时刻谨记,<code>保持id唯一,要和谁同步,就在当前配置中去连接谁</code>,这样,即使再多再复杂的级联也不会懵</p>
+<p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;整个配置过程,无任何技术含量,搞清楚内部运作细节才是最重要的</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/MySQL-主从复制/">#MySQL 主从复制</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

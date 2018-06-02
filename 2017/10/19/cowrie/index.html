@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 蜜罐是什么12蜜罐其实就是一台无人使用但却被严密监控的网络主机,里面包含着各类虚假的高价值资源和一些已知漏洞,以此吸引入侵者来入侵该主机并且在被入侵的过程中,实时记录和审计入侵者的所有入侵攻击流量,行为和数据,以此了解入侵者的攻击方式,手段和目的,便于后期快速完成对其的溯源,取证工作
+0x02 蜜罐的一些主要构成模块按实现大概逻辑划分:123控制,将入侵者牢牢控制在指定的网络范围中,使其不能再以此机器作为跳板来攻击其它的机器捕获,把入侵者在入侵过程中所产生的各种流量捕获住分析,将捕获到的各种数据存到数据库或者其它指定地方,便于后续还原其详细的入侵攻击过程
+按具体实现过程划分:123监控各种主机项,如,进程,文件,注册表,网络...同时提交给入侵检测,以识别其更详细的入侵手段,并对整个入侵过程做详细记录入侵数据汇总分析,其实就是把上述两步所得到的各种数据进行集中分析,最后,勾勒出完整的入侵轨迹画像">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="蜜罐学习之ssh [ cowrie ]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>蜜罐学习之ssh [ cowrie ] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/10/19/cowrie/">
+                蜜罐学习之ssh [ cowrie ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-10-19</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/netsh/">netsh</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 蜜罐是什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">蜜罐其实就是一台无人使用但却被严密监控的网络主机,里面包含着各类虚假的高价值资源和一些已知漏洞,以此吸引入侵者来入侵该主机</span><br><span class="line">并且在被入侵的过程中,实时记录和审计入侵者的所有入侵攻击流量,行为和数据,以此了解入侵者的攻击方式,手段和目的,便于后期快速完成对其的溯源,取证工作</span><br></pre></td></tr></table></figure></p>
+<p>0x02 蜜罐的一些主要构成模块<br>按实现大概逻辑划分:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">控制,将入侵者牢牢控制在指定的网络范围中,使其不能再以此机器作为跳板来攻击其它的机器</span><br><span class="line">捕获,把入侵者在入侵过程中所产生的各种流量捕获住</span><br><span class="line">分析,将捕获到的各种数据存到数据库或者其它指定地方,便于后续还原其详细的入侵攻击过程</span><br></pre></td></tr></table></figure></p>
+<p>按具体实现过程划分:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">监控各种主机项,如,进程,文件,注册表,网络...</span><br><span class="line">同时提交给入侵检测,以识别其更详细的入侵手段,并对整个入侵过程做详细记录</span><br><span class="line">入侵数据汇总分析,其实就是把上述两步所得到的各种数据进行集中分析,最后,勾勒出完整的入侵轨迹画像</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>说人话:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">蜜罐环境隔离:使用虚拟环境将物理环境和蜜罐隔绝开,防止某些敏感操作在其真实的系统环境中进行造成破坏</span><br><span class="line">敏感操作记录:把蜜罐中所有的入侵操作都写进数据库</span><br><span class="line">邮件报警系统:蜜罐被入侵后自动发送报警邮件通知相关安全应急人员</span><br></pre></td></tr></table></figure></p>
+<p>0x03 对蜜罐与攻击者之间进行的交互分类的理解<br>低交互蜜罐:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">最大的特点是,蜜罐为攻击者展示的所有攻击弱点和攻击对象都不是真正的产品系统</span><br><span class="line">而是对各种系统及其提供的服务的模拟,由于它的服务都是模拟的行为,所以蜜罐可以获得的信息非常有限</span><br><span class="line">只能对攻击者进行简单的应答,不过,它也是最安全的蜜罐类型</span><br></pre></td></tr></table></figure></p>
+<p>中交互蜜罐:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">是对真正的操作系统的各种行为的模拟,它提供了更多的交互信息,同时也可以从攻击者的行为中获得更多的信息</span><br><span class="line">在这个模拟行为的系统中,蜜罐此时看起来和一个真正的操作系统没有区别,它们甚至是比真正系统还要诱人的攻击目标</span><br></pre></td></tr></table></figure></p>
+<p>高交互蜜罐:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">具有一个真实的操作系统,它的优点体现在对攻击者提供完全真实的系统</span><br><span class="line">当攻击者获得ROOT权限后,受系统,数据真实性的迷惑,他的更多活动和行为将被记录下来</span><br><span class="line">缺点是被入侵的可能性很高,如果整个高交互蜜罐被入侵,那么它就会成为攻击者下一步攻击的跳板,不太安全</span><br></pre></td></tr></table></figure></p>
+<p>0x04 蜜罐的主要作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">跟踪入侵轨迹,捕获定向攻击,捕获未知nday[是的,Nday除了能自己挖之外,也能这样不劳而获]...你能想到的所有猥琐应用</span><br></pre></td></tr></table></figure></p>
+<p>0x05 开始实战部署ssh蜜罐,<code>cowrie</code>,也是一款非常老的中等交互的开源蜜罐,想必大家也早都比较熟悉了,这里就不多做介绍了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">本次测试的系统环境为 Ubuntu 14.04 LTS x86_64 Server</span><br></pre></td></tr></table></figure></p>
+<p>创建普通用户作为cowrie的服务运行账户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># useradd cowrie</span><br><span class="line"># passwd cowrie</span><br></pre></td></tr></table></figure></p>
+<p>安装所有的依赖库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># apt-get install python-dev gmpc-dev build-essential libmpfr-dev \</span><br><span class="line">libmpc-dev libffi-dev libssl-dev python-twisted python-crypto \</span><br><span class="line">python-pyasn1 python-gmpy2 python-mysqldb python-zope.interface git</span><br></pre></td></tr></table></figure></p>
+<p>下载cowrie<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd /opt/ </span><br><span class="line"># git clone https://github.com/micheloosterhof/cowrie.git </span><br><span class="line"># cd cowrie/</span><br></pre></td></tr></table></figure></p>
+<p>创建好虚拟环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># apt-get install python-virtualenv</span><br><span class="line"># virtualenv cowrie-env</span><br><span class="line"># source cowrie-env/bin/activate</span><br></pre></td></tr></table></figure></p>
+<p>安装虚拟环境中所需的各种py依赖库,其实,在安装cryptography这个py库中间还遇到了一点小麻烦,不过大家按我说的做应该就没什么问题了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># pip install -U pip</span><br><span class="line"># pip install -U virtualenv</span><br><span class="line"># pip install twisted cryptography pyopenssl gmpy2</span><br><span class="line"># pip install -r requirements.txt</span><br><span class="line"># pip install -U -r requirements.txt</span><br></pre></td></tr></table></figure></p>
+<p>创建cowrie的配置文件,并修改cowrie目录的属主属组,意思就是让cowrie对cowrie目录有所有的操作权限<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cp cowrie.cfg.dist cowrie.cfg</span><br><span class="line"># chown -R cowrie:cowrie /opt/cowrie/</span><br><span class="line"># ls -l /opt/cowrie/</span><br></pre></td></tr></table></figure></p>
+<p>切换到cowrie用户,并尝试启动cowrie<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># su - cowrie</span><br><span class="line">$ . cowrie-env/bin/activate</span><br><span class="line">$ ./bin/cowrie start</span><br></pre></td></tr></table></figure></p>
+<p>看到下面的返回,就说明你的cowrie已经基本安装成功了,因为接下来还要要继续配置cowrie,所以看完没什么问题暂时先把cowrie停掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Activating virtualenv &quot;cowrie-env&quot;</span><br><span class="line">Starting cowrie: [twistd   --umask 0077 --pidfile var/run/cowrie.pid -l log/cowrie.log cowrie ]...</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./bin/cowrie stop</span><br></pre></td></tr></table></figure>
+<p>编辑cowrie的主配置文件,配置蜜罐,建议大家还是好好去读读配置文件,支持的功能基本都在里面,这样也更有利于自己更全面的理解把握cowrie<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi cowrie.cfg</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">[honeypot]				蜜罐的全局配置</span><br><span class="line">hostname = svr04			蜜罐机器的机器名</span><br><span class="line">log_path = log				蜜罐自身log的存放位置</span><br><span class="line">download_path = dl			入侵上传文件的默认存放目录</span><br><span class="line">data_path = data			这下面存放了密码字典userdb.txt,其实就是入侵者常用的弱口令,弱口令其实不需要太多,一两个就够了</span><br><span class="line">					只要匹配到其中任何一条即ssh登陆成功,当然,这个登陆是指ssh蜜罐登陆成功,另外还有伪装的文件系统fs.pickle</span><br><span class="line">contents_path = honeyfs			这下面存放有ssh登陆成功后的欢迎信息,即motd中的内容,还有其他的一些重要系统配置文件,如,passwd等,可以自行伪造的更逼真一些</span><br><span class="line">filesystem_file = data/fs.pickle</span><br><span class="line">txtcmds_path = txtcmds			入侵者可以执行的命令</span><br><span class="line">ttylog = true</span><br><span class="line">interactive_timeout = 180</span><br><span class="line">backend = shell</span><br><span class="line">auth_class = UserDB</span><br><span class="line"></span><br><span class="line">[ssh]	</span><br><span class="line">enabled = true			激活ssh蜜罐</span><br><span class="line">rsa_public_key = etc/ssh_host_rsa_key.pub</span><br><span class="line">rsa_private_key = etc/ssh_host_rsa_key</span><br><span class="line">dsa_public_key = etc/ssh_host_dsa_key.pub</span><br><span class="line">dsa_private_key = etc/ssh_host_dsa_key</span><br><span class="line">version = SSH-2.0-OpenSSH_6.0p1 Debian-4+deb7u2</span><br><span class="line">listen_port = 60001		设置蜜罐ssh的端口</span><br><span class="line">listen_endpoints = tcp:60001:interface=0.0.0.0	记得这个端口同时也需要改</span><br><span class="line">sftp_enabled = true</span><br><span class="line">forwarding = true</span><br><span class="line">forward_redirect = false</span><br><span class="line"></span><br><span class="line">[telnet]</span><br><span class="line">enabled = false 	同时它还是支持telnet蜜罐</span><br><span class="line">listen_endpoints = tcp:2223:interface=0.0.0.0</span><br><span class="line">[output_jsonlog]</span><br><span class="line">logfile = log/cowrie.json</span><br><span class="line"></span><br><span class="line">[output_mysql]		数据库连接配置信息,如果你希望把蜜罐的各种入侵数据存到数据库需要开启此项,默认是注释状态</span><br><span class="line">host = localhost</span><br><span class="line">database = cowrie</span><br><span class="line">username = cowrie</span><br><span class="line">password = admin</span><br><span class="line">port = 3306</span><br></pre></td></tr></table></figure>
+<p>cowrie 基本配置完成后,接下来可以来做nat转发了,语句的意思很简单,就是把目的端口22的数据都重定向到60001端口上,很明显,60001端口正是我们蜜罐ssh的端口,很显然,当入侵者连到我们的ssh,就顺利的进到我们提前布置好的蜜罐中了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 60001</span><br><span class="line"># iptables-save</span><br></pre></td></tr></table></figure></p>
+<p>修改ssh服务配置,把原来的22端口’隐藏掉’,改成个高端口,推荐6万以后的,因为nmap貌似默认只扫1000个高危端口,这样就可以一定程度上避开入侵者扫描到我们真实的ssh端口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/ssh/sshd_config</span><br><span class="line"> #Port 22</span><br><span class="line"> Port 60002</span><br><span class="line"># /etc/init.d/ssh restart</span><br></pre></td></tr></table></figure></p>
+<p>上传配置完成后,我们再次切换到cowrie用户,看看其能否正常启动,一般正常启动就说明前面的配置基本没什么问题了,之后就先停掉,我们开始配置数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># su - cowrie</span><br><span class="line">$ cd /opt/cowrie/</span><br><span class="line">$ . cowrie-env/bin/activate</span><br><span class="line">$ ./bin/cowrie start</span><br><span class="line">$ ./bin/cowrie stop</span><br></pre></td></tr></table></figure></p>
+<p>安装mysql数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># apt-get install libmysqlclient-dev python-dev </span><br><span class="line"># apt-get install mysql-server python-mysqldb 		中间会要求你设置root密码,记得设个复杂点的密码</span><br><span class="line"># pip install mysql-python</span><br></pre></td></tr></table></figure></p>
+<p>建库,建表,建用户,授权,准备用来存放蜜罐数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># mysql -u root -p</span><br><span class="line">mysql&gt; CREATE DATABASE cowrie;</span><br><span class="line">mysql&gt; GRANT ALL ON cowrie.* TO cowrie@localhost IDENTIFIED BY &apos;admin&apos;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; exit</span><br></pre></td></tr></table></figure></p>
+<p>默认的表结构文件在/opt/cowrie/doc/sql/目录下,我们切换到该目录下,然后source一下即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># cd /opt/cowrie/doc/sql/</span><br><span class="line"># mysql -u root -p</span><br><span class="line">mysql&gt; use cowrie;</span><br><span class="line">mysql&gt; source ./mysql.sql;</span><br><span class="line">mysql&gt; show tables;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/cowrie_tables.png" alt=""></p>
+<p>务必要记得去把cowrie配置中的数据库连接信息修改下,其实,除了支持直接存到mysql,它也支持存到elasticsearch,mongodb,sqlite中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># vi cowrie.cfg</span><br><span class="line"></span><br><span class="line">[output_mysql]</span><br><span class="line">host = localhost</span><br><span class="line">database = cowrie</span><br><span class="line">username = cowrie</span><br><span class="line">password = admin</span><br><span class="line">port = 3306</span><br></pre></td></tr></table></figure></p>
+<p>至此,cowrie的所有配置基本已完成,再次切换到cowrie用户,尝试启动cowrie<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># su - cowrie</span><br><span class="line">$ cd /opt/cowrie/</span><br><span class="line">$ . cowrie-env/bin/activate</span><br><span class="line">$ ./bin/cowrie start</span><br><span class="line">(cowrie-env)$ exit</span><br><span class="line"># tree -L 2 ./</span><br></pre></td></tr></table></figure></p>
+<p>然后到另一台机器上用ssh连到我们已经配置好蜜罐的这台机器上,默认端口22,很显然,我们发现此时已经进入了一个虚拟的蜜罐环境下,随便执行一些命令<br><img src="/img/ssh_cowrie.png" alt=""></p>
+<p>再来看下实际爆破ssh的效果<br><img src="/img/hydra_cowrie.png" alt=""></p>
+<p>最后回到数据库中,看看被记录到的数据,基本是一目了然的,大家如果有兴趣此时也可以去日志文件中看看都有啥,再或者也可以自己写脚本在前端展示出来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># mysql -u root -p</span><br><span class="line">mysql&gt; use cowrie;</span><br><span class="line">mysql&gt; select * from sessions;</span><br><span class="line">mysql&gt; select * from auth;</span><br><span class="line">mysql&gt; select * from input;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/cowrie_sessions.png" alt=""><br><img src="/img/cowrie_auth.png" alt=""><br><img src="/img/cowrie_input.png" alt=""></p>
+<p>量大的问题:<br>&nbsp;&nbsp;&nbsp;&nbsp;这样的蜜罐很容易被各种搜索引擎抓到,如shodan,另外,现在是数据量特别小,没感觉啥压力,如果并发特别大,数据流入比较猛,各种传统关系型数据库可能就撑不住了,不过,好在cowrie已经事先为我们考虑到了,直接默认就支持nosql,elasticsearch,splunk输出,只是还缺少个自动报警,不过这都不叫问题,后期自己写就好了</p>
+<p><br></p>
+<p>0x06 后话<br>&nbsp;&nbsp;&nbsp;&nbsp;这次只是简单的介绍一些关于cowrie蜜罐的基本应用,其实,就像我前面所说,cowrie除了支持基本的ssh蜜罐,它同样也支持telnet,http,https蜜罐,全部都在cowrie的主配置文件中可以自定义,后续日子里陆续还会更详细介绍如,<code>Dionaea</code>,<code>Beeswarm</code>…这类蜜罐的具体实战应用,关于如何配合各种虚拟化容器进行部署,目前自己也正在学习中,后续都会更新上来…</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/netsh/">#netsh</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

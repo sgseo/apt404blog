@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 基本环境说明:12目标边界机器lnmp01的域名及内网ip: www.rootkit.org 192.168.32.167目标内网中数据库[暂以mysql为例]服务器[win7]的内网ip: 192.168.32.168
+1很明显,lnmp01和win7在目标内网是可以互通的
+0x02 实际脱裤可能会面临的一些困境:123456想脱数据,但目标数据库不允许root用户外连,可能的原因多种多样,一般只grant到指定的ip才能连目标站库分离[再正常不过],数据库在内网的某台机器上即使没分离,当前的数据库用户又不允许外联,另外,由于当前数据库用户权限不够,也没法自己开启外联即使是root,不知道什么乱七八糟的原因,没法grant允许root外连...边界防火墙阻断外部ip对内部数据库端口[假设为3306]的访问等等....还在为脱裤烦恼吗,嘿嘿……navicat也许可以帮到你
+0x03 我们最终要实现的效果:1通过lnmp01这台机器,脱取内网win7机器上的所有数据">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="利用 Navicat 自带的http隧道进行脱裤"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>利用 Navicat 自带的http隧道进行脱裤 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/08/03/navicat-dump/">
+                利用 Navicat 自带的http隧道进行脱裤
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-03</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/dump/">dump</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 基本环境说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">目标边界机器lnmp01的域名及内网ip: www.rootkit.org 192.168.32.167</span><br><span class="line">目标内网中数据库[暂以mysql为例]服务器[win7]的内网ip: 192.168.32.168</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">很明显,lnmp01和win7在目标内网是可以互通的</span><br></pre></td></tr></table></figure>
+<p>0x02 实际脱裤可能会面临的一些困境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">想脱数据,但目标数据库不允许root用户外连,可能的原因多种多样,一般只grant到指定的ip才能连</span><br><span class="line">目标站库分离[再正常不过],数据库在内网的某台机器上</span><br><span class="line">即使没分离,当前的数据库用户又不允许外联,另外,由于当前数据库用户权限不够,也没法自己开启外联</span><br><span class="line">即使是root,不知道什么乱七八糟的原因,没法grant允许root外连...</span><br><span class="line">边界防火墙阻断外部ip对内部数据库端口[假设为3306]的访问等等....</span><br><span class="line">还在为脱裤烦恼吗,嘿嘿……navicat也许可以帮到你</span><br></pre></td></tr></table></figure></p>
+<p>0x03 我们最终要实现的效果:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过lnmp01这台机器,脱取内网win7机器上的所有数据</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x04 大概思路,前提是你现在至少已经有了一个菜刀的webshell 可执行系统命令,且能正常上传文件的情况下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">在数据量非常少的情况下,可考虑直接用菜刀,大马或者针对各种数据库的脱裤脚本来脱,一两万还是勉强可行的</span><br><span class="line">还有一种,就是你也可以通过拦截菜刀的发送的sql语句,借助py把里面的语句替换成你自己的,以此来实现导出数据,不过效率肯定不是太高....</span><br><span class="line">如果数据量非常多的情况下,传统的方法,还可能会利用端口转发,把目标本地或内网指定机器的数据库端口转发到自己vps上,然后在vps本地再用navicat来脱,至于转发工具就非常多了,如,ew,socat之流....</span><br><span class="line">还有一种,就是咱们今天要介绍到的,利用Navicat自身提供的http代理连接方式,说白点儿就是http隧道,其实也是个烂大街的招儿了,但相见恨晚,嘿嘿……</span><br></pre></td></tr></table></figure></p>
+<p>0x05 具体操作,如下:<br>&nbsp;&nbsp;首先,上传对应数据库的代理脚本[目前我们看到,暂只支持postgresql,sqlite以及mysql],这里暂以mysql为例,即上传Navicat安装目录下的ntunnel_mysql.php脚本到目标网站的任意目录中<br><img src="/img/ntuunel_mysql.png" alt=""><br><img src="/img/ntuunel_mysql_upload.png" alt=""><br></p>
+<p>&nbsp;&nbsp;然后,在浏览器中尝试访问该脚本,从界面乍一看,还以为是个脱裤脚本,其实,那只是个连接测试,它只是为了测试你的代理能否连接成功,做了下简单的连接验证而已<br><img src="/img/ntuunel_mysql_upload_res.png" alt=""><br></p>
+<p>&nbsp;&nbsp;此时,在本地打开Navicat配置http连接,这里的通道地址就写你上面访问的那个url,说白点儿就是个代理端,记得勾上使用base64编码,防止waf从中作祟,然后主机名写localhost,账号密码写lnmp01本地数据库用户的账号即可,因为要连接lnmp01本地的mysql<br><img src="/img/ntuunel_mysql_connect.png" alt=""><br><img src="/img/ntuunel_mysql_upload_connect.png" alt=""><br></p>
+<p>&nbsp;&nbsp;再来尝试连接目标内网中win7机器上的mysql,此时主机名ip就要写目标内网那台机器的ip了,数据库账号密码也要写那台机器上的数据库账号密码<br><img src="/img/ntuunel_mysql_upload_connect_win7.png" alt=""><br><img src="/img/ntuunel_mysql_upload_connect_win7_res.png" alt=""><br></p>
+<p>&nbsp;&nbsp;最后,实际的连接效果如下,此时即可尽情的脱裤了,navicat的速度和稳定性还是非常值得信赖的,唯一的缺陷就是速度可能会稍慢,不过这已经足以轻松秒杀市面上所有的脱裤脚本了<br><img src="/img/ntuunel_mysql_all.png" alt=""><br></p>
+<p>0x06 一点拓展:<br>&nbsp;&nbsp;&nbsp;&nbsp;从上面的选项卡中我们也可以清晰的看到,除了可使用http隧道,它还支持通过ssh隧道和ssl加密 的方法来连接,不得不说,Navicat实在是写的太贴心了,原谅自己用了这么年,直到今天才领悟到它的精髓,哈哈……实在是尴尬<br><img src="/img/ntuunel_mysql_upload_connect_ssl_ssh.png" alt=""><br></p>
+<p>一些小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;这也是无意间听同事说到的,顿时感觉耳目一新,所以就回来好奇的多喵了一眼,说实话自己用http隧道用了这么多年,当时一看到Navicat的选项心里就已经猜中了90% 它大概是怎么实现的,其实早该想到了,结果回来仔细一看,原来都是烂大街的东西了,所以这里就顺便记录下,当备忘吧</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/Navicat/">#Navicat</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 关于 etherape:12345一款纯图形化的网络流量分析工具,既是图形界面,所以系统中务必要有各类图形库支持才行很多数时候,我们可能只是想简单的看看数据流向,了解总体数据流向或某单个网络节点状况,并不想关心数据包里面到底是什么东西此时,etherape 则无疑是个比较不错的选择,另外,它对各个协议的支持相对还算比较到位当然,缺点也是有的,毕竟是实时分析,如果流量瞬间激增,很容易把程序卡崩掉[不知道是有点儿溢出,还是io跟不上],也正常,毕竟只是个小工具肯定没商业工具那么完善...
+0x02 环境:1234kali 			ip: 192.168.3.30centos6.9_x64 		ip: 192.168.3.16 [eth1]  192.168.3.19 [eth0]win2008R2cn		ip: 192.178.3.23win7cn			ip: 192.168.3.2">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="纯图形化实时流量分析 [ etherape ]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>纯图形化实时流量分析 [ etherape ] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/11/18/etherape/">
+                纯图形化实时流量分析 [ etherape ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-11-18</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/etherape/">etherape</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>0x01 关于 etherape:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">一款纯图形化的网络流量分析工具,既是图形界面,所以系统中务必要有各类图形库支持才行</span><br><span class="line">很多数时候,我们可能只是想简单的看看数据流向,了解总体数据流向或某单个网络节点状况,并不想关心数据包里面到底是什么东西</span><br><span class="line">此时,etherape 则无疑是个比较不错的选择,另外,它对各个协议的支持相对还算比较到位</span><br><span class="line">当然,缺点也是有的,毕竟是实时分析,如果流量瞬间激增,很容易把程序卡崩掉[不知道是有点儿溢出,还是io跟不上],也正常,毕竟只是个小工具肯定没商业工具那么完善</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>0x02 环境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kali 			ip: 192.168.3.30</span><br><span class="line">centos6.9_x64 		ip: 192.168.3.16 [eth1]  192.168.3.19 [eth0]</span><br><span class="line">win2008R2cn		ip: 192.178.3.23</span><br><span class="line">win7cn			ip: 192.168.3.2</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x03 开始在centos6.9_x64上安装etherape,它同样依赖于libpcap库进行数据捕获,所以,如果你是自行编译安装的,请务必先装好所依赖的各种图形环境,具体请参考其官方说明,  <a href="http://etherape.sourceforge.net/download.shtml#sources" target="_blank" rel="noopener">http://etherape.sourceforge.net/download.shtml#sources</a>   这里就暂以kali平台进行演示,Ubuntu 下其实也是一样的,不再赘述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># apt-get install etherape -y</span><br><span class="line"># etherape -i eth0</span><br></pre></td></tr></table></figure></p>
+<p>0x04 下面是 etherape 所支持的各种数据捕获模式,如,<code>链路模式,ip模式,tcp模式</code>,我们最常用的可能就是ip模式了,非常的直观明了<br><img src="/img/mode etherape.png" alt=""></p>
+<p>0x05 选择要进行捕获的网卡接口,如果你的机器同时有几块网卡,分别连接着不同的vlan,可以选择对指定的vlan进行数据捕获<br><img src="/img/interface etherape.png" alt=""></p>
+<p>0x06 接着,我们就用etherape来简单观察一些典型的网络行为,当然,本身用途绝非仅限于此,对于我们来讲,用的更多的,可能还是分析各种入侵攻击流量,帮助快速定位攻击源,此处要再次强调,它只适合用在流量较小的一些内网环境下,个人觉得,已经很难应用于如今的办公场景,不过,作为学习还是非常有价值的</p>
+<p>在win7cn上尝试用迅雷进行正常的数据下载,注意,不同的颜色代表左侧对应颜色的协议,捕获期间可以随时暂停或直接停止,方便人为进一步分析<br><img src="/img/download.png" alt=""></p>
+<p>在win7cn上用浏览器进行正常的web访问<br><img src="/img/browser https.png" alt=""></p>
+<p>在centos6.9_x64上用超大数据包ping百度<br><img src="/img/ping 65500.png" alt=""></p>
+<p>在kali上对win2008r2cn的rdp使用hydra默认线程进行爆破<br><img src="/img/rdp_crack.png" alt=""></p>
+<p>在kali上对win2008r2cn的smb使用hydra默认线程进行爆破<br><img src="/img/smb_crack.png" alt=""></p>
+<p>在centos6.9_x64上利用hping3快速发送随机源ip的icmp数据包,本来想直接发flood的,因为速度过快,直接把etherape卡崩了,所以不得已才用的–fast选项<br><img src="/img/icmp fast.png" alt=""></p>
+<p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;除了渗透之用,它也一样可以用来帮我们快速定位网络中的各种故障,对于一些网络初学者来讲,更是非常的友好,可以很直观的把各种抽象的网络逻辑用最直观的实时动态绘图表现出来,极易理解,这里就不多啰嗦了,大家有兴趣可以多自行尝试…虽然是个小工具,但不乏大作为 ^_^</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/etherape/">#etherape</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 一些常见的 Nosql 数据库1234memcached 基于纯内存缓存,也就是说,服务只要一重启所有数据就会丢失,但它操作简单,易于上手,相对高效redis     既可以基于内存缓存亦可基于硬盘持久存储,另外,它所支持的数据类型相对较多,功能也较完善MongDB ...
+此次演示环境123CentOS6_x86_64 ip: 192.168.3.65OldLnmp        ip: 192.168.3.42Ubuntu16.04.3  ip: 192.168.3.12
+0x02 Memcached 缓存实际中简单的应用场景12基于纯内存缓存,速度快,同样,也是基于 C客户端 / S服务端 的工作模式,而libevent其实就是一个支持epoll/kqueue异步I/O模型的接口Memcached 在实际生产中主要是用来存放用户经常要访问到的一些高频关键字,加快数据库命中,减轻后端数据库压力,提高数据响应速度...">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="针对 Memcached 的攻防基础"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>针对 Memcached 的攻防基础 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/07/08/nosql-memcached/">
+                针对 Memcached 的攻防基础
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-07-08</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/memcached/">memcached</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p><br><br>0x01 一些常见的 <code>Nosql 数据库</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">memcached 基于纯内存缓存,也就是说,服务只要一重启所有数据就会丢失,但它操作简单,易于上手,相对高效</span><br><span class="line">redis     既可以基于内存缓存亦可基于硬盘持久存储,另外,它所支持的数据类型相对较多,功能也较完善</span><br><span class="line">MongDB </span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CentOS6_x86_64 ip: 192.168.3.65</span><br><span class="line">OldLnmp        ip: 192.168.3.42</span><br><span class="line">Ubuntu16.04.3  ip: 192.168.3.12</span><br></pre></td></tr></table></figure></p>
+<p>0x02 Memcached 缓存实际中简单的应用场景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">基于纯内存缓存,速度快,同样,也是基于 C客户端 / S服务端 的工作模式,而libevent其实就是一个支持epoll/kqueue异步I/O模型的接口</span><br><span class="line">Memcached 在实际生产中主要是用来存放用户经常要访问到的一些高频关键字,加快数据库命中,减轻后端数据库压力,提高数据响应速度...</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x03 安装并启动memcached 服务端,默认它会监听在tcp和udp的11211端口上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># rpm -qa libevent libevent-devel nc telnet memcached</span><br><span class="line"># yum install libevent libevent-devel nc telnet -y</span><br><span class="line"># yum install memcached -y</span><br><span class="line"># which memcached</span><br></pre></td></tr></table></figure></p>
+<p>关于 memcached 自身的各类选项具体用途说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-l  指定要监听在哪个ip地址上</span><br><span class="line">-m  指定用于缓存数据的最大内存,默认是64M</span><br><span class="line">-p  指定memcached服务的端口,默认是11211</span><br><span class="line">-d  让memcached在后台运行</span><br><span class="line">-u  指定运行该服务的用户,在yum安装时会自动创建一个memcached用户</span><br><span class="line">-c  并发连接数,默认是1024</span><br><span class="line">-P  指定pid文件位置</span><br><span class="line">-M  禁用LRU,默认如果内存空间满了会自动使用LRU算法进行数据清除</span><br><span class="line">-vv 显示详细启动信息</span><br></pre></td></tr></table></figure></p>
+<p>单实例及多实例 memcached 服务启动方式,其实很简单,只需要在启动时改下服务端口即可,此处要注意,严禁直接用root身份来运行memcached服务,另外,建议不要用默认端口,可以用个高端口,防止别人扫描<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># memcached -l 192.168.3.65 -m 32m -p 11211 -d -u memcached -c 8192 -P /tmp/11211.pid </span><br><span class="line"># memcached -l 192.168.3.65 -m 32m -p 11212 -d -u memcached -c 8192 -P /tmp/11212.pid</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># lsof -i :11211</span><br><span class="line"># kill `cat /tmp/11211.pid`  针对memecached的多实例杀进程方式,可直接用对应实例的pid文件杀</span><br></pre></td></tr></table></figure>
+<p><img src="/img/memcached many.png" alt=""></p>
+<p>0x04 注意,<code>操作memcached是无需任何认证的,也就是说,只要连到对应的服务端口上就可直接对其进行各类数据的增删改查</code>,这也是它最容易出现错误配置的地方<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># telnet 192.168.3.65 11211</span><br><span class="line"></span><br><span class="line">set 	相当于mysql的 insert</span><br><span class="line">set keyname 0[数据格式] 过期时间[0表示不过期] 值大小[单位字节]</span><br><span class="line"></span><br><span class="line">get 	相当于mysql的 select </span><br><span class="line">get keyname</span><br><span class="line"></span><br><span class="line">replace 相当于mysql的 update</span><br><span class="line">replace keyname 0 0 新值大小</span><br><span class="line"></span><br><span class="line">delete 	相当于mysql的 delete</span><br><span class="line">delete keyname</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/memcached add replace del get.png" alt=""></p>
+<p>0x05 安装php的 memcache 客户端扩展,因为后续主要还是通过<code>php / python / java</code>此类脚本对memcached进行各种增删改查<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># wget https://pecl.php.net/get/memcache-2.2.7.tgz</span><br><span class="line"># tar xf memcache-2.2.7.tgz</span><br><span class="line"># cd memcache-2.2.7</span><br><span class="line"># /usr/local/php/bin/phpize </span><br><span class="line"># ./configure --enable-memcache --with-php-config=/usr/local/php/bin/php-config</span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># vi /usr/local/php/etc/php.ini</span><br><span class="line">  extension_dir = &quot;/usr/local/php-5.6.32/lib/php/extensions/no-debug-non-zts-20131226/&quot;</span><br><span class="line">  extension=memcache.so</span><br><span class="line"># pkill php-fpm</span><br><span class="line"># /usr/local/php/sbin/php-fpm</span><br><span class="line"># /usr/local/nginx/sbin/nginx -t</span><br><span class="line"># /usr/local/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure></p>
+<p>0x06 实际生产中的 memcached 预热注意事项<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">起监控 -&gt; 起存储 -&gt; 起web -&gt; 起缓存 -&gt; ...</span><br><span class="line">一般都是按照从后端往前端慢慢起,最先起数据库存储,然后再对memcached逐个进行预热,减小后端数据库瞬间压力</span><br></pre></td></tr></table></figure></p>
+<p>0x07 memcached 内存管理机制,关于memcached的底层运作细节和性能优化,并非此处重点,就不做详述了,有兴趣大家可以自行去翻阅资料深入研究,当然,直接去读源码无疑是最精准的,前提是得有那个能力 ^_^<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">基于 malloc 的内存管理机制,容易产生内存碎片</span><br><span class="line">基于  slab  的内存管理机制</span><br></pre></td></tr></table></figure></p>
+<p>0x08 memcached 简单性能调优<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">提高命中率</span><br><span class="line">减少内存浪费[slab]</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>0x09 memcached 纯图形化管理小工具<code>memadmin</code>,基于php编写,使用非常简单,直接丢到网站目录中访问即可,个人建议生产中最好不要用容易被人扫目录扫到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># wget http://www.junopen.com/memadmin/memadmin-1.0.12.tar.gz</span><br><span class="line"># tar xf memadmin-1.0.12.tar.gz</span><br><span class="line"># mv memadmin /usr/local/nginx/html/bwapp/bWAPP/</span><br><span class="line"># vi /usr/local/nginx/html/bwapp/bWAPP/memadmin/config.php   务必要记得修改默认账号密码</span><br><span class="line">  $config[&apos;user&apos;] = &quot;admin&quot;;</span><br><span class="line">  $config[&apos;passwd&apos;] = &quot;admin&quot;;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/memadmin.png" alt=""></p>
+<p>0x10 配置专用 session 共享服务器,只需要在php.ini中修改下面的选项即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/php/etc/php.ini</span><br><span class="line">  session.save_handler = memcache</span><br><span class="line">  session.save_path = &quot;tcp://memcached服务器所在的ip:11211&quot;</span><br></pre></td></tr></table></figure></p>
+<p>0x11 关于memcached的一些安全问题,首先,我们还是先来看看仅仅利用memcached我们能干些什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">泄露敏感信息,如各类账号密码,配置信息</span><br><span class="line">随意对memcached缓存进行增删改查</span><br><span class="line">各种RCE exp利用</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>0x12 关于memcached未授权访问的简单利用过程,实际渗透中可以用它来搜集一些敏感些信息,如各类账号密码,服务配置等…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># nmap -Pn -sT -p 11211 --script=memcached-info.nse 192.168.3.65</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/memcached exploit.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># telnet 192.168.3.65 11211</span><br><span class="line">  stats				# 检查Memcached服务状态</span><br><span class="line">  stats items			# 查看各个slab中key的总个数</span><br><span class="line">  stats slabs			# 查看所有的slab信息</span><br><span class="line">  stats cachedump 1 20		# 查看第一个slab中的前20个key</span><br><span class="line">  get username			# 获取key为username的数据</span><br><span class="line">  get password			# 获取key为password的数据</span><br><span class="line">  get email			# 获取key为email的数据</span><br></pre></td></tr></table></figure>
+<p><img src="/img/memcached exploit data.png" alt=""></p>
+<p>0x13 利用iptables对memcached限制ip访问,如,只允许192.168.3.42这个ip访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># iptables -F</span><br><span class="line"># iptables -P INPUT DROP</span><br><span class="line"># iptables -A INPUT -p tcp -s 192.168.3.42 --dport 11211 -j ACCEPT</span><br><span class="line"># iptables -A INPUT -p udp -s 192.168.3.42 --dport 11211 -j ACCEPT</span><br></pre></td></tr></table></figure></p>
+<p>0x14 最后,注意多去关注官方发布的各种高危补丁,适时进行修补</p>
+<p><br></p>
+<p>后话:<br>&nbsp;&nbsp;&nbsp;&nbsp;现在估计用的已经比较少了,服务比较简单,利用的方式也很有限,所以这里也就不多啰嗦了,实际渗透过程中注意把搜集到的各类敏感信息相互配合利用,往往效果更佳,祝大家好运 ^_^</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/memcached/">#memcached</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

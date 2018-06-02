@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="0x01 关于 php12345其历史相对已经比较久远了,这里也就不废话了,属弱类型中一种解释型语言除了web开发以及写些简单的exp,暂未发现其它牛逼用途,暂以中小型web站点开发为主另外,低版本的php自身漏洞就比较多,建议,从现在开始就在新项目中使用php 5.6.x 往后的版本好在官方维护的一直比较勤奋,主次版本都迭代的比较快,最新版已经到7.2.0哼哼……是,&amp;apos;最好的语言&amp;apos;... :)
+0x02 此次演示环境12CentOS6.8 x86_64   最小化,带基础库安装 	eth0: 192.168.3.42 eth1: 192.168.4.14  eth2: 192.168.5.14php-5.6.32.tar.gz  官方提供的源码包
+0x03 下载 php-5.6.32.tar.gz,并安装好php所需的各种依赖库123456789# yum install epel-release -y# yum install -y zlib-devel libxml2-devel freetype-devel # yum install -y libjpeg-devel  libpng-devel gd-devel curl-devel libxslt-devel# yum install openssl openssl-devel libmcrypt libmcrypt-devel mcrypt mhash mhash-devel -y# tar xf libiconv-1.15.tar.gz# cd libiconv-1.15# ./configure --prefix=/usr/local/libiconv-1.15 &amp;amp;&amp;amp; make &amp;amp;&amp;amp; make install# ln -s /usr/local/libiconv-1.15/ /usr/local/libiconv# ll /usr/local/libiconv/">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="php-fpm.conf &amp; php.ini 安全优化实践"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>php-fpm.conf &amp; php.ini 安全优化实践 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+<div class="post">
+
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/11/24/phpsec/">
+                php-fpm.conf & php.ini 安全优化实践
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-11-24</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/phpsec/">phpsec</a>
+                </span>
+            
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Gallery -->
+        
+
+        <!-- Post Content -->
+        <p>0x01 关于 php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">其历史相对已经比较久远了,这里也就不废话了,属弱类型中一种解释型语言</span><br><span class="line">除了web开发以及写些简单的exp,暂未发现其它牛逼用途,暂以中小型web站点开发为主</span><br><span class="line">另外,低版本的php自身漏洞就比较多,建议,从现在开始就在新项目中使用php 5.6.x 往后的版本</span><br><span class="line">好在官方维护的一直比较勤奋,主次版本都迭代的比较快,最新版已经到7.2.0</span><br><span class="line">哼哼……是,&apos;最好的语言&apos;... :)</span><br></pre></td></tr></table></figure></p>
+<p>0x02 此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CentOS6.8 x86_64   最小化,带基础库安装 	eth0: 192.168.3.42 eth1: 192.168.4.14  eth2: 192.168.5.14</span><br><span class="line">php-5.6.32.tar.gz  官方提供的源码包</span><br></pre></td></tr></table></figure></p>
+<p>0x03 下载 <code>php-5.6.32.tar.gz</code>,并安装好php所需的各种依赖库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># yum install epel-release -y</span><br><span class="line"># yum install -y zlib-devel libxml2-devel freetype-devel </span><br><span class="line"># yum install -y libjpeg-devel  libpng-devel gd-devel curl-devel libxslt-devel</span><br><span class="line"># yum install openssl openssl-devel libmcrypt libmcrypt-devel mcrypt mhash mhash-devel -y</span><br><span class="line"># tar xf libiconv-1.15.tar.gz</span><br><span class="line"># cd libiconv-1.15</span><br><span class="line"># ./configure --prefix=/usr/local/libiconv-1.15 &amp;&amp; make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/local/libiconv-1.15/ /usr/local/libiconv</span><br><span class="line"># ll /usr/local/libiconv/</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>0x04 开始编译安装php5.6.32,要带的编译参数比较多,大家下去以后,可以仔细了解下这些参数都是干什么用的,其实,都是一些php内置功能模块,这里默认就已经启用了一些比较常用的模块,如,pdo,mysqli,关于下面的模块,并不用全部都装,根据你自己实际的开发业务需求,用什么装什么即可,切记,不要一上来不管用不用就先装一大堆,你不用,很可能就会被别人利用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"># wget http://au1.php.net/distributions/php-5.6.32.tar.gz</span><br><span class="line"># tar xf php-5.6.32.tar.gz</span><br><span class="line"># cd php-5.6.32</span><br><span class="line"># ./configure --help</span><br><span class="line"># ./configure \</span><br><span class="line">--prefix=/usr/local/php-5.6.32 \</span><br><span class="line">--with-config-file-path=/usr/local/php-5.6.32/etc \</span><br><span class="line">--with-mysql=/usr/local/mysql \</span><br><span class="line">--with-mysqli=/usr/local/mysql/bin/mysql_config \</span><br><span class="line">--with-pdo-mysql=/usr/local/mysql \</span><br><span class="line">--with-iconv-dir=/usr/local/libiconv \</span><br><span class="line">--with-freetype-dir \</span><br><span class="line">--with-jpeg-dir \</span><br><span class="line">--with-png-dir \</span><br><span class="line">--with-zlib \</span><br><span class="line">--with-libxml-dir=/usr \</span><br><span class="line">--with-curl \</span><br><span class="line">--with-mcrypt \</span><br><span class="line">--with-gd \</span><br><span class="line">--with-openssl \</span><br><span class="line">--with-mhash \</span><br><span class="line">--with-xmlrpc \</span><br><span class="line">--with-xsl \</span><br><span class="line">--with-fpm-user=nginx \</span><br><span class="line">--with-fpm-group=nginx \</span><br><span class="line">--enable-xml \</span><br><span class="line">--disable-rpath \</span><br><span class="line">--enable-bcmath \</span><br><span class="line">--enable-shmop \</span><br><span class="line">--enable-sysvsem \</span><br><span class="line">--enable-inline-optimization \</span><br><span class="line">--enable-mbregex \</span><br><span class="line">--enable-fpm \</span><br><span class="line">--enable-mbstring \</span><br><span class="line">--enable-gd-native-ttf \</span><br><span class="line">--enable-pcntl \</span><br><span class="line">--enable-sockets \</span><br><span class="line">--enable-soap \</span><br><span class="line">--enable-short-tags \</span><br><span class="line">--enable-static \</span><br><span class="line">--enable-ftp \</span><br><span class="line">--enable-opcache=no</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/local/php-5.6.32/ /usr/local/php</span><br><span class="line"># cp php.ini-production /usr/local/php/etc/php.ini	创建php解释器的配置文件</span><br></pre></td></tr></table></figure>
+<p>0x05 编辑,配置并优化<code>php-fpm.conf</code>,即 <code>fastcgi 的服务端</code>,如下</p>
+<p>让php进程以一个系统伪用户的身份起来,在能满足实际业务需求的情况下,最大程度上降低php进程权限<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># useradd -s /sbin/nologin -M phpfpm	</span><br><span class="line"># cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf</span><br><span class="line"># vi /usr/local/php/etc/php-fpm.conf</span><br><span class="line"># mkdir /usr/local/php/logs</span><br><span class="line"># egrep -v &quot;^$|;&quot; /usr/local/php/etc/php-fpm.conf	简化php-fpm配置文件</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"># php-fpm 的全局配置模块</span><br><span class="line">[global]</span><br><span class="line"></span><br><span class="line"># 指定php-fpm的进程id号文件存放位置</span><br><span class="line">pid = /usr/local/php/logs/php-fpm.pid		</span><br><span class="line"></span><br><span class="line"># 指定php-fpm进程自身的错误日志存放位置</span><br><span class="line">error_log = /usr/local/php/logs/php-fpm.log	</span><br><span class="line"></span><br><span class="line"># 指定要记录的php-fpm日志级别</span><br><span class="line">log_level = error							</span><br><span class="line">rlimit_files = 32768</span><br><span class="line">events.mechanism = epoll</span><br><span class="line"></span><br><span class="line"># php-fpm web配置模块</span><br><span class="line">[www]</span><br><span class="line"></span><br><span class="line"># 最好把web服务用户和php-fpm进程用户的权限分开,分别用两个完全不同的系统伪用户来跑对应的服务,防止意外的越权行为</span><br><span class="line"># 其实,你也可以不分开,特定条件下,关系也并不是非常大,不过,个人建议,最好还是分开</span><br><span class="line">user = phpfpm			</span><br><span class="line">group = phpfpm</span><br><span class="line"></span><br><span class="line"># 务必要监听在127.0.0.1的9000端口,另外,该端口严禁对外开放,防止别人通过fastcgi进行包含</span><br><span class="line">listen = 127.0.0.1:9000	</span><br><span class="line">listen.owner = phpfpm</span><br><span class="line">listen.group = phpfpm</span><br><span class="line"></span><br><span class="line">pm = dynamic</span><br><span class="line">pm.max_children = 1024</span><br><span class="line">pm.start_servers = 16</span><br><span class="line">pm.min_spare_servers = 5</span><br><span class="line">pm.max_spare_servers = 20</span><br><span class="line">pm.max_requests = 2048</span><br><span class="line">slowlog = /usr/local/php/logs/$pool.log.slow</span><br><span class="line">request_slowlog_timeout = 10</span><br><span class="line">php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f klion@protonmail.com</span><br><span class="line"></span><br><span class="line"># 只让为php的后缀执行,一般这里还有`.php3 .php4 .php5`,把那些默认给的可执行后缀统统去掉,只留`.php`即可</span><br><span class="line"># 一般会配合php.ini文件中的cgi.fix_pathinfo参数一起使用,避免入侵者构造利用解析漏洞进行上传</span><br><span class="line">security.limit_extensions = .php</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/php/sbin/php-fpm	启动php-fpm</span><br><span class="line"># ps -le | grep &quot;php-fpm&quot;</span><br><span class="line"># netstat -tulnp | grep &quot;:9000&quot;</span><br><span class="line"># echo &quot;/usr/local/php/sbin/php-fpm&quot; &gt;&gt; /etc/rc.local &amp;&amp; cat /etc/rc.local</span><br><span class="line"># killall php-fpm 	如果想关闭php-fpm,直接把它进程kill掉即可</span><br></pre></td></tr></table></figure>
+<p>尝试让php与mysql,nginx 进行联动,看看php能不能被正常解析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi connect.php</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">	$link = mysql_connect(&quot;localhost&quot;,&quot;root&quot;,&quot;admin&quot;) or die(mysql_error());</span><br><span class="line">	if($link)&#123;</span><br><span class="line">		echo &quot;yeah , mysql connect succeed!&quot;;</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		echo mysql_error();</span><br><span class="line">	&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>0x06 最后,我们就来好好关注下php解析器自身的安全,php解析器的设置全部依靠<code>php.ini</code>文件来实现,所以,下面就来详细说明一下针对<code>php.ini的安全配置</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /usr/local/php/etc/php.ini</span><br></pre></td></tr></table></figure></p>
+<p>将 <code>register_globals 项设为Off</code>,本身的意思就是注册为全局变量,也就是说,设置为On的时候,从客户端传过来的参数值会被直接注册到php全局变量中,在后端可以直接拿到该变量到脚本中使用,如果为Off,则表示只能到特定的全局数组中才能取到该数据,建议关闭,容易造成变量覆盖问题,不过在php高版本中 <code>如,&gt; 5.6.x</code>,已经去除对此项的设置,官方给的说明是这样的<code>本特性已自 PHP 5.3.0 起废弃并将自 PHP 5.4.0 起移除</code>,如果你用的还是低版本的php就需要注意把此项关闭<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">register_globals = Off</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">	if($mark)&#123;</span><br><span class="line">		echo &quot;login succeed! &quot;;	# 此处会直接显示登陆成功,因事先没有定义$mark,导致$mark直接被覆盖掉了</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		echo &quot;login failed!&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>将 <code>cgi.fix_pathinfo的值设为 0</code>,默认cgi.fix_pathinfo 项是开启的,即值为1,它会对文件路径自动进行修正,我们要把它改成0,不要让php自动修正文件路径,防止入侵者利用此特性构造解析漏洞来配合上传webshell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgi.fix_pathinfo = 0</span><br></pre></td></tr></table></figure></p>
+<p>建议同时关闭以下两项,如果实在有业务需求,请在代码中严格限制检查用户传过来的数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 为On时,则表示允许,也就是说,此时可以通过file_get_contents(),include(),require()等函数直接从远端获取数据</span><br><span class="line"># 容易造成任意文件读取和包含问题,注意,此项默认就是开启的</span><br><span class="line">allow_url_fopen = Off</span><br><span class="line"></span><br><span class="line"># 容易造成远程包含,强烈建议关闭此项		</span><br><span class="line">allow_url_include = Off</span><br></pre></td></tr></table></figure></p>
+<p><code>禁用各种高危函数</code>,尽可能让各种 webshell <code>[ 一句话,大马 ]</code> 无法再靠php内置函数来执行各种系统命令,<code>说实话,禁用这些函数也并不能很好的防住什么,利用各种拆分拼装变形,依然很容易逃逸</code>,下面是一些比较常见的命令和代码执行函数,如果你还发现有其它的一些不常用的高危函数,也可以一并加进来,防止被入侵者率先发现并利用,此项默认为空,即关闭,另外,并不是下面所有的函数都一定要禁用掉,务必要根据自己实际的开发业务来进行,实在用不到的,也没必要让它留着,因为有些函数,开发可能会用,所以也不能盲注的去禁用,那就只能靠在代码中做更为严格的检查,中间的利害还要靠大家自己去定夺,这里仅仅只是个参考<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">disable_functions = dl,eval,assert,popen,proc_close,gzinflate,str_rot13,base64_decode,exec,system,ini_alter,readlink,symlink,leak,proc_open,pope,passthru,chroot,scandir,chgrp,chown,escapeshellcmd,escapeshellarg,shell_exec,proc_get_status,max_execution_time,opendir,readdir,chdir,dir,unlink,delete,copy,rename,ini_set</span><br></pre></td></tr></table></figure></p>
+<p><code>转义开关</code>,主要用来转义各种特殊字符,如,<code>单引号,双引号,反斜线和空字符...</code>个人建议,在这里先把它关闭,因为它并不能很好的防住sql注入,或者说,基本是防不住的,比如,利用宽字节 <code>说到这儿,顺便再补充一句,对付宽字节的最好办法就是全站统一使用 utf-8</code>,这里还是建议大家采用sql语句预编译和绑定变量的方式来预防sql注入,这也是目前为止比较切实有效的预防手段,对于从客户端过来的各种其它数据,可以单独写个检查类,如果你想安全就不要对这些开关寄予太大的希望,可能php官方也发现,这个开关实质就是个摆设,所以给出了这样的说明<code>本特性已自 PHP 5.3.0 起废弃并将自 PHP 5.4.0 起移除</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">magic_quotes_gpc = Off</span><br><span class="line">magic_quotes_runtime = Off</span><br></pre></td></tr></table></figure></p>
+<p><code>关闭php自身的各种错误回显</code>,反正只要记得,在项目上线后,所有的程序错误一律接收到我们自己事先准备好的地方<code>[一般是日志]</code>,一旦被入侵者在前端看到,极易造成敏感信息泄露,高版本的php,默认这些危险项就是处于关闭状态的,另外,有条件的情况下<code>务必把线上环境和测试开发环境隔离</code>,不要把过多希望寄托于程序员,毕竟,你我都知道,那是根本不靠谱的 ^_^<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">display_errors = Off				# 切记千万不让让php错误输出到前端页面上</span><br><span class="line">error_reporting = E_WARING &amp; ERROR		# 设置php的错误报告级别,只需要报告警告和错误即可</span><br><span class="line">log_errors = On  				# 开启php错误日志记录</span><br><span class="line">error_log = /usr/local/php/logs/php_errors.log	# 指定php错误日志存放位置</span><br><span class="line">log_errors_max_len = 2048 	 		# 指定php错误日志的最大长度</span><br><span class="line">ignore_repeated_errors = Off 			# 不要忽略重复的错误</span><br><span class="line">display_startup_errors = Off	 		# 另外,不要把php启动过程中的错误输出到前端页面上</span><br></pre></td></tr></table></figure></p>
+<p><code>隐藏php的详细版本号</code>,即<code>X-Powered-By</code>中显示的内容,不得不再次强调,有些漏洞只能针对特定的类型版本,在实际渗透过程中,如果让入侵者看到详细的版本号,他很可能就会直接去尝试利用该版本所具有的一些漏洞特性再配合着其它漏洞一起使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose_php = Off</span><br></pre></td></tr></table></figure></p>
+<p><code>限制php对本地文件系统的访问</code>,即把所有的文件操作都限制指定的目录下,让php其实就是限制了像<code>fopen()</code>这类函数的访问范围,一般主要用来防止旁站跨目录,把webshell死死控制在当前站点目录下,此项默认为空,不建议直接写到php.ini中,可以参考前面nginx安全部署中的,直接在每个站点目录下新建一个<code>.user.ini</code>然后再把下面的配置写进去即可,这样相对比较灵活<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open_basedir = &quot;/usr/local/nginx/html/bwapp/bWAPP:/usr/local/nginx/html/dvws/&quot;</span><br></pre></td></tr></table></figure></p>
+<p>关于<code>对服务端session的一些安全处理方式</code></p>
+<p>隐藏后端使用的真正脚本类型,扰乱入侵者的渗透思路,另外,切记不要把敏感数据直接明文存在session中,有泄露风险<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.name = JSESSIONID	表示jsp程序,php的则是PHPSESSID</span><br></pre></td></tr></table></figure></p>
+<p>修改session文件存放路径,最好不要直接放在默认的<code>/tmp</code>目录下,实际中可能是一台单独的session服务器,比如,memcached<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">session.save_handler = memcache</span><br><span class="line">session.save_path = &quot;tcp://192.168.3.42:11211&quot;</span><br></pre></td></tr></table></figure></p>
+<p><code>安全模式</code>可根据实际业务需求选择性开启,安全模式的意思就是操作文件的函数只能操作与php进程UID相同的文件,但php进程的uid并不一定就是web服务用户的uid,这也就造成了麻烦,也就是说,你想避免这种麻烦,可能就需要在最开始配置时就让php进程和web服务使用同一个系统用户身份,但这又正好跟我前面说的相背了,我们在前面说过,最好把php进程用户和web服务用户分开,这样更容易进行权限控制,另外,高版本的php<code>[ &gt; php5.4 ]</code>已不再支持安全模式,因为官方可能也觉得它并没什么卵用,而且低版本php的安全模式,还可被绕过,所以,如果你用的是低版本的php,请根据自身实际业务做取舍<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">safe_mode = On</span><br><span class="line">safe_mode_gid = off</span><br></pre></td></tr></table></figure></p>
+<p>限制php单脚本执行时长,防止服务器资源被长期滥用而产生拒绝服务的效果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">max_execution_time = 30</span><br><span class="line">max_input_time = 60</span><br><span class="line">memory_limit = 8M</span><br></pre></td></tr></table></figure></p>
+<p>关于上传,如果实际的业务根本不涉及到上传,直接把上传功能关掉即可,如果需要上传,再根据需求做出调整即可,对防入侵来讲,这里对我们意义并不是非常大<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">file_uploads = On		# 开启php上传功能</span><br><span class="line">upload_tmp_dir =		# 文件传上来的临时存放目录</span><br><span class="line">upload_max_filesize = 8M	# 允许上传文件的文件大小最大为多少 </span><br><span class="line">post_max_size = 8M		# 通过POST表单给php的所能接收的文件大小最多为多少</span><br></pre></td></tr></table></figure></p>
+<p>0x07 利用 <code>chattr</code> 锁定一些不需要经常改动的重要配置文件,如,php-fpm.conf,php.ini,my.cnf…,为了防止chattr工具被别人滥用,你可以把它改名隐藏到系统的某个角落里,用的时候再拿出来</p>
+<p>锁定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># chattr +i /usr/local/php/etc/php.ini</span><br><span class="line"># chattr +i /usr/local/php/etc/php-fpm.conf</span><br><span class="line"># chattr +i /etc/my.cnf</span><br></pre></td></tr></table></figure></p>
+<p>解锁<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># chattr -i /usr/local/php/etc/php.ini</span><br><span class="line"># chattr -i /usr/local/php/etc/php-fpm.conf</span><br><span class="line"># chattr -i /etc/my.cnf</span><br></pre></td></tr></table></figure></p>
+<p>0x08 务必勤于关注php官方的高危补丁发布及说明,和其它工具不同,php 自身bug多,因为关注的人多,搞的人也多,所以暴露出来的各种安全问题也就更多</p>
+<p>0x09 最后,告诉大家一个怎么把曾经yum下来的包保留着的办法,在系统断网的情况下也许用的着,只需到yum配置里面去调整下即可,保留的包的路径也在yum配置中定义好了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/yum.conf</span><br><span class="line">  keepcache=1</span><br></pre></td></tr></table></figure></p>
+<p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;至此为止,关于<code>整套LNMP架构</code>的安全部署及优化,也就差不多完成了,我们关注的点,更多可能还是集中在防御入侵上,捎带了一点性能优化,这里所给的参数选项基本全部都可直接用于实战部署,但并不是所有的参数配置都是必须的,还需要你好好根据自己实际的业务需求做出适当取舍,或者在此基础进行定制改进,有些地方都是基于自己平时实战经验的考量来的,并不一定完全是对的,如果有性能更好,更安全的方案,也非常欢迎大家一起来私信交流 ^_^</p>
+
+    </div>
+
+    
+
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/phpsec/">#phpsec</a>
+        </div>
+    
+
+    <!-- Comments -->
+    
+
+</div>
+        </section>
+
+    </div>
+</div>
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

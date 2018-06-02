@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="APT404-不疯不魔怎么活"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="website" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>page - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+            <h1 id="main-title" class="title">APT404-不疯不魔怎么活</h1>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2014/12/10/hidsdesd-vpn/">
+                OpenVpn 安全部署实战指南 [一]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2014-12-10</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/vpn-config/">vpn config</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 关于openvpn<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">一种基于OpenSSL加密库的开源VPN实现,此处的主要目的还是旨在说明如何快速安全部署openvpn</span><br><span class="line">关于其内部的加解密细节及封装与解封装过程,相信大家都已经比较熟练了,此处不做过多涉及,暂以实战上手应用为主</span><br></pre></td></tr></table></figure></p>
+<p>0x02 openvpn 可工作于两种不同的模式,使用 TUN / TAP 作为接口建立隧道,但需要相应内核支持<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TUN 接口创建的是三层路由隧道,实际中用的较多,TAP 是二层网卡桥接隧道,即创建一个以太网桥接,相对复杂</span><br><span class="line">TAP 接口的好处在于,客户端可以获得 VPN 服务器所处子网的 IP [即,忽略物理上的区别,可以完全将客户端看做是与VPN服务器处于同一子网的另一台机器]</span><br><span class="line">而TUN 接口下所有的客户端则处于一个完全独立的子网内,与 VPN 服务器所在的子网没有关系,待到后面实际部署时,会深有体会的</span><br></pre></td></tr></table></figure></p>
+<p>0x03 下面则是 openvpn 提供的两种安全模式<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Static Key</span><br><span class="line">X509 PKI [Public Key Infrastructure]</span><br></pre></td></tr></table></figure></p>
+<p>此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">OpenVpnServer  	  ip: 192.168.3.71 [假设为公网ip]   ip: 192.168.6.39 [假设为其所在的内网ip] ip: 192.168.7.39 [假设为其所在的另一个内网ip]</span><br><span class="line">OpenVpnClient	  ip: 192.168.6.41 [内网ip] 	   ip: 192.168.7.41 [另一个内网ip段]	为OpenVpnServer所在内网段的一台linux机器</span><br><span class="line">win7cn		  ip: 192.168.32.253 [本地机器的内网ip] 作为连接OpenVpnServer的windows访问客户端</span><br><span class="line">CentOS6.8_x86_64  ip: 192.168.32.136 [本地机器的内网ip] 作为连接OpenVpnServer的linux访问客户端</span><br></pre></td></tr></table></figure></p>
+<p>我们要实现的最终目的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">通过拨入 OpenVpnServer 可在本地直接访问远程内网,即`192.168.32.x`和`192.168.6.x`,本身是两个完全独立相互不同的内网段</span><br><span class="line">但现在要实现的效果就是,可以直接在win7cn或者CentOS6.8上ping通OpenVpnServer所在内网中的OpenVpnClient机器</span><br></pre></td></tr></table></figure></p>
+<p>0x04 Ok,明确了最终目的之后,我们就开始来实战部署OpenVpn</p>
+<p>首先,进行一些前期的必要环境准备,务必严格保证所有机器时间完全一致,此项非常重要,否则后期OpenVpn客户端在连服务端时会出现证书无法被验证的情况<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /usr/sbin/ntpdate time.nist.gov  先手工在所有机器上同步一次,之后再加到计划任务中自动同步即可</span></span><br><span class="line"><span class="comment"># crontab -e</span></span><br><span class="line">  *<span class="regexp">/2 * * * * /usr</span><span class="regexp">/sbin/ntpdate</span> time.nist.gov &gt; <span class="regexp">/dev/null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"><span class="comment"># crontab -l</span></span><br></pre></td></tr></table></figure></p>
+<p>安装C编译器及openssl加密库,众所周知,openvpn依赖openssl对隧道数据进行加密<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum install -y  gcc gcc-c++ openssl openssl-devel</span><br></pre></td></tr></table></figure></p>
+<p>禁用selinux,之后一定要记得重启下系统,才可生效<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># setenforce 0</span><br><span class="line"># sed -i &apos;/^SELINUX=/c\SELINUX=disabled&apos; /etc/selinux/config</span><br><span class="line"># shutdown -r now</span><br></pre></td></tr></table></figure></p>
+<p>准备好环境所需的源码包,此,分别为数据压缩库和openvpn自身的源码包<code>openvpn的下载地址可能已经被墙掉了,大家暂时挂ss下一下就好了</code><br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wget http://www.oberhumer.com/opensource/lzo/download/lzo-2.06.tar.gz</span></span><br><span class="line"><span class="comment"># wget https://build.openvpn.net/downloads/releases/openvpn-2.2.2.tar.gz</span></span><br></pre></td></tr></table></figure></p>
+<p>编译安装LZO,主要用它来压缩通信数据加快传输速度<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># tar xf lzo-2.06.tar.gz</span><br><span class="line"># cd lzo-2.06</span><br><span class="line"># ./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"># echo $?</span><br></pre></td></tr></table></figure></p>
+<p>0x05 编译安装OpenVPN,记得要载入lzo一起编译<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tar -zxf openvpn-2.2.2.tar.gz</span></span><br><span class="line"><span class="comment"># cd openvpn-2.2.2</span></span><br><span class="line"><span class="comment"># ./configure --with-lzo-headers=/usr/local/lzo/include --with-lzo-lib=/usr/local/lzo/lib</span></span><br><span class="line"><span class="comment"># make &amp;&amp; make install</span></span><br><span class="line"><span class="comment"># echo $?</span></span><br><span class="line"><span class="comment"># which openvpn  如果能看到路径,说明openvpn已经基本安装成功,默认是在/usr/local/sbin/openvpn目录下</span></span><br></pre></td></tr></table></figure></p>
+<p>0x06 安装成功后,我们就开始来实际部署配置OpenVpn</p>
+<p>首先,修改默认证书信息,而后,以此来创建各种证书<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># cd /root/openvpn-2.2.2/easy-rsa/2.0/ &amp;&amp; ll</span><br><span class="line"># cp vars vars.bak</span><br><span class="line"># vi vars</span><br><span class="line">  export KEY_COUNTRY=&quot;CN&quot;</span><br><span class="line">  export KEY_PROVINCE=&quot;BJ&quot;</span><br><span class="line">  export KEY_CITY=&quot;BeiJing&quot;</span><br><span class="line">  export KEY_ORG=&quot;klionsec&quot;</span><br><span class="line">  export KEY_EMAIL=&quot;klion@rootkit.org&quot;</span><br><span class="line">  export KEY_EMAIL=klion@rootkit.org</span><br><span class="line">  export KEY_CN=CN</span><br><span class="line">  export KEY_NAME=kliosec</span><br><span class="line">  export KEY_OU=klionsec</span><br><span class="line">  export PKCS11_MODULE_PATH=changeme</span><br><span class="line">  export PKCS11_PIN=1234</span><br><span class="line"># tail -n 11 vars</span><br><span class="line"># source vars	重新载入,让变量生效</span><br><span class="line"># ./clean-all  	把之前已有的证书全部先删掉</span><br><span class="line"># ./build-ca   	创建ca证书ca.crt 及根密钥ca.key [基本上一路按回车就好],因为在vars文件中已经定义好了默认的变量值,生成时会自动逐个读取</span><br><span class="line"># ll keys/   	看下刚刚生成的ca证书在keys目录里有没有</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/ca key.png" alt=""></p>
+<p>创建服务端证书及密钥 <code>[ 中间会有一处让你输入密码,注意,后续创建证书时的密码最好都跟此密码保持一致,防止认证失败,之后再按照提示输入两次y即可]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ./build-key-server server</span><br><span class="line"># ll keys/</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/server key.png" alt=""></p>
+<p>创建完服务端证书和秘钥后,我们还需要为每一个登陆到OpenVpn服务器的客户端创建一个证书,注意直接用<code>build-key</code>创建的客户端证书默认是没密码的,也就是说,别人只要拿到你的这套客户端的证书就可以直接连上vpn服务器,有一定风险,当然,前提也得服务端配置中允许同一用户多点登陆才行,后续如果还要新增客户端用户,只需要再用build-key生成即可<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./build-key client  注意,这里也会提示输入密码,为了避免出问题,和上面创建服务端证书时设置的密码保持一致即可</span></span><br><span class="line"><span class="comment"># ll keys/</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/client key.png" alt=""><br><img src="/img/client key res.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ./build-key-pass clientsec 如果你想创建带密码的客户端证书,直接用 build-key-pass 来创建即可</span><br><span class="line"># ll keys/</span><br></pre></td></tr></table></figure>
+<p><img src="/img/client key pass.png" alt=""><br><img src="/img/client key pass res.png" alt=""></p>
+<p>创建秘钥交换协议文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ./build-dh    即迪菲·赫尔曼密钥,会生成dh1024.pem文件,生成过程可能会比较慢,在此期间不要去中断它</span><br><span class="line"># ll keys/</span><br><span class="line"># openvpn --genkey --secret keys/ta.key  生成ta.key文件,防DDos攻击,UDP淹没等恶意攻击,说实话,效果貌似并不太好</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/dh1024 key.png" alt=""></p>
+<p>0x07 创建并修改openvpn服务器配置文件,将需要用到的openvpn证书和密钥复制一份到创建好的keys目录中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># mkdir -pv /etc/openvpn</span><br><span class="line"># cd /root/openvpn-2.2.2/easy-rsa/2.0</span><br><span class="line"># cp -ap keys/ /etc/openvpn/</span><br><span class="line"># cd ../../</span><br><span class="line"># cp sample-config-files/&#123;server.conf,client.conf&#125; /etc/openvpn/</span><br><span class="line"># tree /etc/openvpn/</span><br><span class="line"># cd  /etc/openvpn/</span><br><span class="line"># cp -a server.conf server.conf.bak</span><br><span class="line"># grep &apos;^[^#;]&apos; /etc/openvpn/server.conf &gt; tmp.txt</span><br><span class="line"># cat tmp.txt &gt; server.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 下面是openvpn服务端的完整配置</span><br><span class="line"># vi server.conf</span><br><span class="line">  local 192.168.3.71			 # 要绑定到的公网ip</span><br><span class="line">  port 11941				 # openvpn服务的默认端口,最好改掉,其实,别人如果全端口扫描还是能扫到 </span><br><span class="line">  proto tcp				 # 使用tcp协议,相对稳定</span><br><span class="line">  dev tun				 # 此处使用tun接口</span><br><span class="line">  ca /etc/openvpn/keys/ca.crt		 # ca证书路径</span><br><span class="line">  cert /etc/openvpn/keys/server.crt	 </span><br><span class="line">  key /etc/openvpn/keys/server.key	 # openvpn服务端证书路径 </span><br><span class="line">  dh /etc/openvpn/keys/dh1024.pem	 </span><br><span class="line">  server 10.18.0.0 255.255.255.0	 # openvpn内网ip地址池 </span><br><span class="line">  push &quot;route 192.168.6.0 255.255.255.0&quot; # 此项非常重要,即vpn服务器所在的内网段</span><br><span class="line">  push &quot;route 192.168.7.0 255.255.255.0&quot; # 如果想让别人拨入成功后能直接跟vpn所在的内网段的机器进行通信,就需要用此方式把配置推到每个客户端</span><br><span class="line">  client-to-client			 # 让openvpn客户端和客户端能相互通信</span><br><span class="line">  duplicate-cn				 # 同一个vpn账号允许同时多点登陆,在上面已经提到过</span><br><span class="line">  ifconfig-pool-persist ipp.txt		 </span><br><span class="line">  keepalive 10 120			 # 发心跳包,每10一次,如果超过120秒都没动静,就自动断开</span><br><span class="line">  comp-lzo				 # 启用传输数据压缩</span><br><span class="line">  persist-key		</span><br><span class="line">  persist-tun				 </span><br><span class="line">  status openvpn-status.log		 # 开启OpenVpn服务端日志</span><br><span class="line">  log /var/log/openvpn.log		 # 指定日志存放位置</span><br><span class="line">  verb 3				 # 指定记录的日志级别</span><br></pre></td></tr></table></figure>
+<p>0x08 修改完OpenVpn服务端配置后,我们再来稍微调整一些系统配置,如下</p>
+<p>开启系统路由转发,因为在拨入成功后还要访问vpn服务器所在内网中的其它机器,所以转发是必须的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># sed -i &apos;/net.ipv4.ip_forward/s/0/1/&apos; /etc/sysctl.conf</span><br><span class="line"># sysctl -p</span><br></pre></td></tr></table></figure></p>
+<p>如果开了iptables,记得把tcp的11941端口<code>[实际中是你自己设置的openvpn服务端口]</code>和转发都放开,不然客户端可能会连不上,如果压根没开,可暂时不用管<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/sysconfig/iptables</span><br><span class="line">  -A INPUT -p tcp --dport 11941 -j ACCEPT</span><br><span class="line"># iptables -A INPUT -p tcp --dport 11941 -j ACCEPT</span><br><span class="line"># iptables -L -n</span><br><span class="line"># /etc/init.d/iptables status</span><br></pre></td></tr></table></figure></p>
+<p>最后,我们来尝试启动OpenVpn服务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/sbin/openvpn --config /etc/openvpn/server.conf &amp;</span><br><span class="line"># netstat -tulnp | grep openvpn</span><br><span class="line"># echo &quot;/usr/local/sbin/openvpn --config /etc/openvpn/server.conf &amp;&quot; &gt;&gt; /etc/rc.local</span><br><span class="line"># tail -n 1 /etc/rc.local</span><br><span class="line"># ifconfig  -a  openvpn服务一旦成功启动系统中就会多出一个名为tun0的虚拟网卡</span><br><span class="line"># pkill openvpn</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/openvpn start.png" alt=""><br><img src="/img/openvpn start res.png" alt=""></p>
+<p>当然,除了手工去加载服务端配置文件来启动,你也可以用openvpn自己提供好的服务启动脚本来配置成常规启动,只是自己不太喜欢这样搞,过程非常简单,如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># cp /root/openvpn-2.2.2/sample-scripts/openvpn.init /etc/init.d/openvpn</span><br><span class="line"># chmod 700 /etc/init.d/openvpn</span><br><span class="line"># chkconfig openvpn on</span><br><span class="line"># chkconfig --list</span><br><span class="line"># /etc/init.d/openvpn restart  会有报错</span><br><span class="line"># vi /etc/init.d/openvpn       把148行的*.conf改成server.conf,这个目录下不能有多个.conf否则就会被干扰到</span><br><span class="line"># /etc/init.d/openvpn restart  正常启动</span><br><span class="line"># lsof -i :1194</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/openvpn start initd.png" alt=""><br><img src="/img/openvpn start log.png" alt=""></p>
+<p>0x09 把服务端完全搞定以后,我们再来看如何在不同系统平台下配置OpenVpn客户端进行连接</p>
+<p>先下载并安装好 OpenVpn 的windows版客户端工具,地址已被墙<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://swupdate.openvpn.org/community/releases/openvpn-2.2.2-install.exe</span><br></pre></td></tr></table></figure></p>
+<p>此时,再到OpenVpn服务端去把指定客户端的证书及配置文件都下载下来<code>[此处以client用户为例]</code>,之后再把这些文件全部复制到你OpenVpn客户端的config目录中,此处的OpenVpn客户端config目录是在如下的路径上,而你则要根据你自己的OpenVpn客户端安装目录来调整<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># cd /etc/openvpn/keys/</span><br><span class="line"># sz ca.crt client.crt client.key</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ca.crt client.crt client.key  	所有要复制的文件</span><br><span class="line">C:\Program Files\OpenVPN\config	要复制到的目录</span><br></pre></td></tr></table></figure>
+<p><img src="/img/openvpn client install.png" alt=""><br><img src="/img/openvpn client install res.png" alt=""><br><img src="/img/openvpn client download.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 手工创建好客户端配置文件,文件具体内容如下,注意在windows中客户端配置文件名必须为 client.ovpn </span><br><span class="line"></span><br><span class="line">client			  # 声明是客户端</span><br><span class="line">dev tun			  # 和服务端保持一致,使用tun接口</span><br><span class="line">proto tcp		  # 同样使用tcp协议,保持一致,不然就没法和服务端进行正常通信了</span><br><span class="line">remote 192.168.3.71 11941 # Openvpn 服务端的ip和端口</span><br><span class="line">resolv-retry infinite</span><br><span class="line">nobind</span><br><span class="line">persist-key</span><br><span class="line">persist-tun</span><br><span class="line">ca ca.crt		  # 客户端证书所在路径</span><br><span class="line">cert client.crt</span><br><span class="line">key client.key</span><br><span class="line">ns-cert-type server</span><br><span class="line">comp-lzo		  # 压缩传输</span><br><span class="line">verb 3</span><br></pre></td></tr></table></figure>
+<p>之后,再右键以<code>管理员权限</code>运行openvpn客户端,点击<code>connect</code> 进行连接即可,如下即表示连接成功,至此,整个OpenVpn的部署工作也就完成了百分之八十,但我们的最终目的是希望能在本地通过拨入vpn直接跟远程内网中的机器进行通信,再次明确目的之后,我们继续</p>
+<p><img src="/img/openvpn client connect res.png" alt=""><br><img src="/img/openvpn client connect.png" alt=""></p>
+<p>0x10 以上是使用windows客户端来连接OpenVpn服务端,至于如何在linux中使用客户端连接OpenVpn服务端就更简单了,跟OpenVpn服务端一样,先装好OpenVpn,之后只需用openvpn工具加载对应的客户端配置文件即可,注意,是客户端配置文件,另外,此处不需要再配置服务端,单单只是用下openvpn工具而已,具体如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /etc/openvpn</span><br><span class="line"># cd /etc/openvpn</span><br><span class="line"># rz  可以直接把刚刚client的一套证书丢上去</span><br><span class="line"># tree ./</span><br><span class="line"> ├── ca.crt</span><br><span class="line"> ├── client.conf</span><br><span class="line"> ├── client.crt</span><br><span class="line"> └── client.key</span><br><span class="line"></span><br><span class="line"># 断开以后,第二次重连可能会有些问题,把客户端配置文件改个名就好了</span><br><span class="line"># /usr/local/sbin/openvpn --config /etc/openvpn/client.conf &amp;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/linux conenect in.png" alt=""></p>
+<p>0x11 再回到我们的最终目的上,<code>如何在本地通过vpn直接跟远程内网进行通信</code>,方式大概有三种,如下</p>
+<p>第一种,把所有要通信的远程内网中的机器的网关都指向OpenVpn服务器的ip,这样,包在回传的时候就能找到本地机器,为了防止重启即失效,可直接把命令放在<code>rc.local</code>中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># route add default gw 192.168.7.39  在OpenVpnClient上添加如下指向</span><br><span class="line"># route -n</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/openvpn in net .png" alt=""><br><img src="/img/openvpn in net res .png" alt=""></p>
+<p>第二种,走网段路由,在所有要通信的内网的机器上添加如下路由,把来自vpn内网段的数据都直接丢到OpenVpn服务器指定的内网ip上,一样也可以达到目的,但两种方式有个共同的确定,机器比较少的情况下也许还能凑活,如果有几千台机器,每台上都要添加一条这样的指向毕竟是很不现实的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># route add -net 10.18.0.0/24 gw 192.168.7.39  在OpenVpnClient上添加如下指向</span><br><span class="line"># route -n</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/secode network.png" alt=""><br><img src="/img/secode network res.png" alt=""></p>
+<p>所以,我们再来看第三种,利用iptables进行NAT转换,即把源地址为<code>10.18.0.0/24</code>都转换到指定的内网卡ip上,这样就不用再逐个指定网关了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># /etc/init.d/iptables status  只需在OpenVpnServer服务器上添加如下规则即可</span><br><span class="line"># /sbin/iptables -t nat -A POSTROUTING -s 10.18.0.0/24 -o eth2 -j SNAT --to-source 192.168.7.39	添加规则</span><br><span class="line"># /sbin/iptables -t nat -D POSTROUTING -s 10.18.0.0/24 -o eth2 -j SNAT --to-source 192.168.7.39	删除规则</span><br><span class="line"># /etc/init.d/iptables stop</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/iptables three.png" alt=""><br><img src="/img/iptables three res.png" alt=""></p>
+<p>0x12 实际生产环境中,由于各种各样的原因,有时可能还需要禁止指定的客户端用户登陆,方法非常简单,直接注销指定的客户端证书,万一要连续禁用多个vpn账号,那就直接一次性注销多个客户端证书,执行revoke-full后直接覆盖原来的crl.pem文件即可,如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># cd /root/openvpn-2.2.2/easy-rsa/2.0</span><br><span class="line"># source vars</span><br><span class="line"># vi /root/openvpn-2.2.2/easy-rsa/2.0/openssl-1.0.0.cnf</span><br><span class="line"># tail -n 6 /root/openvpn-2.2.2/easy-rsa/2.0/openssl-1.0.0.cnf	先注释如下行</span><br><span class="line">  #[ pkcs11_section ]</span><br><span class="line">  #engine_id = pkcs11</span><br><span class="line">  #dynamic_path = /usr/lib/engines/engine_pkcs11.so</span><br><span class="line">  #MODULE_PATH = $ENV::PKCS11_MODULE_PATH</span><br><span class="line">  #PIN = $ENV::PKCS11_PIN</span><br><span class="line">  #init = 0</span><br><span class="line"># ./revoke-full client	指定要注销的客户端用户执行注销</span><br><span class="line"># cat keys/crl.pem</span><br><span class="line"># cat keys/index.txt	从该文件中可看到客户端用户的状态,R为已注销</span><br><span class="line"># cp keys/crl.pem /etc/openvpn/keys/</span><br><span class="line"># vi /etc/openvpn/server.conf	再到主配置文件中添加该pem文件位置,然后重启openvpn,该用户登陆即会失效</span><br><span class="line">  crl-verify /etc/openvpn/keys/crl.pem</span><br><span class="line"># /etc/init.d/openvpn restart</span><br></pre></td></tr></table></figure></p>
+<p>下面是vpn账户被禁用后再登陆的效果,你会发现客户端的连接在一直被reset掉</p>
+<p><img src="/img/client error.png" alt=""></p>
+<p><br></p>
+<p>后话:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vpn作为直插目标内部的一个最直接的入口,也颇受入侵者的热爱,尤其是对各种APT团队来讲更是如此,针对此所进行的各种形式的钓鱼也从未休止</span><br><span class="line">其实,关于openvpn自身的漏洞并不多,甚至可以说,几乎没有,有也只是一些第三方库的,另外,基本也不存在什么错误配置能辅助我们渗透的</span><br><span class="line">关于openvpn的内部通信过程,大家可自行拿wireshark&amp;tcpdump仔细好好跟一下基本就看明白了,如果真想深入研究建议直接去阅读2.2的源码</span><br><span class="line">在部署上基本无任何技术含量,只是为了方便大家用,顺便给自己做个备忘,保证后续随时能用即可</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2014/12/09/pptp-config/">
+                web渗透第一步之信息搜集 [win 2008 配置pptp]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2014-12-09</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/vpn-config/">vpn config</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br></p>
+<p>0x01 什么是vpn:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">学名称虚拟专网,即在公共网络中搭建的一条专有通道</span><br><span class="line">当用户连接到vpn服务器时,只需提供正确的账号密码即可进入到这条专用通道内,之后所有的通信数据也都会被这层通道包裹着来回传输</span><br><span class="line">上面这样说可能有点儿不太形象,你可以把它想成我们之前所说的正向代理,或者<span class="string">'翻墙'</span></span><br><span class="line">当然啦,vpn的用途远远不止这点,下面我们开始细说</span><br></pre></td></tr></table></figure></p>
+<p>下面是一些vpn应用场景:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>,公司员工想在家里通过公网直接访问到公司内网的服务器,即远程办公</span><br><span class="line"><span class="number">2</span>,学生放假回家,想在家里直接通过公网访问到自己学校内网的图书馆网站查阅资料</span><br><span class="line"><span class="number">3</span>,公司有好几个机房,现在有需求,希望把分布在各地的机房内的机器都连到同一个内网中(当然啦,域也是一种方案)</span><br><span class="line"><span class="number">4</span>,大型跨国组织公司想把分布在不同国家不同地域的分支机构连到同一个内网中,方便大家处理公司业务</span><br><span class="line"><span class="number">5</span>,通过各种类型的vpn隧道来bypass掉天朝的gfw</span><br><span class="line"><span class="number">6</span>,入侵者希望通过vpn来暂时性的隐匿自己[你知道的,tor也许会更好,有机会再说]……</span><br><span class="line"><span class="number">7</span>,等等……</span><br></pre></td></tr></table></figure></p>
+<p>0x02 一些常见的vpn隧道协议:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PPTP： 点对点隧道协议,其将控制包与数据包分开,控制包采用TCP控制,加密通信,搭建过程极其方便简单,非常适合个人使用</span><br><span class="line">L2TP： PPTP和L2TP两种连接类型在性能上差别不大,可以把L2TP理解成pptp的升级版,如果使用PPTP不正常,可更换为L2TP</span><br><span class="line">IPSEC(Openswan)：把来回通信的数据加密放到隧道中传输,然后就是正常的封装和解封装过程,防止中间人窃听,常用于多个不同地域的机房内网互连</span><br><span class="line">SSLVpn(openvpn)：它的技术核心是虚拟网卡,基于SSL协议(加密库)实现,这也意味着它全程通信加密,而且非常稳定,也是个人极力推荐可用于实战渗透用途的vpn,跟其它vpn有些不一样的是,它属于C/S架构软件[即需要客户端和服务端],深入的通信过程还是比较复杂的,这里就不细说了,搭建自然也会稍微繁琐一点</span><br></pre></td></tr></table></figure></p>
+<p>0x03 接下来,我们就来简单搞搞清楚vpn的大致工作流程,为了让大家能够快速理解这个东西,会尽量说的比较简单通俗一些,当然,vpn具体的工作细节还是非常复杂的,不过,那并不是咱们今天的重点,我们只需要会搭建,会使用,能排一些简单的错[会看日志]即可,暂时不必过于深究协议层的东西,毕竟,你并非想自己开发各类vpn工具,大多时候学习亦是如此,要取舍得当,别偏离重点了就行,下面是我用自己的话对vpn工作特性的一点简要叙述,可能听着不太专业,但目的也是为了让大家更好的去理解,毕竟我们并不是在搞学术研究,所以,大可不必在一些专业名词上死扣,那样对我们的实际技术的提高其实并没有多大帮助,不是吗,废话说完,咱们就来粗略走一遍vpn的通信过程:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">正常情况下我们和公网进行的任何通信,都必须先通过本地<span class="string">'网关'</span>出去,再通过<span class="string">'网关'</span>回来[俗称nat转换]</span><br><span class="line">你可以暂时把vpn想成你家里的路由器,因为它们在功能上有些类似,我们知道,在家里,正常上网的情况下是通过本地路由网关实现的</span><br><span class="line">但一旦你连上了vpn,以后上网的网关就不再是你家里路由器上的那个了,而是你vpn服务器上的<span class="string">'vpn网关'</span></span><br><span class="line">因为在你拨通vpn以后,你的机器就会进入到vpn的内网中,而这个网关自然就变成了vpn服务器上的那个网关</span><br><span class="line">也就是说你和公网进行的任何通信都要先交给vpn网关,回来的数据再通过vpn网关[nat],经过vpn隧道响应给你</span><br><span class="line">举个简单的例子,当你挂上vpn以后去访问某个网站,用于解析域名的dns,其实是你vpn服务器所在的ip的当地的dns服务器</span><br><span class="line">这样看来,也就不难理解为什么vpn会慢了,因为你每次请求响应都要经过两层节点,家的路由器网关和vpn网关,数据也都是通过包裹[封装]在vpn隧道中返回给你的</span><br></pre></td></tr></table></figure></p>
+<p>0x04 vpn对于我们实际渗透的意义,至于它在真实生产环境的好处,这里就不说了,可自行谷歌,对于一些大型跨国公司或组织,vpn还是一种比较靠谱的协作方案<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>)隐藏入侵者真实ip,作为入侵者的第一道保护屏障,能熟练快速配置各类vpn是每个入侵者最基本的基本功,如果条件允许的话,你甚至可以多套几层vpn,无疑,这样速度肯定也会慢很多</span><br><span class="line"><span class="number">2</span>)加大目标溯源取证的难度和成本</span><br><span class="line"><span class="number">3</span>)灵活性好,主要是拥有了一台自己可以随意操作的公网ip,这样在实际渗透中会帮我们很多的忙</span><br><span class="line"><span class="number">4</span>)是所有入侵者,真正走向入侵的第一步</span><br></pre></td></tr></table></figure></p>
+<p>0x05 理解了vpn大致的工作流程以后,具体的配置就非常简单了,这里暂时以win下的pptp为例,进行一些实际的搭建配置<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">因为用vpn的主要目的还是为了保护我们自己,所以对于vpn的宿主系统,一系列的安全策略是非常必要的,比如,在win中你可以通过tcp/ip筛选限制<span class="number">3389</span>[端口最好不要默认],vpn,还有你自己经常要用的这几个端口流量可以正常进出,其余的端口一律禁止,另外,启用系统禁ping,尽可能防止别人ddos,最好不要再在vpn服务器上同时搭建别的服务,尽可能减少别人下手的机会,总之,跑的东西越少越好,恪守<span class="string">'最少服务'</span>原则,当然,如果别人手里有个可以随意远程溢出的0day,那就没什么好说的了,要想真正彻底防住,几乎是不太现实的,我们只能尽自己的能力,尽可能的保护自己,最后建议大家在实际渗透中全部用英文系统,具体原因你应该懂的,对了,还有防火墙,你可以根据自己的实际需求来,开了筛选,其实防火墙你就可以不用开了……</span><br><span class="line">尽可能的禁用掉系统和vpn的各种日志审核记录功能及其所对应的服务,在系统里留的日志越少越好(防止被反渗透),记得定时上去看下日志,如果没看到什么特别的情况,定时把日志清空一下,方便自己分析</span><br><span class="line">条件允许的情况下,务必把系统补丁打到最新,改掉rdp的默认端口,用户密码要严格遵守复杂性要求,大小写数字特殊字符随机排列,越随机越好,长度推荐至少<span class="number">12</span>位以上,防止无聊的人爆破,如果是团队共用vps,密码最好一个人知道就可以了,严禁管理权限泛滥……</span><br><span class="line">推荐在vpn上装个wireshark,可以时常去看看机器流量,或者留个隐蔽点的监控脚本也行,尽可能防止被别人反桶回来,不要以为哪些只是电影里才会出现的场景[很正常的情况],谨慎小心,方得永生……</span><br><span class="line">切记千万不要在vps上保留任何容易暴露私人信息的任何东西,这极度,非常,特别重要,包括在各种工具里的有可能暴露私人信息的特征也务必要全部清干净……</span><br><span class="line">用于入侵的vps,推荐一个月换一次,最迟两月换一次,换机房,换ip段,换国家,搞定一个项目后,最好把vps系统也都重装一下,买vps,尽量找一些靠谱的厂商,擦亮你的眼睛,这个也非常重要……</span><br><span class="line">尽量不要经常利用vps进行任何大流量的动作,其实,在大多数的入侵过程下,我们根本没必要大规模持久性扫描,极易容易触发报警而被机房封,如果你经常干这事儿,只能说明你的入侵思路可能有问题,不妨多换换姿势,一般工具能扫出来的洞,基本人工很快也能看到了,好了,忍不住多说了一句废话,这方面的东西,后面还会大量的篇幅专门进行说明,这里就先到此为止吧 </span><br><span class="line">上面提供的仅仅都是一些极其简单的参考建议,其他更多的注意事项,最终还是要根据您自己的实际需求来……</span><br></pre></td></tr></table></figure></p>
+<p>0x06 说完简单的注意事项后,我们准备开始真正在windows server 2008R2上配置pptp vpn</p>
+<p>1)首先,找到’服务’,关闭并禁用 “windows防火墙” ,将’远程路由’设为自启动,之后重启系统(防火墙关了以后,最好重启下)<br><img src="/img/disabled firewall.png" alt=""><br><img src="/img/enabled routing and remote access.png" alt=""></p>
+<p>2)重启完毕进入系统,打开’服务器管理器’,找到’角色’,点击’添加角色’,勾选’网络策略和访问服务’,然后再勾选’路由和远程访问’,点击’安装’<br><img src="/img/add roles.png" alt=""><br><img src="/img/network policy and access services.png" alt=""><br><img src="/img/remote access services routing.png" alt=""><br><img src="/img/win pptp install.png" alt=""></p>
+<p>3)下面是具体的安装过程和安装完成后的状态,安装完成后点击关闭,回到’服务器管理器’中<br><img src="/img/install succeed.png" alt=""></p>
+<p>4)安装过程中如果没什么问题,我们就开始配置pptp,到’服务器管理器’中,右键’路由远程访问’,点击’配置启用远程路由访问’,选择’自定义配置’<br><img src="/img/win pptp config.png" alt=""><br><img src="/img/custom configuration.png" alt=""></p>
+<p>5)勾选’vpn’和’nat’ ,点击完成,即可开始自动安装并启动vpn服务,中间会提示个警告,说网络策略服务冲突,因为我们根本没配置nps,所以就不用管它了<br><img src="/img/finish config res.png" alt=""><br><img src="/img/vpn and nat.png" alt=""></p>
+<p>6)选择启动服务,启动以后它会应用刚才的配置到服务中,配置完成后,vpn的配置界面就会自动跳出来<br><img src="/img/start servicves.png" alt=""></p>
+<p>7)此时右键’路由和远程访问’,选择’属性’,找到’ipv4’选项,设置为’静态ip地址池’[这个ip地址池其实就是vpn的内网ip段],并禁用该选项日志记录功能<br><img src="/img/pptpp protiest.png" alt=""><br><img src="/img/ipaddr add.png" alt=""><br><img src="/img/ipaddr disabled log.png" alt=""></p>
+<p>8)在下面的’ipv4’中,找到’公共’选项,右键属性,禁用该项日志<br><img src="/img/general disabled log.png" alt=""></p>
+<p>9)右键 ‘igmp属性’,禁用该项日志<br><img src="/img/igmp disabled log.png" alt=""></p>
+<p>10)右键’nat’,新建网卡接口,这里有两个接口,一个外网卡,一个内网卡,这一步非常关键,一定要在内网卡上启用nat</p>
+<p>(1)首先,新建外部网卡接口,’internal’,从名字也应该能判断,这个肯定是用于公网通信的外网卡<br><img src="/img/add interface internal.png" alt=""><br><img src="/img/add interface internal res.png" alt=""></p>
+<p>(2)之后再右键新建网卡建接口,这个网卡是用于vpn内网通信的内网卡,记得务必在此网卡上勾选启用’nat’<br><img src="/img/add interface local.png" alt=""><br><img src="/img/add interface local res.png" alt=""></p>
+<p>11) 至此,pptp vpn服务端就算搭建配置完成了,不过,现在我们还没有用于登陆vpn的账号密码,所以,需要先新建一个系统用户(没错,win下的pptp vpn用户直接就是系统用户),并赋予其拨入权限,记得一定要用户给拨入权限,要不然客户端是拨不上的,其实,到这里你可能会忍不住多想一下,既然vpn用的是系统用户,如果目标也配置并开启了vpn服务,我们是不是可以直接给它的管理员悄悄的赋予下拨入权限,然后作为我们进一步渗透内网的桥梁岂不是很好,这里我们暂时先这样想着,后续,还会有大量的篇幅对这些东西进行详细的说明<br><img src="/img/new add user.png" alt=""><br><img src="/img/new add user res.png" alt=""><br><img src="/img/pptp server ip.png" alt=""></p>
+<p>12) 看下pptp服务器所在的ip,然后开始到客户端系统中配置vpn,进行连接测试,这里以win7作为客户端系统,看到vpn已正常连接,在客户端系统中也会多一个ip,其实就是vpn内网ip地址池里设置好的ip段,之后再在win7上ping下vpn服务器的内网ip,看看能不能通,能通基本就没什么问题了<br><img src="/img/client connect.png" alt=""><br><img src="/img/internetal connect.png" alt=""><br><img src="/img/pptp server ip connect.png" alt=""><br><img src="/img/connect succed.png" alt=""><br><img src="/img/connect status.png" alt=""><br><img src="/img/tracert.png" alt=""></p>
+<p>13) 这时,我们在服务器端已经看到有一个vpn客户端在线,pptp的默认端口是1723<br><img src="/img/pptp connect sockest.png" alt=""></p>
+<p>一些小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;至此,在windows 2008上的pptp vpn配置基本就全部完成了,可以看到,整个过程并没什么实际的技术含量,在这儿也就不多做说明了,当然vpn对我们的作用也并非仅限于于此,后面在实际的渗透过程中,还有更详细的说明,虽然这次是在2008上配置的,但和在2003,2012上配置pptp几乎没什么区别,基本流程都差不多,最多可能安装的地方不太一样,希望大家能举一反三,多尝试,熟了就好了<br><br></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2014/12/08/ubuntu-pptp/">
+                web渗透第一步之信息搜集[ubuntu 14.04LTS 快速安装配置pptp]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2014-12-08</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/vpn-config/">vpn config</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 一点安装配置前的准备工作:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">先最小化安装好ubuntu server <span class="number">14.04</span> LTS,除了ssh,尽量不要再勾选其它的系统服务,顺手做些简单的系统安全优化,尽量保证跳板系统的纯净</span><br></pre></td></tr></table></figure></p>
+<p>0x02 关于vpn的具体用途,在前面已有详细说明,此处不再赘述,下面只会专门说明如何在linux(暂以ubuntu14.04为例)中快速搭建配置pptp<br>1)首先,到Ubuntu中安装好pptp服务端<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get install pptpd -y</span></span><br><span class="line"><span class="comment"># apt-get update</span></span><br><span class="line"><span class="comment"># echo $?</span></span><br></pre></td></tr></table></figure></p>
+<p>2)服务端安装完成后,我们就可以开始配置pptpd了,先看下本机ip[<code>实际中应该是你自己vps的公网ip</code>],因为等会儿要把这个写到pptp主配置文件中<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig -a</span></span><br></pre></td></tr></table></figure></p>
+<p>3)编辑pptpd 主配置文件,设置好本机ip和vpn 的内网iP地址池(分配vpn的内网ip要用)<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/pptpd.conf</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">localip <span class="number">192.168</span>.<span class="number">3.185</span>        本机ip,实际用的vps,那这里就写vps的公网ip</span><br><span class="line">remoteip <span class="number">172.16</span>.<span class="number">110.1</span>-<span class="number">20</span>     设置vpn的内网ip地址池</span><br></pre></td></tr></table></figure>
+<p>4)编辑pptpd的dns配置文件,设置好用于解析的dns服务器ip,推荐用谷歌的8.8.8.8<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/ppp/pptpd-options</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">8.8</span></span><br><span class="line">ms-dns <span class="number">114.114</span>.<span class="number">114.114</span></span><br></pre></td></tr></table></figure>
+<p>5) 添加系统用户,没错,在linux中pptp也直接用的是系统用户,作为我们的vpn登录账户[不过,大多数可能都是nologin的]<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># useradd xlion -s /usr/sbin/nologin</span></span><br><span class="line"><span class="comment"># passwd  xlion</span></span><br></pre></td></tr></table></figure></p>
+<p>6) 把该账号密码添加到对应的pptp配置文件中,格式: username  pptpd password *,如下:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/ppp/chap-secrets</span></span><br><span class="line">xlion  pptpd admin *</span><br></pre></td></tr></table></figure></p>
+<p>7) 重启pptpd服务,先看下服务到底有没有起来,不用急着连<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init.d/pptpd restart</span></span><br><span class="line"><span class="comment"># netstat -tulnp | grep "1723"</span></span><br></pre></td></tr></table></figure></p>
+<p>8) 编辑sysctl.conf 文件,开启系统的路由转发功能,如下<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/sysctl.conf  </span></span><br><span class="line">net.ipv4.ip_forward=<span class="number">1</span> 将ip_forward 值改为 <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sysctl -p  重新读取sysctl配置</span></span><br></pre></td></tr></table></figure>
+<p>9) 如果你已经安装并且开启了iptables,可以顺手把下面的规则加进去,否则,你可能会发现,vpn确实能正常连上,但死活上不了外网,其实原因很简单,你需要在vpn的这个内网段上做下nat,具体如下,这里的ip段是vpn的内网ip段,网卡接口是外网卡接口,意思就是在这个网卡上启用nat<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get install iptables</span></span><br><span class="line"><span class="comment"># iptables -t nat -A POSTROUTING -s 172.16.110.0/24 -o  eth0 -j MASQUERADE</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">设置下mtu,正常情况下<span class="number">1200</span>即可,防止包过大,可以不用设置</span><br><span class="line"><span class="comment"># iptables -A FORWARD -s 172.16.110.0/24 -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1200  </span></span><br><span class="line"><span class="comment"># iptables-save &gt; /etc/iptables-rules   </span></span><br><span class="line"><span class="comment"># /etc/init.d/pptpd restart</span></span><br></pre></td></tr></table></figure>
+<p>10) 让pptpd 服务随系统自启动<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># update-rc.d pptpd enable</span></span><br></pre></td></tr></table></figure></p>
+<p>11) 开始配置客户端,进行连接测试,有时候,你可能会遇到这样的情况,虽然pptp客户端是连接成功了,但无法正常上网,ping的结果显示超时,绝大多数原因都是防火墙在搞鬼,你可以利用下面的命令直接把防火墙关掉,或者允许1723端口能正常进出应该就没问题了,至此,在ubuntu 14.04 LTS中搭建配置pptpd基本就算完成了<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ufw status</span></span><br><span class="line"><span class="comment"># ufw disable  		停止防火墙并删除自启动</span></span><br><span class="line"><span class="comment"># ufw allow 1723    	允许外部的1723端口访问</span></span><br><span class="line"><span class="comment"># ufw delete allow 1723	禁止外部访问本机的1723端口</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/pptp server ubuntu.png" alt=""><br><img src="/img/ubuntu pptpd res.png" alt=""><br><img src="/img/ubuntu pptpd res ping .png" alt=""><br><img src="/img/ubuntu pptpd tracert.png" alt=""><br></p>
+<p>12) 是不是觉得手敲命令太枯燥了呢,把它写成shell脚本吧,其实非常简单,稍微把命令堆砌调整一下即可,稍后会把自己的脚本都提供给大家,可根据自己的实际需求再稍微改下<br><br></p>
+<p>一些小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;通观全文并没什么实际的技术含量,安装配置和win下基本也没有太大差别,只不过一个是靠图形界面,另一个是靠改配置文件来完成的,完全是看个人习惯,可能我自己比较习惯linux,所以更喜欢在linux中配置pptp,如果你觉得windows比较方便,那你就直接在windows上配置就好了,前提是要严格遵循前面所提到的一些关于系统的各种安全策略配置,不同的系统平台策略设置可能不太一样,后面会有专门的篇幅来讲解linux系统的安全部署,这里只要暂时能满足把服务先跑起来能用上即可,关于安全部署方面的东西,后面再详细说,因为你vpn宿主系统的安全也会直接关系到你自己的安全,大家可能在这上面还要多花点儿心思才是,也不早了,睡觉,安……！</p>
+<p><br></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2014/11/10/sqli-readme/">
+                深入透彻理解 sql注入
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2014-11-10</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/pentest/">pentest</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 首先,创建测试库,表,准备好测试数据:</p>
+<p>建库:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\&gt;mysql -uroot -p</span><br><span class="line">mysql&gt; create database sqli;</span><br><span class="line">mysql&gt; show databases;</span><br><span class="line">mysql&gt; use sqli;</span><br></pre></td></tr></table></figure></p>
+<p>建表  personal_info(人员信息表),admin(假设为网站管理表,里面存的是网站后台管理员的账号密码):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table if not exists `personal_info`(</span><br><span class="line">    -&gt; `id` int unsigned not null auto_increment,</span><br><span class="line">    -&gt; `name` varchar(50) not null,</span><br><span class="line">    -&gt; `age` int not null,</span><br><span class="line">    -&gt; `phonenu` varchar(20) not null unique,</span><br><span class="line">    -&gt; `email` varchar(20) not null unique,</span><br><span class="line">    -&gt; `sex` varchar(20) not null default &apos;man&apos;,</span><br><span class="line">    -&gt; `birthday` date not null default &apos;1991-01-01&apos;,</span><br><span class="line">    -&gt; primary key(`id`),</span><br><span class="line">    -&gt; index username_index(`name`),</span><br><span class="line">    -&gt; index userpass_index(`phonenu`)</span><br><span class="line">    -&gt; )ENGINE=MyISAM DEFAULT CHARSET=utf8 collate utf8_general_ci;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table if not exists `admin`(</span><br><span class="line">    -&gt; `id` int unsigned not null auto_increment,</span><br><span class="line">    -&gt; `username` varchar(50) not null,</span><br><span class="line">    -&gt; `passwd` varchar(50) not null,</span><br><span class="line">    -&gt; `email` varchar(20) not null unique,</span><br><span class="line">    -&gt; primary key(`id`),</span><br><span class="line">    -&gt; index username_index(`username`),</span><br><span class="line">    -&gt; index userpass_index(`passwd`)</span><br><span class="line">    -&gt; )ENGINE=MyISAM DEFAULT CHARSET=utf8 collate utf8_general_ci;</span><br></pre></td></tr></table></figure>
+<p>0x02 理解 sql注入产生的根因:<br>&nbsp;&nbsp;&nbsp;&nbsp;脚本在接收前台传过来的数据时,没有对该数据进行很好的安全检查就直接丢到数据库中去操作,导致入侵者在前台随正常数据一起提交过来的恶意sql语句也被一并带入数据库中执行[各种子查询,联合查询…],也就是说,注入的本质,只是数据库本身,与后端脚本,系统平台无关</p>
+<p>0x03 我们利用 sql注入到底可以干些什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在当前数据库用户权限够的时候,一般为数据库管理员</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">执行系统命令,但这并不直接就等于’提权’,具体权限的大小还要取决于你服务用户的系统权限</span><br><span class="line">写文件,比如,我们可能会尝试往目标网站目录中写webshell,但能不能写进去,还要看目录具体权限</span><br><span class="line">读文件,尝试读取带有账号密码的各类敏感配置文件,然后再想办法配合其它的漏洞一起利用</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在当前数据库用户权限一般的时候,比如,只能在指定的库中进行正常的增删改查</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">像这种情况,一般我们可能会尝试查出目标网站管理员的账号和密码hash,然后再登到后台传webshell</span><br><span class="line">或者搜集各种能搜集到[有权限]的各类用户密码数据,时刻为后面的字典作准备,以备不时之需</span><br></pre></td></tr></table></figure>
+<p>0x04 先理解一些最简单的sql注入漏洞语句原型及闭合方法:</p>
+<p>最常见的 select 查询注入:<br>&nbsp;&nbsp;&nbsp;&nbsp;关于select 的注入,也可能会是我们在实战中遇到的最多的一种注入语句,实际上在前端涉及增删改的操作一般都非常少,除非像那种论坛程序,对于大多数普通的cms而言,前端用户的大多数操作可能都是在点击链接,然后把对应的参数值传给后端脚本,然后脚本再到数据库中去查,之后再把查询的结果返回给前端页面显示给用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">标准数字型注入语句:</span><br><span class="line">mysql&gt; select * from personal_info where id=3;</span><br><span class="line"></span><br><span class="line">数字型sql注入利用,数字嘛,也不存在什么闭合,直接跟上sql,就可以一下就把网站管理员的账号密码都查出来:</span><br><span class="line">mysql&gt; select * from personal_info where id=-3 union select username,passwd,3,4,5,6,7 from admin;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">标准字符型注入语句:</span><br><span class="line">mysql&gt; select * from personal_info where name=&apos;fedora&apos;;</span><br><span class="line"></span><br><span class="line">字符型sql注入利用,想办法闭合单引号,and后面可随意跟上各种子查询就可以把所有数据遍历出来了</span><br><span class="line">mysql&gt; select * from personal_info where name=&apos;fedora&apos; and 12=12 -- -; &apos;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">各种常见的登陆框注入漏洞原型sql语句:</span><br><span class="line">mysql&gt; select * from admin where username=&apos;admin&apos; and passwd=&apos;abc123&apos;;</span><br><span class="line"></span><br><span class="line">具体利用方法如下,依然是闭合前面注释后面,在and后面跟上各种子查询,直到把所有想要的数据都遍历出来:</span><br><span class="line">mysql&gt; select * from admin where username=&apos;admin&apos; and 12=12 -- - passwd=&apos;abc123&apos;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">针对各类搜索框注入的漏洞原型sql语句:</span><br><span class="line">mysql&gt; select * from personal_info where name like &apos;%ka%&apos;;</span><br><span class="line"></span><br><span class="line">具体利用方法 也非常简单,只需要前后的单引号和通配符都闭合掉即可保证语句的正常执行</span><br><span class="line">mysql&gt; select * from personal_info where name like &apos;%%&apos; and 12=12 -- +%&apos;;</span><br></pre></td></tr></table></figure>
+<p>insert 注入利用核心:<br>&nbsp;&nbsp;&nbsp;&nbsp;因为一些功能需求,在前端可能会有很多需要录入各种用户信息的表单,丢给后端脚本以后,脚本会把传过来的这些数据再插到数据库,例如典型的基于各种形式的个人中心功能,一旦遇到了,都可以随便尝试insert注入,注意,想成功利用insert注入有个必要的前提,就是你一定要知道自己插入的数据在前端的什么地方显示,如果别人只是单单搜集用户信息,然后插到数据库中,并没有在前端页面上显示,即使你知道它存在insert注入也是个鸡肋</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">漏洞语句原型:</span><br><span class="line">mysql&gt; insert into personal_info(*) values(&apos;injection&apos;,123,&apos;123456789011&apos;,&apos;sqli@inection.org&apos;,&apos;man&apos;,&apos;0000-00-00&apos;);</span><br><span class="line"></span><br><span class="line">利用如下,注意这里的闭合方法,insert前后字段的个数和数据类型务必一致,不然是闭合不了的,具体该怎么确定字段个数呢,其实很简单,你就一位位的字段递增,直到它返回正常为止,然后再在爆出来的字段上查数据就可以了</span><br><span class="line">mysql&gt; insert into personal_info(name,age,phonenu,email,sex,birthday) values(&apos;injection&apos;,1,2,3,4,5)-- -123,&apos;123456789011&apos;,&apos;sqli@inection.org&apos;,&apos;man&apos;,&apos;0000-00-00&apos;);</span><br></pre></td></tr></table></figure>
+<p>update 注入利用核心:<br>&nbsp;&nbsp;&nbsp;&nbsp;关于update利用的点有两个,一个是在set的时候,如果set的是一个从前端传过来的变量,结果可想而知,另一个则是where后面的条件,因为这个条件也是可以从前端传过来的,这个后果想必就应该清楚了,相对于insert可能会比较麻烦的一点的是,update一般都是在set一个新值,这也就意味着我们在闭合的时候,在前端很可能是没有任何回显的,这样的话我们在实际查询数据的时候可能就要费点儿劲了,具体利用过程如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">漏洞原型语句:</span><br><span class="line">mysql&gt; update personal_info set email = &apos;flow@yeah.net&apos; where name=&apos;fedora&apos;;</span><br><span class="line"></span><br><span class="line">漏洞利用语句,其实,这里是利用mysql自身的报错特性来查数据的,但大多数情况下,稍微有点儿尝试的目标站一般都会接收页面错误,这时你依然可以利用盲注的来查数据,方法大同小异</span><br><span class="line">mysql&gt; update personal_info set email=&apos;&apos;*(select 1 from(select count(*),concat((select (select (select concat(0x7e,database(),0x7e))) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)* &apos;&apos; where name=&apos;fedora&apos;;</span><br></pre></td></tr></table></figure>
+<p>关于对delete注入的利用:<br>&nbsp;&nbsp;&nbsp;&nbsp;对于delete语句,我们唯一能控制的地方可能就只有where后面的条件了,清晰明白这一点之后,剩下的事情就很好办了,说实话,在现在的web程序里,在前台涉及到delete的操作非常少,可以说几乎是没有,不过有时还是可以在后台尝试下,尤其在权限特别高的时候,至于怎么利用它来查数据,跟update差不太多,基本也是靠报错或者盲注来搞,具体利用过程如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">漏洞原型sql语句:</span><br><span class="line">mysql&gt; delete from personal_info where id=&apos;fedora&apos;;</span><br><span class="line"></span><br><span class="line">针对性注入利用,这个闭合其实跟select的时候差不多,无非就是数字或者字符串,数字就不存在什么闭合了,如果是字符串,注意闭合掉前后的单引号即可</span><br><span class="line">mysql&gt; delete from personal_info where id=&apos;fedora&apos; or (select 1 from (select count(*),Concat((select database()),0x3a,floor(rand(0)*2))y from information_schema.tables group by y)x) -- +&apos;;</span><br></pre></td></tr></table></figure></p>
+<p>0x05 在对sql注入有了基本的了解之后,再来详细看看到底哪些地方容易出现sql注入,实战知道从哪儿入手<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">get请求的url,正常情况下这里应该是最先会尝试的地方</span><br><span class="line">post数据字段中,数据较多时一般都会用post传,会是个不错的入手点</span><br><span class="line">cookie中传的数据,有些还可能会把一些参数放在cookie中传,所以这儿也会是个不错的入手点</span><br><span class="line">Referer本身用来记录上一个页面的url,但一旦被存到数据库中之后又被带入查询,你懂的 </span><br><span class="line">User-agent 本身用来记录客户端信息,只要被记录到数据库之后又被带入查询一样可被利用</span><br><span class="line">X-Forwarded-For 本身专门用来记录客户端真实ip,如果脚本在处理时把它也带到数据库中去查询...</span><br><span class="line">宽字节[双字节],	主要是由于前后端编码不统一造成理解歧义</span><br><span class="line">只要是你发现会和后端数据库交互的地方全都可以随便尝试,并不仅限于我上面提到的这些...</span><br></pre></td></tr></table></figure></p>
+<p>0x06 最后,再来简单看下几种主流关系数据库的报错信息都大概是个什么样子,先混个脸熟,后面会再详细说<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Mysql:</span><br><span class="line">ERROR 1064 (42000): You have an error in your SQL syntax;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Mssql:</span><br><span class="line">Server Error in &apos;/sportpavilion&apos; Application.</span><br><span class="line">Unclosed quotation mark after the character string &apos;&apos;.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Oracle:</span><br><span class="line">[Oracle][ODBC][Ora]ORA-01756:</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Postgresql:</span><br><span class="line">Warning: pg_query() [function.pg-query]: Query failed: ERROR: syntax error at or near &quot;\&quot; at character 53</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Sqlite3:</span><br><span class="line">Error: HY000</span><br></pre></td></tr></table></figure>
+<p>0x07 下一阶段准备<br>&nbsp;&nbsp;&nbsp;&nbsp;关于sql注入的基础科普就先简单到这里了,接下来,会再专门针对每种数据库具体的手工注入方法及注意事项做更详细的说明,待续…</p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2014/09/10/pentester/">
+                初识网络安全
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2014-09-10</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/pentest/">pentest</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 本次内容要点快速预览<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">如何正确地理解 &apos;网络安全&apos;！ 此&apos;网络安全&apos; = 彼&apos;网络安全&apos;? 渗透? 入侵? 攻击? apt?</span><br><span class="line">网络安全所涉及到的一些具体技术领域</span><br><span class="line">掌握相关领域技能所需要事先具备的一些必要基础</span><br><span class="line">熟悉圈子内约定俗成的一些 ’术语’,方便日后同别人协作沟通</span><br><span class="line">推荐几本相对比较有实用价值的安全书刊,仅以此作为入门学习参考之用</span><br><span class="line">另外,再推荐一些相对比较靠谱的安全社区及个人博客,方便大家快速获取业内信息及学习</span><br><span class="line">了解常用的一些渗透系统平台</span><br><span class="line">简要说明Web及内网常规渗透流程</span><br><span class="line">其它,问题集中讨论</span><br><span class="line"></span><br><span class="line">注: 此次分享,无任何实操环节,仅作为入门概念科普之用</span><br></pre></td></tr></table></figure></p>
+<p>0x02 网络安全所涉及到的一些领域,站在不同的角度来看,大致就如下这些</p>
+<p>单从入侵方来看 [ 主要以获取目标机器最高权限为最终目的 ]:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Web 安全 [ web并非仅限于传统意义上的标准网站,如各类oa系统,webmail它们同样都属于web范畴,包括一些并非工作在默认端口上的web服务... ]</span><br><span class="line"></span><br><span class="line">web渗透,利用各类传统高危web漏洞专门从事web入侵,关于最新web top 10漏洞详情可自行参考owasp</span><br><span class="line">针对各种web后台脚本的常规高危漏洞挖掘 [ 代码安全审查 ] 及 exp编写</span><br><span class="line">针对各主流浏览器[chrome,firefox,IE...]及web中间件[apache,IIS,tomcat,nginx,jboss,resin...]的漏洞挖掘[偏逆向]</span><br><span class="line">……</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">网络安全 [ 含二进制 ]</span><br><span class="line">	</span><br><span class="line">内网渗透,主要针对目标核心网[一般为办公内网或域内网]以及其它常规内网环境下的各种入侵手段...</span><br><span class="line">操作系统自身的各种远程执行,远程溢出类漏洞,利用协议缺陷,各类服务配置错误,软件自身的漏洞...</span><br><span class="line">针对不同平台下的高级远控及rootkit编写...[高级程序员]</span><br><span class="line">协议及系统内核0day挖掘,各类工具破解,杀软及系统内核防护对抗[免杀]...[安全研究员]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">无线安全</span><br><span class="line"></span><br><span class="line">无线电,如,典型的伪基站,蜂窝数据[短信和语音流量]嗅探,无人机劫持[射频]...</span><br><span class="line">利用无线热点实地入侵目标办公内网,暂时主要集中在无线密码hash快速破解及热点伪造上...</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">移动端安全</span><br><span class="line"></span><br><span class="line">利用移动设备进行渗透,如,常规的nethunter平台...</span><br><span class="line">各类app自身逆向 ,http/https数据分析[web渗透],android[绝大部分都是apk,已经泛滥]及ios木马...</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">工控安全</span><br><span class="line"></span><br><span class="line">主要针对目标地区的各类公共系统设施进行入侵以达到长期控制的目的,各国APT组织的主要目标</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">社工</span><br><span class="line"></span><br><span class="line">发信,即钓鱼邮件,又名鱼叉式攻击,本质其实就是花式钓鱼,方法虽然很low,但往往直接有效,前期信息搜集到位的情况下命中率也高</span><br><span class="line">水坑攻击,一直跟踪目标搜集信息</span><br><span class="line">撞库攻击,利用所有已泄露的海量数据,大数据查询,又名 ‘社工库’...</span><br><span class="line">针对特定人的公开信息搜集调研...</span><br></pre></td></tr></table></figure>
+<p>再从防御方来看 [ 单纯以’技术’安全为目的,业务安全暂不包括在内 ]:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Web 安全</span><br><span class="line"></span><br><span class="line">针对各类服务,中间件及脚本配置文件加固</span><br><span class="line">网站实时监控,各类程序补丁升级,应急响应[主要是应对各类0day灾害及入侵事件,进行的紧急修复]...</span><br><span class="line">代码安全审查,安全开发 [负责编写一些安全检测小工具及exp],各类waf,ids,ips,fw等传统安全产品开发...</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">网络安全</span><br><span class="line"></span><br><span class="line">ids,ips部署,各类fw,服务及网络设备加固,日志审查,入侵取证, 恶意流量分析,反渗透溯源...</span><br><span class="line">蜜罐开发部署,入侵监控,威胁情报分析[反社工]...</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">无线安全</span><br><span class="line"></span><br><span class="line">配置加固,防火墙,隐藏无线id,禁用wps,升级固件...</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">移动安全</span><br><span class="line"></span><br><span class="line">http/https数据分析,app逆向分析但&apos;此&apos;逆向非&apos;彼&apos;逆向...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>0x03 初步掌握相关渗透技能所需要具备的一些基础知识<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Web 渗透:</span><br><span class="line"></span><br><span class="line">熟练掌握http/https协议,比如,请求响应头部中的各个字段的具体作用务必要非常熟悉</span><br><span class="line">熟练最基本的web前后端开发,如,html4/5,css2/3,原生js/及任意一款js框架,php/python/java/c#...</span><br><span class="line">熟练标准sql及各类数据库的基本操作,如,mssql,mysql,oracle,postgresl,sqlite,db2...</span><br><span class="line">熟练各类web中间件的基本部署配置,如,apache,nginx,tomcat,iis,resin,jboss,glassfish...</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">内网渗透:</span><br><span class="line"></span><br><span class="line">熟练不同平台下的系统管理,如 *inux,win server</span><br><span class="line">如,基本工具命令使用,用户及组管理,进程管理,磁盘管理,网络管理,各类服务管理,域内管理..</span><br><span class="line">熟知各类常用协议的核心工作细节,如,http,https,dns,smb,tcp,udp,arp...</span><br><span class="line">熟知不同操作系统上独有的一些特性,熟练掌握一门底层开发语言,最好是c</span><br><span class="line">掌握必要的逆向基础,如,逆向分析[包含免杀破解,入侵取证,恶意流量分析,病毒分析]...</span><br></pre></td></tr></table></figure>
+<p>0x04 理解相关安全领域的一些基本安全 ‘术语’[漏洞类型]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Web:</span><br><span class="line"></span><br><span class="line">信息搜集,如查找目标真实ip,利用搜索引擎快速锁定目标漏洞站点,敏感目录文件扫描,子域爆破...</span><br><span class="line">Sql注入[injection], 包含[File inclusion vulnerability],远程代码或命令执行[RCE]</span><br><span class="line">上传[File upload vulnerability],解析漏洞[Request line parsing vulnerability]</span><br><span class="line">反序列化漏洞[Deserialization of untrusted data]</span><br><span class="line">未授权访问[Broken Access Control],任意文件读取[xxe],任意文件下载...</span><br><span class="line">Ssrf,信息泄露[主要是各类敏感文件源码泄露],xpath,email,ldap注入,xss,csrf...</span><br><span class="line">bypass Waf, webshell,小马,大马,菜刀[webshell管理工具],免杀webshell...</span><br><span class="line">打包脱裤,提权,poc[漏洞证明代码],exp[漏洞利用程序],0day[零日漏洞],src...</span><br><span class="line">web漏扫,系统漏扫,爬虫[spider],钓鱼[定向攻击],端口扫描...</span><br><span class="line">旁站[同服],C段,cc攻击,各类框架漏洞利用[struts2,thinkphp...],肉鸡,跳板...</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">内网:</span><br><span class="line"></span><br><span class="line">tcp端口转发,复用 [各类隧道,ssh,icmp,http],socks5反向代理,多级内网穿透[打洞]</span><br><span class="line">Powershell,嗅探,爆破,维持访问[反弹shell,木马后门,病毒,蠕虫,免杀,rootkit],日志伪造...</span><br><span class="line">域,域控,域管,抓hash,hash传递,hash破解,批量挂马,ddos攻击……</span><br><span class="line">Msf [ metasploit ] 渗透平台,有详细官方文档可参考, www.offensive-security.com</span><br><span class="line">cobalt strike 一款高级蓝队协同作战平台,异常实用,功能强悍,隐蔽性较好...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>0x05 熟悉几个相对比较主流的渗透系统平台<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Kali			[基于debian,适合初学者,不稳定,维护更新较为频繁] &amp; nethunter</span><br><span class="line">Parrot Security OS	[基于debian,ui炫酷,不实用]</span><br><span class="line">BackBox 		[基于ubuntu,不稳定,系统封装还有很多问题]</span><br><span class="line">PentestBox 		[Windows下的渗透平台,说实话,不太好用,不推荐]</span><br><span class="line">Ubuntu 			[利用Ubuntu手工打造适合自己习惯的渗透平台,个人推荐]</span><br></pre></td></tr></table></figure></p>
+<p>0x06 推荐给大家一些相对比较靠谱的安全学习书刊,看书的时候,务必以真正吸收知识为主<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">《安全参考》《书安》...			内容相对比较基础,容易入门</span><br><span class="line">《Web应用安全权威指南》			作为web渗透入门书籍还是非常值得一看的</span><br><span class="line">《黑客攻防技术宝典 web实战篇》		适合多次阅读,对web安全剖析相对比较全面深入,实战性较强</span><br><span class="line">《黑客大曝光 第七版》			适合作为win内网渗透入门,此外,它还详细介绍了apt团队的惯用攻击流程及招数</span><br><span class="line">《Wireshark 数据包分析实战(第2版)》	用实操来熟练深刻理解各种基础协议基本运作原理</span><br><span class="line">《0day安全(第2版)》			逆向分析的入门书籍,非常值得一看,内容浅显易懂</span><br><span class="line">《深入理解计算机系统》			在熟练具备以上基础之后,非常值得深入的一本好书</span><br><span class="line">《TCP/IP详解 卷1-3》			熟练协议分析必备,网络专家之路上的不二之选,建议上述所有内容都熟练掌握以后再来看,理解会更深</span><br></pre></td></tr></table></figure></p>
+<p>0x07 再推荐一些相对比较有价值的安全站及个人博客<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">github.com		全球程序员的殿堂,全球最大的黑客武器库,尽情享用,不用客气,嘿嘿……</span><br><span class="line">adsecurity.org		专注windows域安全,里面还是有很多宝贝的,非常值得深度挖掘</span><br><span class="line">pentest.blog		更新挺快的,质量还行</span><br><span class="line">forum.90sec.com		老牌安全社区,较专注web和内网安全,总体来说挺不错的</span><br><span class="line">www.mottoin.com		也还不错,只是暂时人可能比较少,可能是因为内容更新太慢了吧</span><br><span class="line">www.pediy.com www.52pojie.cn 	专业老牌的二进制社区,如果对逆向有兴趣可以多多关注这两个地方</span><br><span class="line">bobao.360.cn			播报,也比较老了,不过里面还是有些比较有价值的好文章,总体来讲平台不错</span><br><span class="line">xianzhi.aliyun.com		阿里先知,也还不错,立马不乏一些高质量文章</span><br><span class="line">www.sec-wiki.com		窗口导航站,自由投稿,很一般</span><br><span class="line">www.exploit-db.com		全球最大的exp平台</span><br><span class="line">其它各大官方漏洞库,国内,境外都非常多,但可能并不是我们想要的,大多是给甲方看的</span><br><span class="line">……</span><br></pre></td></tr></table></figure></p>
+<p>0x08 常规入侵流程小结<br>详情可参考本人总结好的脑图,其实,不管是web还是内网,大概流程上基本是一致的,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-&gt; 确定目标... </span><br><span class="line">  -&gt; 搜集信息[扫描探测,社工搜集...]... </span><br><span class="line">    -&gt; 查找漏洞...</span><br><span class="line">      -&gt; 成功利用该漏洞进入目标系统[此时权限可能还比较低]... </span><br><span class="line">        -&gt; 提权... </span><br><span class="line">          -&gt; 拿到想要的各类数据... </span><br><span class="line">            -&gt; 处理好日志...</span><br><span class="line">              -&gt; 留上后门... </span><br><span class="line">                -&gt; 长期稳控,定时维护肉鸡,组建僵尸网络,蓄势待发...</span><br></pre></td></tr></table></figure></p>
+<p>0x09 技术之外的话<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">关于安全的东西确实非常的多,想一下子全栈掌握暂时似乎还不太现实,但掌握一两个方向至少还是很有可能的</span><br><span class="line">既是如此,投入大量的时间和精力在里面也是肯定的,毕竟都是慢慢积累起来的,安全嘛,说到底就是一个不断学习</span><br><span class="line">不断接触熟悉掌握未知领域的过程,期间肯定会经常去尝试一些自己曾经没做过甚至都没接触过的事情,挑战是经常的</span><br><span class="line">只要不抵触,不浮躁,能静下心耐着性子好好去理解,后面的路就会越来越好走,个人始终坚信 &apos;未知攻焉知防&apos;</span><br><span class="line">一位优秀的防御者,必定也是一位顶尖的入侵者,自己也一直在朝着这方向努力,不管以后是开发各种安全产品也好</span><br><span class="line">写各类渗透工具也好,专门做渗透手也好,或者去研究架构安全也罢,丰富的实战入侵经验在任何时候都是必须的</span><br><span class="line">很明显,只有这样,写出来的工具,才会有更强的针对性和适应性,说了这么多,所谓的&apos;经验&apos;</span><br><span class="line">说白点儿其实都是你自己在实战渗透中解决问题潜移默化形成的那种能力,这也是任何人都给不了你的</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2014/03/21/sec-proto-auth/">
+                安全协议及认证服务脑图
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2014-03-21</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/secpic/">secpic</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><img src="/img/secprotoauth.jpg" alt="&quot;安全协议和认证服务&quot;"><br></p>
+
+        </div>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2014/01/12/proctice/">
+                各类漏洞演练平台汇总
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2014-01-12</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/other/">other</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><img src="/img/Practice.png" alt="&quot;各类漏洞演练平台汇总&quot;"><br></p>
+
+        </div>
+    
+
+</div>
+            
+        </section>
+    </div>
+</div>
+
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="wrap-pagination">
+                <a class="" href="/page/15/">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                </a>
+                <a class="disabled" href="/">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

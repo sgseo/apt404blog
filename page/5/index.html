@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="APT404-不疯不魔怎么活"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="website" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>page - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+        
+            <h1 id="main-title" class="title">APT404-不疯不魔怎么活</h1>
+        
+    </div>
+</header>
+
+        <section class="main">
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/09/22/snortpentest/">
+                入侵检测学习 Snort [一]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-09-22</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/snort/">snort</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 关于Snort<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">业界相对比较出名年头也比较久的一款基于网络的开源入侵检测工具</span><br><span class="line">不过,比较适合中小型网络 [在流量不是非常大的情况下还是很不错的选择],规则配置灵活,实战适用性相对较好</span><br><span class="line">只是,实在不知道为什么要弄一头猪做logo,这文化差异大的有点儿着实让人无法理解 :)</span><br></pre></td></tr></table></figure></p>
+<p>0x02 理解snort的最基本的工作流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">内网中的数据 -&gt; 数据嗅探[让内网中其它机器上的数据流过自己] -&gt; 进行各种预处理[防止数据逃逸] -&gt; 规则检测引擎 -&gt; 处理报警/日志 </span><br><span class="line">											    |		  |</span><br><span class="line">										      匹配规则库	  存到数据库或者写到日志文件中</span><br></pre></td></tr></table></figure></p>
+<p>0x03 模块具体作用简介<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">数据包嗅探,让其它机器上的指定数据包都经过自己,以便snort分析数据,同样,用的也是libpcap库,包括在其它很多linux平台嗅探工具你都能看到它的身影</span><br><span class="line">预处理,包重组预处理器,主要是为了防止攻击包被拆分逃避Snort的检测,另一个是协议编码预处理器,主要负责把数据包协议解码成一个统一的格式,再丢给检测模块,最后一个是协议异常检测预处器</span><br><span class="line">规则匹配检测,也就是当预处理把数据包丢过来以后,规则引擎会将这些数据包逐个和规则库进行匹配,一旦发现数据包内容与某条规则匹配,就丢给报警模块去处理</span><br><span class="line">报警/日志模块,规则引擎将数据丢给报警模块以后,报警模块会根据snort事先定义好的规则动作(alert,log...)对其进行不同的处理(写到数据库或日志文件中)</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/09/22/snortpentest/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/09/21/mysql-mul-server/">
+                一分钟部署 MySql 多实例
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-09-21</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/mysql多实例/">mysql多实例</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>0x01 到底什么是<code>MySql多实例</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">说的通俗些,就是通过读取不同的my.cnf配置,同时启动多个mysqld进程,共用系统资源</span><br><span class="line">这也就意味着,当其中一个实例并发较高或者慢查询较多的情况下,其它实例的性能也会因此受到很大的影响</span><br><span class="line">这种情况通常用于机器性能较好且单实例mysql无法充分利用系统资源的情况下</span><br></pre></td></tr></table></figure></p>
+<p>0x02 此处,我们选择自己手工编译安装<code>mysql-5.5.55</code>,根据大家自己实际的机器性能,速度可能会稍慢些,请耐心等待</p>
+<p>演示环境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CentOS 6.8 x86_64     最小化,带基础环境库安装</span><br><span class="line">eth0 ip: 192.168.3.51</span><br><span class="line">eth1 ip: 192.168.4.19</span><br><span class="line">eth2 ip: 192.168.5.19</span><br></pre></td></tr></table></figure></p>
+<p>安装mysql所需的各种依赖库并创建mysql的服务用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># yum install ncurses-devel libaio-devel cmake bison -y</span><br><span class="line"># useradd mysql -s /sbin/nologin -M</span><br></pre></td></tr></table></figure></p>
+<p>下载并编译 mysql-5.5.55<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># wget http://mirrors.sohu.com/mysql/MySQL-5.5/mysql-5.5.55.tar.gz</span><br><span class="line"># tar xf mysql-5.5.55.tar.gz</span><br><span class="line"># cd mysql-5.5.55</span><br><span class="line"># cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql-5.5.55 \</span><br><span class="line">-DMYSQL_DATADIR=/usr/local/mysql-5.5.55/data \</span><br><span class="line">-DMYSQL_UNIX_ADDR=/usr/local/mysql-5.5.55/tmp/mysql.sock \</span><br><span class="line">-DDEFAULT_CHARSET=utf8 \</span><br><span class="line">-DDEFAULT_COLLATION=utf8_general_ci \</span><br><span class="line">-DEXTRA_CHARSETS=all \</span><br><span class="line">-DENABLED_LOCAL_INFILE=ON \</span><br><span class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_FEDERATED_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITHOUT_EXAMPLE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITHOUT_PARTITION_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_FAST_MUTEXES=1 \</span><br><span class="line">-DWITH_ZLIB=bundled \</span><br><span class="line">-DENABLED_LOCAL_INFILE=1 \</span><br><span class="line">-DWITH_READLINE=1 \</span><br><span class="line">-DWITH_EMBEDDED_SERVER=1 \</span><br><span class="line">-DWITH_DEBUG=0</span><br><span class="line"></span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/local/mysql-5.5.55/ /usr/local/mysql</span><br><span class="line"># ll /usr/local/mysql/</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/09/21/mysql-mul-server/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/09/19/naxsiwaf/">
+                定制轻量高效的WAF Naxsi [一]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-09-19</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/env/">env</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 关于naxsi<br>&nbsp;&nbsp;&nbsp;&nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库<code>其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动</code>,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试中貌似暂时只能拦截从get或者post过来的数据,这也是个小遗憾</p>
+<p>0x02 依然是拿之前编译好的lnmp环境[具体如何编译配置,请参考博客相关文章]来做演示,我这里先把之前的配置文件备份下,等会儿好直接拿过来用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php5.5.38 + mysql-5.5.32 + nginx-1.12.1 + centOS6.8_x64</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># netstat -tulnp | grep &quot;80&quot;</span><br><span class="line"># pkill nginx</span><br><span class="line"># cp /usr/local/nginx/conf/nginx.conf ./</span><br><span class="line"># cp /usr/local/nginx/conf/extra/bwapp.conf  ./</span><br><span class="line"># rm -rf /usr/local/nginx*</span><br></pre></td></tr></table></figure>
+<p>0x03 下载naxsi,重新编译安装nginx,主要是要把naxsi模块加载进去,这里的nginx直接用的最新版的稳定版本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># git clone https://github.com/nbs-system/naxsi.git</span><br><span class="line"># wget http://nginx.org/download/nginx-1.12.1.tar.gz</span><br><span class="line"># yum install pcre pcre-devel openssl openssl-devel -y</span><br><span class="line"># useradd -s /sbin/nologin -M nginx</span><br><span class="line"># tar xf nginx-1.12.1.tar.gz</span><br><span class="line"># cd nginx-1.12.1</span><br><span class="line"># ./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module --with-file-aio --with-http_dav_module --add-module=../naxsi/naxsi_src/</span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/local/nginx-1.12.1/ /usr/local/nginx</span><br><span class="line"># cd /usr/local/nginx/conf/</span><br><span class="line"># mv nginx.conf nginx.conf.bak &amp;&amp; egrep -v &quot;^$|#&quot; nginx.conf.bak &gt;&gt; nginx.conf</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/09/19/naxsiwaf/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/09/09/pentestaction/">
+                自己总结的常规入侵流程脑图
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-09-09</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/pentest/">pentest</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br></p>
+<p><center>个人始终坚信,只有深入理解入侵者的真实想法,不断学习,并能轻松熟练地模拟出入侵者的各类入侵手段,才是最切实有效的防御</center><br>
+        </div>
+        <a href="/2017/09/09/pentestaction/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/08/06/ew-tunnel/">
+                利用 ew 轻松穿透目标多级内网
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-06</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/ew/">ew</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p>0x01 ew 快速穿透目标多级内网:</p>
+<p>简要环境说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">win2008R2 假设为目标边界web服务器,可正常访问公网</span><br><span class="line">假设其公网ip为 192.168.3.23</span><br><span class="line">假设其内网ip为 192.168.32.131</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">win2008 假设为目标内网数据库服务器,可正常访问公网</span><br><span class="line">假设其内网ip为 192.168.32.170</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">win7 假设为自己公网的vps</span><br><span class="line">假设其公网ip为 192.168.3.232</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">centos 5.1 假设为目标内网的一台linux机器,没有dns不能访问公网</span><br><span class="line">假设其内网ip为 192.168.32.169</span><br></pre></td></tr></table></figure>
+<p>0x02 首先,利用ew做最简单的正向代理,其实就是大家最常用的所谓的ss:</p>
+<p>在 win2008R2 机器上执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ew_for_Win.exe -s ssocksd -l 1080</span><br></pre></td></tr></table></figure></p>
+<p>在win7上打开Proxifier根据上面监听的端口建立正常的socks代理即可<br>
+        </div>
+        <a href="/2017/08/06/ew-tunnel/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/08/03/navicat-dump/">
+                利用 Navicat 自带的http隧道进行脱裤
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-03</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/dump/">dump</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 基本环境说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">目标边界机器lnmp01的域名及内网ip: www.rootkit.org 192.168.32.167</span><br><span class="line">目标内网中数据库[暂以mysql为例]服务器[win7]的内网ip: 192.168.32.168</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">很明显,lnmp01和win7在目标内网是可以互通的</span><br></pre></td></tr></table></figure>
+<p>0x02 实际脱裤可能会面临的一些困境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">想脱数据,但目标数据库不允许root用户外连,可能的原因多种多样,一般只grant到指定的ip才能连</span><br><span class="line">目标站库分离[再正常不过],数据库在内网的某台机器上</span><br><span class="line">即使没分离,当前的数据库用户又不允许外联,另外,由于当前数据库用户权限不够,也没法自己开启外联</span><br><span class="line">即使是root,不知道什么乱七八糟的原因,没法grant允许root外连...</span><br><span class="line">边界防火墙阻断外部ip对内部数据库端口[假设为3306]的访问等等....</span><br><span class="line">还在为脱裤烦恼吗,嘿嘿……navicat也许可以帮到你</span><br></pre></td></tr></table></figure></p>
+<p>0x03 我们最终要实现的效果:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过lnmp01这台机器,脱取内网win7机器上的所有数据</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/08/03/navicat-dump/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/08/02/log-find/">
+                入侵取证 [ web日志分析初步 ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-02</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/log/">log</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;既然是取证, 不妨就从一个稍微全局点的角度来理解,最先应该搞清楚的, 可能就是, 到底哪些地方会留下入侵者的痕迹 , 这次单单就以最基础的web服务 [ 暂不涉及脚本引擎,数据库及系统方面的东西 ] 基本取证流程为例, 其实很简单,入侵者一般喜欢从哪里下手,就必然会在那里留下痕迹, 可能在此之前我们还需要搞清楚客户端的http数据到底都是从什么地方过来的, 有GET 的 URL 中传来的数据 , POST 中传来的数据,从http头中获取的各类客户端数据 [ 如,cookie,user-agent,Referer,X-Forwarded-For ], 像这些很基础的东西,早该在最开始部署服务的时候就想到,不然,等到真出事的那一天,自己真正能掌握的资料就着实比较少了</p>
+<p>0x02 环境简介<br>&nbsp;&nbsp;&nbsp;&nbsp;暂以 nginx 为例,一个最基本的日志格式大概是下面这个样子,当然,这种格式可能会造成你的日志文件特别大 [ 存的东西多嘛 ], 但实际部署时还是需要你根据自己的实际的业务来,这里也仅仅只是做个参考</p>
+<p>先在指定的 server 标签中定义好cookie变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">...</span><br><span class="line">    set $dm_cookie &quot;&quot;;</span><br><span class="line">    if ($http_cookie ~* &quot;(.+)(?:;|$)&quot;) &#123;</span><br><span class="line">        set $dm_cookie $1;</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这时再回到 nginx 主配置文件中, 引用刚刚设置的cookie变量, 这样, 头里面的那几个字段数据就都可以被记录了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">...</span><br><span class="line">    log_format main &apos;$remote_addr - $remote_user  [$time_local]  &apos;</span><br><span class="line">    &apos; &quot;$request&quot; $request_body $status  $body_bytes_sent  &apos;</span><br><span class="line">    &apos; &quot;$http_referer&quot;  &quot;$http_user_agent&quot;  &quot;$http_x_forwarded_for&quot; &quot;$dm_cookie&quot; &apos;;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/08/02/log-find/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/08/02/ELK-LOG/">
+                利用 ELK 深度定制实时入侵日志分析平台初步
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-02</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/ELK/">ELK</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 首先,快速安装配置好jdk 1.8,因为ES基于java:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># export LANG=en</span><br><span class="line"># tar xf jdk-8u131-linux-x64.tar.gz</span><br><span class="line"># mv jdk1.8.0_131/ /usr/local/jdk</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># chown -R root.root /usr/local/jdk/</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># vi /etc/profile</span><br><span class="line">  export JAVA_HOME=/usr/local/jdk/</span><br><span class="line">  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH</span><br><span class="line">  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar</span><br><span class="line">  export TOMCAT_HOME=/usr/local/tomcat</span><br><span class="line"># source /etc/profile</span><br><span class="line"># java -version</span><br><span class="line"># javac</span><br></pre></td></tr></table></figure></p>
+<p>0x02 再来熟悉一些必要的关于elasticsearch的基础概念:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">索引 -&gt; 文档 -&gt; 分片和副本</span><br></pre></td></tr></table></figure></p>
+<p>0x03 下载配置 elasticsearch:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.2.tar.gz</span><br><span class="line"># tar -xf elasticsearch-1.7.2.tar.gz</span><br><span class="line"># mv elasticsearch-1.7.2 /usr/local/</span><br><span class="line"># ln -s /usr/local/elasticsearch-1.7.2/ /usr/local/elasticsearch</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/08/02/ELK-LOG/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/08/01/socat-meterpreter/">
+                如何利用 socat 更方便地穿透目标内网
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-01</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/socat/">socat</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 此次环境说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lnmp01	假设为目标DMZ段机器,等会儿会作为proxy端</span><br><span class="line">假设其公网ip为 192.168.3.30</span><br><span class="line">假设其内网ip为 192.168.32.167</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">win7  假设为目标内网机器</span><br><span class="line">假设其内网ip为 192.168.32.144</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">本地机器</span><br><span class="line">假设本地内网ip为 192.168.3.15</span><br></pre></td></tr></table></figure>
+<p>0x02 需要注意的一些前提条件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">本地机器能ping通lnmp01,lnmp01和目标内网中的win7能互通</span><br></pre></td></tr></table></figure></p>
+<p>0x03 最终目的,实现双内网通信,即在我自己的内网中操作目标内网中的机器,当然,实现双内网通信的方式还有非常多,比如常用的几种方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">最传统的是通过在vps利用lcx listen做转发,然后再在本地bind上去</span><br><span class="line">另外,还是通过vps搭建vpn,本地先连到vpn内网中,再在vps上用lcx tran通过vpn内网转发到本地</span><br><span class="line">还有,利用meterpreter自带的端口转发功能,当然啦,那个是通过meterpreter隧道自己来实现的,也就是说你要先把meterpreter的shell先弹回来,因为这个并非今天重点,暂不多做介绍,有兴趣可自行深度挖掘研究</span><br><span class="line">再有,在一些高级点的马中也自带了各种内网代理功能....</span><br><span class="line">最后,就是接下来咱们要详细说明的这种,利用socat和目标DMZ建立双向通道,然后带出目标内网中所有机器的流量</span><br><span class="line">......</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/08/01/socat-meterpreter/" class="read-more">Read More</a>
+    
+
+</div>
+            
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2017/08/01/waf-for-modsecurity/">
+                ModSecurity 生产级WAF部署优化 [一]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-08-01</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/ModSecurity/">ModSecurity</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>0x01 用大白话来简单说明 WAF 最基本的工作流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">捕获客户端的各种请求 -&gt; 匹配WAF拦截规则 -&gt; 命中规则后的处理动作 -&gt; 将整个拦截过程记录到指定的日志文件中 -&gt; 脚本绘制实时攻击图表</span><br></pre></td></tr></table></figure></p>
+<p>0x02 关于modsecurity<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">一款老牌的开源 WAF,相信经常搞渗透的朋友,对市面上经常用的几款WAF,都早已非常熟悉,废话不多说,咱们直奔主题</span><br><span class="line">本次,我们只是单单把它部署到可用的状态,关于规则深度定制,绕过以及白名单设置是我们面的事情</span><br><span class="line">个人非常不建议把modsecurity和nginx一起用,实际测试中,问题还非常的多,关于nginx更推荐用naxsi[后面再单独说]</span><br><span class="line">至于源码包,可自行去 modsecurity 的官方站点下载  www.modsecurity.org</span><br></pre></td></tr></table></figure></p>
+<p>0x03 首先,先编译安装好基本的LAMP环境 [具体编译安装过程,可自行参考博客相关文章] ,这里暂时就直接用之前编译好的环境来演示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpd 2.4.27 + php 5.6.31 + mysql 5.5.57 + centOS6.8_x64</span><br></pre></td></tr></table></figure></p>
+<p>0x04 先停掉apache,因为等会儿要编译modsecurity生成对应的库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># pkill httpd</span><br></pre></td></tr></table></figure></p>
+<p>0x05 开始编译安装 modsecurity,一如往常,务必先装好一些必要的依赖库,不然中间会有很多的麻烦<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># yum install httpd-devel apr apr-util-devel apr-devel pcre pcre-devel libxml2 libxml2-devel curl-devel zlib zlib-devel openssl openssl-devel -y</span><br><span class="line"># cd modsecurity-2.9.2</span><br><span class="line"># ./configure --with-apxs=/usr/local/httpd/bin/apxs   生成modsecurity的so</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
+        </div>
+        <a href="/2017/08/01/waf-for-modsecurity/" class="read-more">Read More</a>
+    
+
+</div>
+            
+        </section>
+    </div>
+</div>
+
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="wrap-pagination">
+                <a class="" href="/page/4/">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                </a>
+                <a class="" href="/page/6/">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
+        
+        <li>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/python-basic/">python basic</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- After footer scripts -->
+
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
+<script src="/js/main.js"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

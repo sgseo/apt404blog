@@ -51,6 +51,63 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
+        <a href="/2017/10/27/NetRipper/">截获内存中的各类Https明文密码</a>
+      </h1>
+    
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-10-27
+        
+            by klion
+        
+    </p>
+
+    
+
+    <!-- Content -->
+    <p>0x01 利用 NetRipper 抓取内存中的https明文密码</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;优点,可以在一个相对较低的系统权限下截获加密的明文,工具已经出了有些年头了,好在作者维护一直比较勤奋,才活到了现在,它支持截获像putty,winscp,mssql,chrome,firefox,outlook中的明文密码,同时也提供了很多类型的版本,如,win cmd下的exe,msf模块,ps脚本,实战中更推荐大家直接用powershell,更多详情请自行参考其github <a href="https://github.com/NytroRST/NetRipper" target="_blank" rel="noopener">https://github.com/NytroRST/NetRipper</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># powershell -exec bypass</span><br><span class="line">PS&gt; Import-Module .\Invoke-NetRipper.ps1</span><br></pre></td></tr></table></figure>
+    <!-- Only display the Read More link if we are displaying an excerpt -->
+    
+        <p id="readmore">
+            <a href="/2017/10/27/NetRipper/">
+                Read More >>>
+            </a>
+        </p>
+    
+
+    <hr />
+
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/NetRipper/">NetRipper</a>
+</div>
+
+
+    
+
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/NetRipper/">#NetRipper</a>
+</div>
+
+
+
+
+</div>
+</div>
+
+
+    <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    
+      <h1 class="blog-post-title">
         <a href="/2017/10/26/privilege-local/">Win & Linux 本地提权脑图</a>
       </h1>
     
@@ -542,63 +599,6 @@
 <div class="blog-tags-container">
     <span><img src="/image/tagsicon.png" alt=""/></span>
     <a href="/tags/cobalt-strike/">#cobalt strike</a>
-</div>
-
-
-
-
-</div>
-</div>
-
-
-    <div class="main">
-<div class="blog-post">
-    <!-- Title -->
-    
-      <h1 class="blog-post-title">
-        <a href="/2017/09/22/snortpentest/">入侵检测学习 Snort [一]</a>
-      </h1>
-    
-    <!-- Date and Author -->
-    <p class="blog-post-meta">
-        2017-09-22
-        
-            by klion
-        
-    </p>
-
-    
-
-    <!-- Content -->
-    <p><br><br>0x01 关于Snort<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">业界相对比较出名年头也比较久的一款基于网络的开源入侵检测工具</span><br><span class="line">不过,比较适合中小型网络 [在流量不是非常大的情况下还是很不错的选择],规则配置灵活,实战适用性相对较好</span><br><span class="line">只是,实在不知道为什么要弄一头猪做logo,这文化差异大的有点儿着实让人无法理解 :)</span><br></pre></td></tr></table></figure></p>
-<p>0x02 理解snort的最基本的工作流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">内网中的数据 -&gt; 数据嗅探[让内网中其它机器上的数据流过自己] -&gt; 进行各种预处理[防止数据逃逸] -&gt; 规则检测引擎 -&gt; 处理报警/日志 </span><br><span class="line">											    |		  |</span><br><span class="line">										      匹配规则库	  存到数据库或者写到日志文件中</span><br></pre></td></tr></table></figure></p>
-<p>0x03 模块具体作用简介<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">数据包嗅探,让其它机器上的指定数据包都经过自己,以便snort分析数据,同样,用的也是libpcap库,包括在其它很多linux平台嗅探工具你都能看到它的身影</span><br><span class="line">预处理,包重组预处理器,主要是为了防止攻击包被拆分逃避Snort的检测,另一个是协议编码预处理器,主要负责把数据包协议解码成一个统一的格式,再丢给检测模块,最后一个是协议异常检测预处器</span><br><span class="line">规则匹配检测,也就是当预处理把数据包丢过来以后,规则引擎会将这些数据包逐个和规则库进行匹配,一旦发现数据包内容与某条规则匹配,就丢给报警模块去处理</span><br><span class="line">报警/日志模块,规则引擎将数据丢给报警模块以后,报警模块会根据snort事先定义好的规则动作(alert,log...)对其进行不同的处理(写到数据库或日志文件中)</span><br></pre></td></tr></table></figure></p>
-    <!-- Only display the Read More link if we are displaying an excerpt -->
-    
-        <p id="readmore">
-            <a href="/2017/09/22/snortpentest/">
-                Read More >>>
-            </a>
-        </p>
-    
-
-    <hr />
-
-    
-
-
-<div class="blog-categories-container">
-    <span><img src="/image/categoriesicon.png" alt=""/></span> 
-    <a href="/categories/snort/">snort</a>
-</div>
-
-
-    
-
-
-<div class="blog-tags-container">
-    <span><img src="/image/tagsicon.png" alt=""/></span>
-    <a href="/tags/snort/">#snort</a>
 </div>
 
 

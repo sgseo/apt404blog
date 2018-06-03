@@ -51,48 +51,64 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
-        <a href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与实战</a>
+        <a href="/2018/06/03/使用-tor-来尽可能伪装入侵痕迹-匿名搞事/">使用 Tor 来尽可能伪装入侵痕迹(匿名搞事)</a>
       </h1>
     
     <!-- Date and Author -->
     <p class="blog-post-meta">
-        2017-12-29
+        2018-06-03
         
-            by klion
+            by admin
         
     </p>
 
     
 
     <!-- Content -->
-    <p>0x01 开始之前,有必要先稍微理解下基于<code>dns beacon的大致通信过程</code>,其实,非常非常简单,前提是你对dns的解析过程早已经烂透于心,不熟悉的朋友可以先去参考前段时间写的 <a href="https://klionsec.github.io/2017/12/11/Dns-tips/" target="_blank" rel="noopener">[DNS 深度理解 一] </a>,把基础打扎实了,再回过头来理解这些东西自然就易如反掌了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-&gt; beacon shell会向指定的域名发起正常的dns查询</span><br><span class="line">  -&gt; 中间依然是经过一些列的常规dns迭代及递归查询,大致过程就是,一直从根开始找,直到找到我们自己的ns服务器,最后再定位到团队服务器ip,仅此而已</span><br><span class="line">    -&gt; 也就是说,第一次通信可能会慢点,后续就会稍微快些,不过说实话,dns再快也快不到哪里去,毕竟,我们要的是足够的隐蔽,而不一味追求速度,不然容易露点</span><br></pre></td></tr></table></figure></p>
-<p>0x02 废话说完,我们就开始来尝试在实战中应用,首先,你要先买台<code>vps</code>,亚马逊或者<code>vultr</code>都挺不错的,自己也一直在用,之后装好系统,推荐用<code>ubuntu</code>,此处演示用的是<code>ubuntu 16.04.2</code>,具体的系统安装方法直接一路点点点就好了,全程傻瓜化,大概等个六七分钟,待系统初始化完成就可以用ssh连上去了<br>
+    <p><br><br>0x01</p>
+<p>  在开始 tor 之前,有必要先来大致说明下,什么是‘洋葱路由协议’以及其内部数据的创建,发送与加密过程,能先大致理解通信流程就好,毕竟我们不是为了去专门研究洋葱路由协议以及其内部的加解密过程</p>
+<p>  上世纪 90 年代初,美国海军研究实验室为了保护美国在线情报系统而开发了洋葱路由,之所以被称为洋葱路是因为要发送的原始消息被一层一层加密包装成像洋葱一样的数据包,至于被包裹的层数则取决于到达最终目的地中<br>间所经过的总节点数,每经过一个节点就会将数据包的最外层解密,这样也使得中间所经过的任何一个节点都无法同时知晓这个消息最初与最终的目的地在哪儿,使发送者在一定程度上达到了匿名的效果<br>简单背景科普之后,我们就从用户发起一个匿名请求开始,为了组装洋葱数据包,原始消息发送者,会从现有的所有 tor 节点中随机选出一部分节点,并用这些节点规划出一条线路,也就是该洋葱数据包后续的通信线路[其实就<br>是不停转发,也叫’中继节点’],为尽可能隐匿原始消息的发送者,这条线路中间的任何一个节点都无法确定前一个节点到底是原始消息发送者还是同线路中的另一个节点,同样,该线路中间的任何一个节点也无法确定下一个节点到<br>底是最终的目的节点还是整条线路中的另一个节点,只有该线路中的最后一个节点知道自己是最终的目的节点,即所谓 “出口节点” ,与之相反的则是整条线路中的第一个节点,即所谓 “入口节点”</p>
+<p><img src="/img/tor1.jpg" alt=""></p>
+<p> 另外,洋葱路由的所有节点间使用非对称加密,也就是说,我们无法再通过常规的嗅探来获取节点的敏感数据,大致的加密过程是这样的,首先,发送者会从目录节点中获取一个公钥,用此公钥把要发送的原始消息进行加密,然后丢给入口节点,并随即与入口节点建立连接和共享秘钥,之后,发送者就可以通过这条连接把加密过的消息发送至线路上的第二个节点,此时发送的加密消息只有第二个节点可以解密,当第二个节点收到此消息后,便会立即与前一个节点[也就是入口节点]建立同样的连接,这样一来,发送者的消息就可以顺利到达线路中的第二个节点,在前面我们也提到过,当前节点是无法确定上一个节点在当前线路中的具体身份的,发送者通过入口节点和第二个节点中间的这条连接将只有第三个节点能解密的消息发送给第三个节点,此时,第三个节点用和之前同样的方式与第二个节点继续建立连接,如此循环往复,直到最后,线路上的所有节点的连接建立完成,消息最终达到出口节点,出口节点回传数据时也是以同样的方式对数据进行层层加密,只是顺序完全相反<br><img src="/img/tor2.jpg" alt=""></p>
+<p>0x02</p>
+<p>  了解完洋葱路由协议的基本运作模式之后, 接着我们再来看Tor,说白点儿 tor只是洋葱路由协议的一种具体实现而已,换句话说,洋葱路由如何工作,tor便是如何工作的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Tor 核心    本文的重点,全平台支持,至于tor的各种图形控制端,这里可能暂时也用不上,先不多说了 </span><br><span class="line">Tor Browser   tor浏览器,全平台支持,使用极为简单,挂上vpn以后,不用任何配置,直接’connect’即可,当然,如果在国内也可以不用通过网桥来上 Orbot    </span><br><span class="line">tor 安卓版,有兴趣,可自行尝试,还是那句话,务必要先挂上vpn或直接连网桥,否则在国内是连不上tor的 https://www.torproject.org tor项目官方站点</span><br></pre></td></tr></table></figure>
+<p>0x03</p>
+<h1 id="实际渗透中-为什么要推荐大家使用tor"><a href="#实际渗透中-为什么要推荐大家使用tor" class="headerlink" title="实际渗透中,为什么要推荐大家使用tor"></a>实际渗透中,为什么要推荐大家使用tor</h1><p>虽然在实际渗透中,我们可以通过各类加密vpn隧道[如,openvpn…]一定程度上来减少被反渗透的几率,但很显然,仅仅只有这一道防线还是远远不够的,一旦此防线被攻破,你的完整画像几乎会瞬间暴露给对手,这肯定不是<br>我们想看到的,所以就要使用tor来帮我们多跳几层,尽可能加大对方的追踪难度 </p>
+<p>另外,平时渗透过程中,几乎不可避免的会存在着诸多的敏感扫描动作,如,端口扫描,漏洞扫描,各类形式的爆破[包括跑表单是什么的],跑目录,等等…稍不注意,线程给的太高,就会触发对方防护报警,导致 ip 被秒封,极有可能也就因此失去了再次尝试的机会,此时就可以尝试配合tor来不停的切换ip以对抗这种ip黑名单类的常规封锁,即使暂时还做不到秒级切换,但每隔一两分钟切换一次还是可行的,起码不至于封个ip就搞不下去了,虽然,你也可以用各种免费代理ip列表写脚本来搞,但极不推荐,因为那些跟tor完全就不是一类东西,那些只是简单的用代理ip去帮忙访问,而tor走的是洋葱路由协议,虽然tor也并非绝对匿名,但始终坚信不用绝对是不匿名的 </p>
+<p> 当然,市面上现在也已经有越来越多的RAT,为了让自己的流量痕迹变得更加难以追踪,也都会依靠tor网关来进行转发,也就是说,把自己马的流量,全部放在tor网络中进行传递,以此来躲避各种各样的入侵侦测和取证分析 </p>
+<p>最后,作为我们而言,当然是很不希望对方从各类日志和在线流量中掌握太多有关我们的信息,所以,使用tor也许能在一定程度上帮我们减少一些不必要的麻烦 </p>
+<p>0x04</p>
+<p>#既然tor是洋葱路由的一种具体实现,那么下面我们就来简单看看具体该怎么使用tor</p>
+<p> a)    首先,我们ssh到自己的vps上安装好tor,官方建议,不要直接使用”apt install tor -y”来安装,因为Ubuntu默认apt源中的tor已经很久没有更新了,至于如何安装最新版的tor,如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/apt/sources.list   将以下源直接追加到该文件末尾 </span><br><span class="line">deb http://deb.torproject.org/torproject.org trusty main </span><br><span class="line">deb-src http://deb.torproject.org/torproject.org trusty main</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># gpg --keyserver keys.gnupg.net --recv A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 </span><br><span class="line"># gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add –  #</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt update </span><br><span class="line"> # apt install tor deb.torproject.org-keyring -y  </span><br><span class="line"> # /etc/init.d/tor start    尝试启动tor服务,默认它会运行在一个名为debian-tor的系统伪用户权限下 </span><br><span class="line"> # netstat -tulnp | grep 9050  服务成功启动后,默认会起一个9050的tcp端口的,其实,说白点,就是个socks端口</span><br></pre></td></tr></table></figure>
+<p>b)确认上面的安装启动没有任何问题之后,接着再来简单配置下torrc [ tor的主配置文件 ],因为主要目的还是想利用tor来隐匿自己,暂时无需提供暗网服务,所以,我们只需关心几个选项即可,至于其它的,暂无需关心</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># egrep -v &quot;^#|^$&quot; /etc/tor/torrc 此处可以看到,安装完tor以后,默认是没有任何自定义配置的,都是在按默认的选项参数走 </span><br><span class="line"># vi /etc/tor/torrc      编辑tor的主配置文件,修改以下配置 </span><br><span class="line">AvoidDiskWrites 1     # 减少对硬盘的读写 </span><br><span class="line">SOCKSPort 198.13.52.95:8080   # tor默认使用的socks5代理端口是9050,建议改掉,被人扫到以后,容易被滥用,监听地址,改为vps的公网地址即可,默认它只监听在127.0.0.1上</span><br></pre></td></tr></table></figure>
+<p> 默认情况下,任何人都能随意连到这个代理上,很显然这不是我们想要的,所以务必要加上ip限制<br> 根据官方说明,貌似并没有提供socks5代理账号密码的参数,只给了下面一个限制ip的参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SOCKSPolicy accept 23.7.17.0/24  </span><br><span class="line">SOCKSPolicy reject *</span><br></pre></td></tr></table></figure></p>
+<p>定义tor运行日志的存放位置,实战中,日志最好放到定时任务里定时清空,打log只是为了方便偶尔出问题来看一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Log notice file Log notice file /var/log/tor/tor.log</span><br></pre></td></tr></table></figure></p>
+<p>可以下面选项,把一些国家的tor节点给忽略掉,因为有些国家的运营商有限制或者一些网络基础设施都不完善的国家<br>很容易拖慢tor的整体速度,这样做只是为了我们能尽量有一条高速的连接链,但不一定是非要加上,根据实际情况,如果本身速度就可以不用加也行,此处只是为了告诉大家可以这么干<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExcludeNodes &#123;cn&#125;,&#123;hk&#125;,&#123;mo&#125;,&#123;sg&#125;,&#123;th&#125;,&#123;pk&#125;,&#123;by&#125;,&#123;ru&#125;,&#123;ir&#125;,&#123;vn&#125;,&#123;ph&#125;,&#123;my&#125;,&#123;cu&#125; </span><br><span class="line">ExcludeExitNodes &#123;cn&#125;,&#123;hk&#125;,&#123;mo&#125;,&#123;sg&#125;,&#123;th&#125;,&#123;pk&#125;,&#123;by&#125;,&#123;ru&#125;,&#123;ir&#125;,&#123;vn&#125;,&#123;ph&#125;,&#123;my&#125;,&#123;cu&#125; </span><br><span class="line">StrictNodes 1</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#/etc/init.d/tor restart    配置搞定之后重启tor服务,让配置生效 </span><br><span class="line"># netstat -tulnp | grep 8080   起来以后顺手看下我们刚才改的socks5代理端口有没有起来 </span><br><span class="line"># tail -f /var/log/tor/tor.log  从该日志中我们可以清晰看到tor的启动过程,方便后续排错用</span><br></pre></td></tr></table></figure>
+<p>c) 关于torrc的更多详细配置有兴趣可直接参考其官方手册,这里就不一一废话了,如下 <a href="https://www.torproject.org/docs/tor-manual.html.en" target="_blank" rel="noopener">https://www.torproject.org/docs/tor-manual.html.en</a> 至此为止,tor服务基本算是搞定了,那么,如何来通过tor来访问深网 [务必要用tor浏览器才可以] 和外部公共网络 ? 如下</p>
+<p>因为我们要用 proxychains-ng连接到tor的socks端口上,所以,事先得先装好proxychains-ng,此处暂以kali为例进行安装,注意这个包名有点特别,是proxychains4,而非proxychains-ng </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apt-get install proxychains4 -y </span><br><span class="line"></span><br><span class="line">``` </span><br><span class="line">而后开始简单配置proxychains-ng,&#123;注意,proxychains-ng的默认配置文件是proxychains4.conf不是proxychains.conf,用的时候可以直接用-f选项加载配置文件来执行&#125;</span><br><span class="line"></span><br><span class="line">[egrep -v &quot;^$|^#&quot; /etc/proxychains4.conf ]</span><br><span class="line">[vi /etc/proxychains4.conf ]</span><br></pre></td></tr></table></figure>
+<p>strict_chain    实战中建议使用该模式,严格按照顺序来使用代理,且所有代理必须可用<br>proxy_dns  remote_dns_subnet 224 tcp_read_time_out 15000 tcp_connect_time_out<br>8000<br><code>`</code></p>
+<p><img src="/img/tor3.jpg" alt=""></p>
+
     <!-- Only display the Read More link if we are displaying an excerpt -->
-    
-        <p id="readmore">
-            <a href="/2017/12/29/cobalt-strike-dns/">
-                Read More >>>
-            </a>
-        </p>
     
 
     <hr />
 
     
 
-
-<div class="blog-categories-container">
-    <span><img src="/image/categoriesicon.png" alt=""/></span> 
-    <a href="/categories/DNS隧道/">DNS隧道</a>
-</div>
-
-
     
 
 
 <div class="blog-tags-container">
     <span><img src="/image/tagsicon.png" alt=""/></span>
-    <a href="/tags/DNS隧道/">#DNS隧道</a>
+    <a href="/tags/tot/">#tot</a>
 </div>
 
 
@@ -148,6 +164,62 @@
 <div class="blog-tags-container">
     <span><img src="/image/tagsicon.png" alt=""/></span>
     <a href="/tags/spawn/">#spawn</a>
+</div>
+
+
+
+
+</div>
+</div>
+
+
+    <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    
+      <h1 class="blog-post-title">
+        <a href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与实战</a>
+      </h1>
+    
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-12-29
+        
+            by klion
+        
+    </p>
+
+    
+
+    <!-- Content -->
+    <p>0x01 开始之前,有必要先稍微理解下基于<code>dns beacon的大致通信过程</code>,其实,非常非常简单,前提是你对dns的解析过程早已经烂透于心,不熟悉的朋友可以先去参考前段时间写的 <a href="https://klionsec.github.io/2017/12/11/Dns-tips/" target="_blank" rel="noopener">[DNS 深度理解 一] </a>,把基础打扎实了,再回过头来理解这些东西自然就易如反掌了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-&gt; beacon shell会向指定的域名发起正常的dns查询</span><br><span class="line">  -&gt; 中间依然是经过一些列的常规dns迭代及递归查询,大致过程就是,一直从根开始找,直到找到我们自己的ns服务器,最后再定位到团队服务器ip,仅此而已</span><br><span class="line">    -&gt; 也就是说,第一次通信可能会慢点,后续就会稍微快些,不过说实话,dns再快也快不到哪里去,毕竟,我们要的是足够的隐蔽,而不一味追求速度,不然容易露点</span><br></pre></td></tr></table></figure></p>
+<p>0x02 废话说完,我们就开始来尝试在实战中应用,首先,你要先买台<code>vps</code>,亚马逊或者<code>vultr</code>都挺不错的,自己也一直在用,之后装好系统,推荐用<code>ubuntu</code>,此处演示用的是<code>ubuntu 16.04.2</code>,具体的系统安装方法直接一路点点点就好了,全程傻瓜化,大概等个六七分钟,待系统初始化完成就可以用ssh连上去了<br>
+    <!-- Only display the Read More link if we are displaying an excerpt -->
+    
+        <p id="readmore">
+            <a href="/2017/12/29/cobalt-strike-dns/">
+                Read More >>>
+            </a>
+        </p>
+    
+
+    <hr />
+
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/DNS隧道/">DNS隧道</a>
+</div>
+
+
+    
+
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/DNS隧道/">#DNS隧道</a>
 </div>
 
 
@@ -219,7 +291,7 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
-        <a href="/2017/12/26/modify-hacked/">用Shell对指定站点进行简单的实时入侵预警</a>
+        <a href="/2017/12/26/modify-webshell/">实时精准侦测站点目录中的各类 Webshell</a>
       </h1>
     
     <!-- Date and Author -->
@@ -233,11 +305,11 @@
     
 
     <!-- Content -->
-    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># author by klion</span><br><span class="line"># 2017.12.25</span><br><span class="line"># Real-time monitoring of Web Directory script</span><br><span class="line"></span><br><span class="line">web_dir=&quot;/usr/local/nginx/html/bwapp/bWAPP/&quot;</span><br><span class="line">oldnum=`wc -l web_history_db.log | awk -F &quot; &quot; &apos;&#123;print $1&#125;&apos;`</span><br><span class="line">newnum=`find $web_dir -type f | wc -l`</span><br><span class="line">md5num=`md5sum -c web_history_db.log | grep -i FAILED | wc -l`</span><br><span class="line"></span><br><span class="line"># 先对指定的站点目录创建指纹库</span><br><span class="line">[ ! -f web_history_db.log  ] &amp;&amp; &#123;</span><br><span class="line">    find $web_dir -type f | xargs md5sum &gt; ./web_history_db.log</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 和新文件对比指纹,如果发现不对,就马上发信通知,并带上被改动的文件路径一起</span><br><span class="line">[ $md5num -ne 0 ] &amp;&amp; &#123;</span><br><span class="line">    md5sum -c web_history_db.log | grep -i &quot;FAILED&quot; | awk -F &quot;:&quot; &apos;&#123;print $1&#125;&apos; &gt; web_mod_`date +%Y-%m-%d-%H-%M-%S`.web.log</span><br><span class="line">    log_file=`ls -l *.web.log | head -n 1 | awk -F &quot; &quot; &apos;&#123;print $9&#125;&apos;`</span><br><span class="line">    mail -s &quot;Your website may be hacked, Please check it as soon as possible&quot; klion@protonmail.com &lt; $log_file;sleep 5</span><br><span class="line">    rm -fr $log_file</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 对比文件个数,发现不对,同样是立马发信,因为有可能要同时监控很多个站点目录,所以就顺便把具体的站点路径也带上了</span><br><span class="line">[ $oldnum -ne $newnum  ] &amp;&amp; &#123;</span><br><span class="line">    echo &quot;website directory is $web_dir&quot; | mail -s &quot;web directory have new file created &quot; klion@protonmail.com ;sleep 5</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># author by klion</span><br><span class="line"># 2017.12.25</span><br><span class="line"># Delete webshell auto </span><br><span class="line"></span><br><span class="line">webshell_log=&quot;/var/log/webshell.log&quot;</span><br><span class="line">upload_shell=&quot;/var/log/modify.tmp&quot;</span><br><span class="line"></span><br><span class="line"># 只要一检测到有新事件发生就立马打包上传检测</span><br><span class="line">[ -s $webshell_log ] &amp;&amp;&#123;</span><br><span class="line">    awk -F &quot; &quot; &apos;&#123;print $3&#125;&apos; $webshell_log |grep -E &quot;.php$&quot;| sort -u &gt; $upload_shell</span><br><span class="line">    cat $upload_shell |xargs zip ./maybeshell.zip</span><br><span class="line">    echo `curl https://scanner.baidu.com/enqueue -F archive=@maybeshell.zip` | mail -s &quot;webshell detect url api&quot; klion@protonmail.com </span><br><span class="line">    sleep 5</span><br><span class="line">    &gt; $webshell_log &amp;&amp; &gt; $upload_shell &amp;&amp; rm -fr ./maybeshell.zip</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     <!-- Only display the Read More link if we are displaying an excerpt -->
     
         <p id="readmore">
-            <a href="/2017/12/26/modify-hacked/">
+            <a href="/2017/12/26/modify-webshell/">
                 Read More >>>
             </a>
         </p>
@@ -274,7 +346,7 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
-        <a href="/2017/12/26/modify-webshell/">实时精准侦测站点目录中的各类 Webshell</a>
+        <a href="/2017/12/26/modify-hacked/">用Shell对指定站点进行简单的实时入侵预警</a>
       </h1>
     
     <!-- Date and Author -->
@@ -288,11 +360,11 @@
     
 
     <!-- Content -->
-    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># author by klion</span><br><span class="line"># 2017.12.25</span><br><span class="line"># Delete webshell auto </span><br><span class="line"></span><br><span class="line">webshell_log=&quot;/var/log/webshell.log&quot;</span><br><span class="line">upload_shell=&quot;/var/log/modify.tmp&quot;</span><br><span class="line"></span><br><span class="line"># 只要一检测到有新事件发生就立马打包上传检测</span><br><span class="line">[ -s $webshell_log ] &amp;&amp;&#123;</span><br><span class="line">    awk -F &quot; &quot; &apos;&#123;print $3&#125;&apos; $webshell_log |grep -E &quot;.php$&quot;| sort -u &gt; $upload_shell</span><br><span class="line">    cat $upload_shell |xargs zip ./maybeshell.zip</span><br><span class="line">    echo `curl https://scanner.baidu.com/enqueue -F archive=@maybeshell.zip` | mail -s &quot;webshell detect url api&quot; klion@protonmail.com </span><br><span class="line">    sleep 5</span><br><span class="line">    &gt; $webshell_log &amp;&amp; &gt; $upload_shell &amp;&amp; rm -fr ./maybeshell.zip</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># author by klion</span><br><span class="line"># 2017.12.25</span><br><span class="line"># Real-time monitoring of Web Directory script</span><br><span class="line"></span><br><span class="line">web_dir=&quot;/usr/local/nginx/html/bwapp/bWAPP/&quot;</span><br><span class="line">oldnum=`wc -l web_history_db.log | awk -F &quot; &quot; &apos;&#123;print $1&#125;&apos;`</span><br><span class="line">newnum=`find $web_dir -type f | wc -l`</span><br><span class="line">md5num=`md5sum -c web_history_db.log | grep -i FAILED | wc -l`</span><br><span class="line"></span><br><span class="line"># 先对指定的站点目录创建指纹库</span><br><span class="line">[ ! -f web_history_db.log  ] &amp;&amp; &#123;</span><br><span class="line">    find $web_dir -type f | xargs md5sum &gt; ./web_history_db.log</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 和新文件对比指纹,如果发现不对,就马上发信通知,并带上被改动的文件路径一起</span><br><span class="line">[ $md5num -ne 0 ] &amp;&amp; &#123;</span><br><span class="line">    md5sum -c web_history_db.log | grep -i &quot;FAILED&quot; | awk -F &quot;:&quot; &apos;&#123;print $1&#125;&apos; &gt; web_mod_`date +%Y-%m-%d-%H-%M-%S`.web.log</span><br><span class="line">    log_file=`ls -l *.web.log | head -n 1 | awk -F &quot; &quot; &apos;&#123;print $9&#125;&apos;`</span><br><span class="line">    mail -s &quot;Your website may be hacked, Please check it as soon as possible&quot; klion@protonmail.com &lt; $log_file;sleep 5</span><br><span class="line">    rm -fr $log_file</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 对比文件个数,发现不对,同样是立马发信,因为有可能要同时监控很多个站点目录,所以就顺便把具体的站点路径也带上了</span><br><span class="line">[ $oldnum -ne $newnum  ] &amp;&amp; &#123;</span><br><span class="line">    echo &quot;website directory is $web_dir&quot; | mail -s &quot;web directory have new file created &quot; klion@protonmail.com ;sleep 5</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     <!-- Only display the Read More link if we are displaying an excerpt -->
     
         <p id="readmore">
-            <a href="/2017/12/26/modify-webshell/">
+            <a href="/2017/12/26/modify-hacked/">
                 Read More >>>
             </a>
         </p>
@@ -543,65 +615,6 @@
 <div class="blog-tags-container">
     <span><img src="/image/tagsicon.png" alt=""/></span>
     <a href="/tags/Tomcat-安全部署实战指南/">#Tomcat 安全部署实战指南</a>
-</div>
-
-
-
-
-</div>
-</div>
-
-
-    <div class="main">
-<div class="blog-post">
-    <!-- Title -->
-    
-      <h1 class="blog-post-title">
-        <a href="/2017/12/13/samba-sec/">跨平台快速文件共享 Samba</a>
-      </h1>
-    
-    <!-- Date and Author -->
-    <p class="blog-post-meta">
-        2017-12-13
-        
-            by klion
-        
-    </p>
-
-    
-
-    <!-- Content -->
-    <p>0x01 关于smaba<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主要用于实现不同系统平台间的文件共享,配置非常简单,轻量,适合用于常规办公内网环境中</span><br><span class="line">linux &lt;==&gt; windows &lt;==&gt; unix</span><br></pre></td></tr></table></figure></p>
-<p>此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CentOS6.9 x86_64	ip:192.168.3.55 samba服务器</span><br><span class="line">CentOS6.9 x86_64	ip:192.168.3.57 用来模拟smb客户端进行访问测试</span><br></pre></td></tr></table></figure></p>
-<p>0x02 samba服务默认所监听的端口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">137/udp,138/udp nmb 进程提供netbios解析,以满足基于 CIFS 协议的共享访问环境</span><br><span class="line">138/tcp,445/tcp smb 进程主要为客户端提供文件共享,打印机服务以及用户权限验证</span><br></pre></td></tr></table></figure></p>
-<p>0x03 使用samba客户端工具 <code>smbclient</code>,其实有些类似于ftp的客户端工具,也是一种交互式的访问</p>
-<p><code>在linux下使用smbclient访问windows中的共享目录</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># smbclient -L 192.168.3.23 -U administrator</span><br><span class="line"># smbclient //192.168.3.23/linux_dir -U dcadmin</span><br><span class="line"># mount -t cifs //192.168.3.23/linux_dir /mnt/windows/ -o username=dcadmin 注意,此处要使用cifs协议进行挂载</span><br></pre></td></tr></table></figure></p>
-    <!-- Only display the Read More link if we are displaying an excerpt -->
-    
-        <p id="readmore">
-            <a href="/2017/12/13/samba-sec/">
-                Read More >>>
-            </a>
-        </p>
-    
-
-    <hr />
-
-    
-
-
-<div class="blog-categories-container">
-    <span><img src="/image/categoriesicon.png" alt=""/></span> 
-    <a href="/categories/Samba/">Samba</a>
-</div>
-
-
-    
-
-
-<div class="blog-tags-container">
-    <span><img src="/image/tagsicon.png" alt=""/></span>
-    <a href="/tags/Samba/">#Samba</a>
 </div>
 
 

@@ -1,175 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 下面是自己找网站后台的一些常规办法[注意,对于找后台主要都是针对一些非开源web程序,如果是开源程序,直接把代码down下来看下目录结构,不就什么都有了,何苦找呢]:1234567891011首先,看看目标站自己的前端页面上,有没有给我们提供后台入口,很多脑残的政府和学校站很可能都会这么干,直接把后台入口丢在前端页面上,你方便,别人也方便尝试访问目标的robots.txt文件,如果有的话">
+<meta name="keywords" content="信息搜集">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速搜集目标的各类web管理入口,敏感目录,文件及错误配置">
+<meta property="og:url" content="https://apt404.github.io/2014/12/16/dirscan/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 下面是自己找网站后台的一些常规办法[注意,对于找后台主要都是针对一些非开源web程序,如果是开源程序,直接把代码down下来看下目录结构,不就什么都有了,何苦找呢]:1234567891011首先,看看目标站自己的前端页面上,有没有给我们提供后台入口,很多脑残的政府和学校站很可能都会这么干,直接把后台入口丢在前端页面上,你方便,别人也方便尝试访问目标的robots.txt文件,如果有的话">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-20T00:37:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="快速搜集目标的各类web管理入口,敏感目录,文件及错误配置">
+<meta name="twitter:description" content="0x01 下面是自己找网站后台的一些常规办法[注意,对于找后台主要都是针对一些非开源web程序,如果是开源程序,直接把代码down下来看下目录结构,不就什么都有了,何苦找呢]:1234567891011首先,看看目标站自己的前端页面上,有没有给我们提供后台入口,很多脑残的政府和学校站很可能都会这么干,直接把后台入口丢在前端页面上,你方便,别人也方便尝试访问目标的robots.txt文件,如果有的话">
     
-        <meta name="description" content="0x01 下面是自己找网站后台的一些常规办法[注意,对于找后台主要都是针对一些非开源web程序,如果是开源程序,直接把代码down下来看下目录结构,不就什么都有了,何苦找呢]:1234567891011首先,看看目标站自己的前端页面上,有没有给我们提供后台入口,很多脑残的政府和学校站很可能都会这么干">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>快速搜集目标的各类web管理入口,敏感目录,文件及错误配置 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>快速搜集目标的各类web管理入口,敏感目录,文件及错误配置</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2014/12/17/dirscan-tools/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2014/12/15/shodan-hacking/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2014/12/16/dirscan/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2014/12/16/dirscan/&text=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2014/12/16/dirscan/&is_video=false&description=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置&body=Check out this article: https://apt404.github.io/2014/12/16/dirscan/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2014/12/16/dirscan/&name=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        快速搜集目标的各类web管理入口,敏感目录,文件及错误配置
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2014/12/16/dirscan/">
-                快速搜集目标的各类web管理入口,敏感目录,文件及错误配置
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2014-12-16</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/dirscan/">dirscan</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2014-12-16T15:52:52.000Z" itemprop="datePublished">2014-12-16</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/信息搜集/">信息搜集</a>
+    </div>
 
-        <!-- Post Content -->
-        <p><br><br>0x01 下面是自己找网站后台的一些常规办法[注意,对于找后台主要都是针对一些非开源web程序,如果是开源程序,直接把代码down下来看下目录结构,不就什么都有了,何苦找呢]:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">首先,看看目标站自己的前端页面上,有没有给我们提供后台入口,很多脑残的政府和学校站很可能都会这么干,直接把后台入口丢在前端页面上,你方便,别人也方便</span><br><span class="line">尝试访问目标的robots.txt文件,如果有的话,看看里面有没有后台或者上传点之类的敏感目录,至于robots.txt文件本身的作用,大家请自行谷歌,这里就不多做解释了</span><br><span class="line">习惯性的盲打一些常见的后台目录名,如<span class="symbol">:/admin/</span>,<span class="regexp">/manage/</span>,<span class="regexp">/cms/</span>,<span class="regexp">/system/</span>,<span class="regexp">/administrator/</span>,<span class="regexp">/wp-login.php,/control</span><span class="regexp">/等,记得大小写变换下多试几个……</span></span><br><span class="line"><span class="regexp">使用各类基于字典的目录爆破及爬行工具,如:dirb,wwwscan,cansina,uniscan,破壳以及其它的各种py脚本,非常多,现在也有很多在线的目录爆破工具站,这类的工具其实并没什么太多的技术含量,实际效果还得取决于你的字典质量和目标的防护程度,抛开防护先不说,起码网站敏感目录文件字典要好好花点儿时间精心准备</span></span><br><span class="line"><span class="regexp">"cscan"谷歌浏览器小插件,速度快,误报极高,具体原理,本人暂时还没弄明白,不过可以尝试下,自己用的比较少,记得有一次实在没办法就就抱着侥幸试了一下,结果真就跑出来了,可能是运气吧</span></span><br><span class="line"><span class="regexp">对于大型站点,可利用之前提到的google hacking,这里就不细说了,请仔细看前面的说明</span></span><br><span class="line"><span class="regexp">用各种wvs爬,也许也能爬出来一些,关于这类web漏洞扫描器的具体使用,后面会有详细说明,这里就先不细说了,例如: awvs,appscan,netsparker……</span></span><br><span class="line"><span class="regexp">如果是windows的话,不妨尝试下短文件漏洞扫描工具,鸡肋的是,它只能扫出前6个字节(6个英文字符),也就是说你只能看一部分猜一部分,好处在于前6个字节起码是绝对正确的</span></span><br><span class="line"><span class="regexp">配合网站的域名或者业务社工,比如:商城站一般我们会想到什么呢,shop?,有的后台目录也可能是依据目标域名的各种变形,多尝试……</span></span><br><span class="line"><span class="regexp">尝试各种万能密码,虽然很low,但很直接,存在万能密码问题的程序毕竟也不在少数,如:phpmyadmin 2.11.3-2.11.4 等……</span></span><br><span class="line"><span class="regexp">如果实在找不到,就想想办法直接问管理员吧,至于套不套的出来,就要看你自己的本事了,嘿嘿……</span></span><br></pre></td></tr></table></figure></p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><br><br>0x01 下面是自己找网站后台的一些常规办法[注意,对于找后台主要都是针对一些非开源web程序,如果是开源程序,直接把代码down下来看下目录结构,不就什么都有了,何苦找呢]:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">首先,看看目标站自己的前端页面上,有没有给我们提供后台入口,很多脑残的政府和学校站很可能都会这么干,直接把后台入口丢在前端页面上,你方便,别人也方便</span><br><span class="line">尝试访问目标的robots.txt文件,如果有的话,看看里面有没有后台或者上传点之类的敏感目录,至于robots.txt文件本身的作用,大家请自行谷歌,这里就不多做解释了</span><br><span class="line">习惯性的盲打一些常见的后台目录名,如<span class="symbol">:/admin/</span>,<span class="regexp">/manage/</span>,<span class="regexp">/cms/</span>,<span class="regexp">/system/</span>,<span class="regexp">/administrator/</span>,<span class="regexp">/wp-login.php,/control</span><span class="regexp">/等,记得大小写变换下多试几个……</span></span><br><span class="line"><span class="regexp">使用各类基于字典的目录爆破及爬行工具,如:dirb,wwwscan,cansina,uniscan,破壳以及其它的各种py脚本,非常多,现在也有很多在线的目录爆破工具站,这类的工具其实并没什么太多的技术含量,实际效果还得取决于你的字典质量和目标的防护程度,抛开防护先不说,起码网站敏感目录文件字典要好好花点儿时间精心准备</span></span><br><span class="line"><span class="regexp">"cscan"谷歌浏览器小插件,速度快,误报极高,具体原理,本人暂时还没弄明白,不过可以尝试下,自己用的比较少,记得有一次实在没办法就就抱着侥幸试了一下,结果真就跑出来了,可能是运气吧</span></span><br><span class="line"><span class="regexp">对于大型站点,可利用之前提到的google hacking,这里就不细说了,请仔细看前面的说明</span></span><br><span class="line"><span class="regexp">用各种wvs爬,也许也能爬出来一些,关于这类web漏洞扫描器的具体使用,后面会有详细说明,这里就先不细说了,例如: awvs,appscan,netsparker……</span></span><br><span class="line"><span class="regexp">如果是windows的话,不妨尝试下短文件漏洞扫描工具,鸡肋的是,它只能扫出前6个字节(6个英文字符),也就是说你只能看一部分猜一部分,好处在于前6个字节起码是绝对正确的</span></span><br><span class="line"><span class="regexp">配合网站的域名或者业务社工,比如:商城站一般我们会想到什么呢,shop?,有的后台目录也可能是依据目标域名的各种变形,多尝试……</span></span><br><span class="line"><span class="regexp">尝试各种万能密码,虽然很low,但很直接,存在万能密码问题的程序毕竟也不在少数,如:phpmyadmin 2.11.3-2.11.4 等……</span></span><br><span class="line"><span class="regexp">如果实在找不到,就想想办法直接问管理员吧,至于套不套的出来,就要看你自己的本事了,嘿嘿……</span></span><br></pre></td></tr></table></figure></p>
 <p>0x02 除了一些常规网站后台入口,我们也可以尝试各种java web入口,尤其是针对各种java控制台的,当然,前提是目标要有,基本进去后,shell权限都非常大:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tomcat[默认端口<span class="number">8080</span> 需要用户名密码,还是那句话多尝试些弱口令,进去以后上传war马]</span><br><span class="line">jboss [默认端口<span class="number">8080</span>无需任何验证,进去以后上传war马]</span><br><span class="line">weblogic [默认端口<span class="number">7001</span>,实际很多是在<span class="number">8080</span>上,进去以后上传war马]</span><br><span class="line">Websphere[默认端口<span class="number">9043</span>,实际很多是在<span class="number">8080</span>上,进去以后上传war马]</span><br><span class="line">webmin[web版的服务器管理工具,默认端口<span class="number">10000</span>,可以把它当做图形版的ssh管理工具]</span><br><span class="line">……</span><br></pre></td></tr></table></figure></p>
 <p>0x03 查找其它的各类敏感文件目录,自己所说的敏感文件及目录一般包括如下内容:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">网站源码备份文件,数据库备份文件,配置文件备份等...一般命名都是类似wwwroot.zip,wwwroot.sql这种的,建议直接用专门的备份的字典跑</span><br><span class="line">目标服务器的各种探针类文件,例如<span class="symbol">:phpinfo</span>.php,test.asp,info.aspx……</span><br><span class="line">目标网站的物理路径,注意物理路径和网站路径的区别,网站路径都是以www为根目录,而物理路径则是指系统某个分区下的绝对路径,如<span class="symbol">:c</span><span class="symbol">:</span>\windows\system32  /usr/local/lib</span><br><span class="line">网站后台目录,上传目录,如: 各类上传点,各类漏洞编辑器中的敏感路径</span><br><span class="line">网站数据库连接配置类文件</span><br><span class="line">各类数据库的web管理入口,例如<span class="symbol">:phpmyadmin</span>,adminer……之流</span><br><span class="line">目标网站后台脚本源码泄露及各种各样的网站报错信息</span><br><span class="line">svn 文件泄露如,.svn,用户命令历史文件泄露,如,.history...</span><br><span class="line">其它各种第三方服务的核心配置文件,里面可能会有用户密码……例如<span class="symbol">:cisco</span> vpn,ser-u……</span><br><span class="line">目标内部的各种账号密码信息,并不仅限于邮箱,vpn,ftp……</span><br><span class="line">web服务器配置错误所导致的目录遍历</span><br><span class="line">别人的webshell,目录扫描工具对这个的扫描似乎不太靠谱,因为有些shell隐藏的比较深,所以还是建议直接用google爬各种webshell特征</span><br><span class="line">……</span><br></pre></td></tr></table></figure></p>
 <p>0x04 另外,还有一些目标内部的OA系统入口,不过这些通常都不在常规的web端口上,又该怎么办呢,其实,很多情况下,你可以习惯性的尝试访问以下目标的81,82,83,86,88,8081,8082,8088这样的web端口,说不定就会有惊喜:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">在目标防火墙没有开启的情况下,可以用一些之前介绍过的公网端口扫描工具,进行全端口扫描,然后根据扫到的结果,看着可能是web端口的,再尝试在浏览器中逐个访问</span><br><span class="line">如果目标开起了防火墙[waf],除了谷歌,或者直接在目标网站上找找,基本也就没谁了,扫可能是不太现实的,嘿嘿……如果大家有更好的思路也期待能一起交流</span><br><span class="line">……</span><br></pre></td></tr></table></figure></p>
@@ -177,216 +148,94 @@
 <p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;对于后台查找自己知道的基本也就这么多了,如果实在找不到,不妨换换别的思路,web只是我们渗透过程中的其中一个入手点,却不是唯一的入手点,别太死板就行,更多手法,也期待能和大家一起交流学习</p>
 <p><br></p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/信息搜集/">#信息搜集</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2014/12/16/dirscan/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2014/12/16/dirscan/&text=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2014/12/16/dirscan/&is_video=false&description=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置&body=Check out this article: https://apt404.github.io/2014/12/16/dirscan/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2014/12/16/dirscan/&title=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2014/12/16/dirscan/&name=快速搜集目标的各类web管理入口,敏感目录,文件及错误配置&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

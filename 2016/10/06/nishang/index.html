@@ -1,176 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,">
+<meta name="keywords" content="nishang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="powershell 渗透框架[ nishang ]">
+<meta property="og:url" content="https://apt404.github.io/2016/10/06/nishang/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20vmcheck.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20machine_info.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20copy%20vsso.png">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20firebuster.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/FireListener.png">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20gethashes.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20getpashhhints.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20webcredentials.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20credentialsphish.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20mimikatz.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20Mimikittenz.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20portscan.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20bruteforce.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20bruteforce%20ftp.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20bruteforce%20dc.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20psuacme.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20remove%20update.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20download_exec%20ps.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20mssql%20connect.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20poshrathttp%20res.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20tcp%20shell.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20tcp%20shell%20res.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20udp%20shell.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20udp%20shell%20res.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/ps%20wmic%20shell.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/create-multipleseessions.png">
+<meta property="og:image" content="https://apt404.github.io/img/Add-RegBackdoor.png">
+<meta property="og:image" content="https://apt404.github.io/img/Add-RegBackdoor%20res.png">
+<meta property="og:updated_time" content="2017-10-18T02:20:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="powershell 渗透框架[ nishang ]">
+<meta name="twitter:description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,">
+<meta name="twitter:image" content="https://apt404.github.io/img/ps%20vmcheck.jpg">
     
-        <meta name="description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,可直接跟系统api交互,容易定制,轻量,远程加载执行,对目标系统的影响极小……好处众多,这里就不多啰嗦了,说破天,我们最终的目的还是希望能在实际渗透中把它用起来,不然,实际价值何在呢
-0x02 关于nishang&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;今天我们就先来看看第一款powershell渗透框架其实,个人觉得把它称为powershell渗透框架似乎更合适些,nishang [想必现在早已家喻户晓],关于nishang中的各个ps脚本的选项用法,在其脚本代码的最前面都有详细说明,使用前请务必仔细阅读,因为系统默认是禁止执行ps脚本的,所以实际用的时候后面都会带上bypass选项12Set-ExecutionPolicy Unrestricted  如果你得到的是一个交互式的ps shell,也可以用该命令来放开脚本执行限制# powershell –exec bypass –Command &#34;Get-Host | Select-Object Version&#34;  查看当前powershell版本,有些脚本只能在指定的powershell版本中执行">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="powershell 渗透框架[ nishang ]"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>powershell 渗透框架[ nishang ] - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>powershell 渗透框架[ nishang ]</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/10/07/powersploit/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2016/10/05/hidden-webshell/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/10/06/nishang/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/10/06/nishang/&text=powershell 渗透框架[ nishang ]"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/10/06/nishang/&is_video=false&description=powershell 渗透框架[ nishang ]"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=powershell 渗透框架[ nishang ]&body=Check out this article: https://apt404.github.io/2016/10/06/nishang/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/10/06/nishang/&name=powershell 渗透框架[ nishang ]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前言&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,可直接跟系统api交互,容易定制,轻量,远程加载执行,对目标系统的影响极小……好处众多,这里就不多啰嗦了,说破天,我们最终的目的还是希望能在实际渗透中把它用起来,不然,实际价值何在呢&lt;/p&gt;
+&lt;p&gt;0x02 关于nishang&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;今天我们就先来看看第一款powershell渗透框架&lt;code&gt;其实,个人觉得把它称为powershell渗透框架似乎更合适些&lt;/code&gt;,&lt;code&gt;nishang&lt;/code&gt; [想必现在早已家喻户晓],关于nishang中的各个ps脚本的选项用法,在其脚本代码的最前面都有详细说明,使用前请务必仔细阅读,因为系统默认是禁止执行ps脚本的,所以实际用的时候后面都会带上bypass选项&lt;br&gt;&lt;figure class=&#34;highlight ruby&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Set-ExecutionPolicy Unrestricted  如果你得到的是一个交互式的ps shell,也可以用该命令来放开脚本执行限制&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# powershell –exec bypass –Command &#34;Get-Host | Select-Object Version&#34;  查看当前powershell版本,有些脚本只能在指定的powershell版本中执行&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        powershell 渗透框架[ nishang ]
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2016/10/06/nishang/">
-                powershell 渗透框架[ nishang ]
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2016-10-06</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/powershell/">powershell</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-10-06T02:16:14.000Z" itemprop="datePublished">2016-10-06</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/nishang/">nishang</a>
+    </div>
 
-        <!-- Post Content -->
-        <p><br><br>0x01 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,可直接跟系统api交互,容易定制,轻量,远程加载执行,对目标系统的影响极小……好处众多,这里就不多啰嗦了,说破天,我们最终的目的还是希望能在实际渗透中把它用起来,不然,实际价值何在呢</p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><br><br>0x01 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,可直接跟系统api交互,容易定制,轻量,远程加载执行,对目标系统的影响极小……好处众多,这里就不多啰嗦了,说破天,我们最终的目的还是希望能在实际渗透中把它用起来,不然,实际价值何在呢</p>
 <p>0x02 关于nishang<br>&nbsp;&nbsp;&nbsp;&nbsp;今天我们就先来看看第一款powershell渗透框架<code>其实,个人觉得把它称为powershell渗透框架似乎更合适些</code>,<code>nishang</code> [想必现在早已家喻户晓],关于nishang中的各个ps脚本的选项用法,在其脚本代码的最前面都有详细说明,使用前请务必仔细阅读,因为系统默认是禁止执行ps脚本的,所以实际用的时候后面都会带上bypass选项<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Set-ExecutionPolicy Unrestricted  如果你得到的是一个交互式的ps shell,也可以用该命令来放开脚本执行限制</span><br><span class="line"><span class="comment"># powershell –exec bypass –Command "Get-Host | Select-Object Version"  查看当前powershell版本,有些脚本只能在指定的powershell版本中执行</span></span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
 <p>0x03 首先,所有内网渗透的第一步,信息搜集[Gather]</p>
@@ -254,216 +254,95 @@
 <p>0x13 其它的一些辅助性的功能模块[Utility]<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">StringToBase64.ps1		base64编码</span><br><span class="line">Base64ToString.ps1 		base64解码</span><br><span class="line">ConvertTo-ROT13.ps1     	rot13加密</span><br><span class="line">Download.ps1			下载文件</span><br><span class="line">ExetoText.ps1			将可执行文件转换成文本</span><br><span class="line">TexttoExe.ps1			将可文本转换成可执行文件</span><br><span class="line">Invoke-Decode.ps1		解码</span><br><span class="line">Invoke-Encode.ps1		编码</span><br><span class="line">Parse_Keys.ps1			用来还原键盘记录中的内容</span><br><span class="line">Start-CaptureServer.ps1		抓取smb的hash</span><br><span class="line">Add-Persistence.ps1		加入自启动ps脚本,实现持久控制</span><br><span class="line">Remove-Persistence.ps1		删除自启动ps脚本</span><br><span class="line">Speak.ps1 			最后再说个很有趣的小教本,让对方系统播放指定的语音</span><br></pre></td></tr></table></figure></p>
 <p>一点小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;不得不说,老外们的脑洞确实比我们大很多,虽然只是一款小工具,但带我们的思路确实无穷的,起码本人是受益颇多,对于win渗透来讲,powershell无疑就是最好而且纯天然的渗透工具,因为能直接跟系统api灵活接触,这一点是无可比拟的优势,所以还是很值得我们花大量的时间去研究学习的</p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/nishang/">#nishang</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/10/06/nishang/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/10/06/nishang/&text=powershell 渗透框架[ nishang ]"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/10/06/nishang/&is_video=false&description=powershell 渗透框架[ nishang ]"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=powershell 渗透框架[ nishang ]&body=Check out this article: https://apt404.github.io/2016/10/06/nishang/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/10/06/nishang/&title=powershell 渗透框架[ nishang ]"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/10/06/nishang/&name=powershell 渗透框架[ nishang ]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前言&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;注意,powershell只能针对win7以后的系统使用,此之前的win系统是没有引入powershell的,powershell是什么这里就不废话了,大家请自行谷歌,在使用各种powrshell脚本过程中,系统权限自然也是越高越好,权限越大你能在系统中操作的范围就越广,至于为什么要选择powershell,想必大家早已心知肚明,免杀,可直接跟系统api交互,容易定制,轻量,远程加载执行,对目标系统的影响极小……好处众多,这里就不多啰嗦了,说破天,我们最终的目的还是希望能在实际渗透中把它用起来,不然,实际价值何在呢&lt;/p&gt;
+&lt;p&gt;0x02 关于nishang&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;今天我们就先来看看第一款powershell渗透框架&lt;code&gt;其实,个人觉得把它称为powershell渗透框架似乎更合适些&lt;/code&gt;,&lt;code&gt;nishang&lt;/code&gt; [想必现在早已家喻户晓],关于nishang中的各个ps脚本的选项用法,在其脚本代码的最前面都有详细说明,使用前请务必仔细阅读,因为系统默认是禁止执行ps脚本的,所以实际用的时候后面都会带上bypass选项&lt;br&gt;&lt;figure class=&#34;highlight ruby&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Set-ExecutionPolicy Unrestricted  如果你得到的是一个交互式的ps shell,也可以用该命令来放开脚本执行限制&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# powershell –exec bypass –Command &#34;Get-Host | Select-Object Version&#34;  查看当前powershell版本,有些脚本只能在指定的powershell版本中执行&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

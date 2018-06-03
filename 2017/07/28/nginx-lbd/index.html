@@ -1,179 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 此次演示环境1234NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 ngin">
+<meta name="keywords" content="lbd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 nginx 的七层负载均衡实现初步">
+<meta property="og:url" content="https://apt404.github.io/2017/07/28/nginx-lbd/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 此次演示环境1234NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 ngin">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/normal%20ofr.png">
+<meta property="og:image" content="https://apt404.github.io/img/weight%20for.png">
+<meta property="og:image" content="https://apt404.github.io/img/ip%20hash%20for.png">
+<meta property="og:image" content="https://apt404.github.io/img/lamp%20log.png">
+<meta property="og:image" content="https://apt404.github.io/img/lnmp%20log.png">
+<meta property="og:updated_time" content="2017-12-23T07:55:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于 nginx 的七层负载均衡实现初步">
+<meta name="twitter:description" content="0x01 此次演示环境1234NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 ngin">
+<meta name="twitter:image" content="https://apt404.github.io/img/normal%20ofr.png">
     
-        <meta name="description" content="0x01 此次演示环境1234NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 nginx-1.12.2NewLnmp	  ip: 192.168.3.43	作为访问客户端,测试各种负载均衡算法是否工作
-先改下当前nginx负载均衡器的host解析,即NginxHttp机器,因为等会儿要直接用机器名去访问后端的web节点123# vi /etc/hosts  192.168.3.42	test.bwapp.org bwapp.org  192.168.3.45	bwapp.cc www.bwapp.cc
-再来改下Newlnmp机器的host解析,添加如下内容,因为等会儿要用它来进行测试访问12# vi /etc/hosts  192.168.3.49 lb.org
-0x02 以下是一些常用的负载均衡调度算法123456rr   	 [ 正常轮询 ] 即按照事先给定的后端节点顺序挨个轮询,适合性能相近,业务相同的场景wrr  	 [ 权重轮询 ] 即按照事先设置好的后端节点轮询比例,进行轮询,适合机器性能差距较大,业务相同的场景ip_hash  [ ip hash ] 也就是说只要客户端ip不变,在一段时间内就只访问固定的后端节点,`常用于会话保持`,如session,cookie,不过这样保持,负载就不均衡了fair	 [ 动态算法 ] 属于第三方算法,即根据节点的响应时间来分配请求,响应快的节点优先分配url_hash [ 节点取模 ] 也属于第三方节点,根据url来分配后端节点,命中率比较低,不过非常适合做web缓存一致性 hash ...
-0x03 在 nginx 中可用来实现负载均衡的主要模块12upstream   模块 定义好后端节点及所使用调度算法,大致工作过程是这样的,它会先读取upstream中的配置,然后通过server标签中的proxy_pass来进行实际的调用http_proxy 模块	主要负责实际的转发行为">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="基于 nginx 的七层负载均衡实现初步"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>基于 nginx 的七层负载均衡实现初步 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>基于 nginx 的七层负载均衡实现初步</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/08/01/waf-for-modsecurity/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/07/25/PSR-screen/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/07/28/nginx-lbd/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/07/28/nginx-lbd/&text=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/07/28/nginx-lbd/&is_video=false&description=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于 nginx 的七层负载均衡实现初步&body=Check out this article: https://apt404.github.io/2017/07/28/nginx-lbd/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/07/28/nginx-lbd/&name=基于 nginx 的七层负载均衡实现初步&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 此次演示环境&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 nginx-1.12.2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;NewLnmp	  ip: 192.168.3.43	作为访问客户端,测试各种负载均衡算法是否工作&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;先改下当前nginx负载均衡器的host解析,即&lt;code&gt;NginxHttp&lt;/code&gt;机器,因为等会儿要直接用机器名去访问后端的web节点&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# vi /etc/hosts&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  192.168.3.42	test.bwapp.org bwapp.org&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  192.168.3.45	bwapp.cc www.bwapp.cc&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;再来改下&lt;code&gt;Newlnmp机器&lt;/code&gt;的host解析,添加如下内容,因为等会儿要用它来进行测试访问&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# vi /etc/hosts&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  192.168.3.49 lb.org&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 以下是一些常用的负载均衡调度算法&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;rr   	 [ 正常轮询 ] 即按照事先给定的后端节点顺序挨个轮询,适合性能相近,业务相同的场景&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;wrr  	 [ 权重轮询 ] 即按照事先设置好的后端节点轮询比例,进行轮询,适合机器性能差距较大,业务相同的场景&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;ip_hash  [ ip hash ] 也就是说只要客户端ip不变,在一段时间内就只访问固定的后端节点,`常用于会话保持`,如session,cookie,不过这样保持,负载就不均衡了&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fair	 [ 动态算法 ] 属于第三方算法,即根据节点的响应时间来分配请求,响应快的节点优先分配&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;url_hash [ 节点取模 ] 也属于第三方节点,根据url来分配后端节点,命中率比较低,不过非常适合做web缓存&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;一致性 hash ...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x03 在 nginx 中可用来实现负载均衡的主要模块&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;upstream   模块 定义好后端节点及所使用调度算法,大致工作过程是这样的,它会先读取upstream中的配置,然后通过server标签中的proxy_pass来进行实际的调用&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;http_proxy 模块	主要负责实际的转发行为&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        基于 nginx 的七层负载均衡实现初步
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/07/28/nginx-lbd/">
-                基于 nginx 的七层负载均衡实现初步
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-07-28</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/lbd/">lbd</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-07-27T19:46:52.000Z" itemprop="datePublished">2017-07-28</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/lbd/">lbd</a>
+    </div>
 
-        <!-- Post Content -->
-        <p><br><br>0x01 此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙</span><br><span class="line">OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34</span><br><span class="line">OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 nginx-1.12.2</span><br><span class="line">NewLnmp	  ip: 192.168.3.43	作为访问客户端,测试各种负载均衡算法是否工作</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><br><br>0x01 此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙</span><br><span class="line">OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34</span><br><span class="line">OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 nginx-1.12.2</span><br><span class="line">NewLnmp	  ip: 192.168.3.43	作为访问客户端,测试各种负载均衡算法是否工作</span><br></pre></td></tr></table></figure></p>
 <p>先改下当前nginx负载均衡器的host解析,即<code>NginxHttp</code>机器,因为等会儿要直接用机器名去访问后端的web节点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/hosts</span><br><span class="line">  192.168.3.42	test.bwapp.org bwapp.org</span><br><span class="line">  192.168.3.45	bwapp.cc www.bwapp.cc</span><br></pre></td></tr></table></figure></p>
 <p>再来改下<code>Newlnmp机器</code>的host解析,添加如下内容,因为等会儿要用它来进行测试访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/hosts</span><br><span class="line">  192.168.3.49 lb.org</span><br></pre></td></tr></table></figure></p>
 <p>0x02 以下是一些常用的负载均衡调度算法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rr   	 [ 正常轮询 ] 即按照事先给定的后端节点顺序挨个轮询,适合性能相近,业务相同的场景</span><br><span class="line">wrr  	 [ 权重轮询 ] 即按照事先设置好的后端节点轮询比例,进行轮询,适合机器性能差距较大,业务相同的场景</span><br><span class="line">ip_hash  [ ip hash ] 也就是说只要客户端ip不变,在一段时间内就只访问固定的后端节点,`常用于会话保持`,如session,cookie,不过这样保持,负载就不均衡了</span><br><span class="line">fair	 [ 动态算法 ] 属于第三方算法,即根据节点的响应时间来分配请求,响应快的节点优先分配</span><br><span class="line">url_hash [ 节点取模 ] 也属于第三方节点,根据url来分配后端节点,命中率比较低,不过非常适合做web缓存</span><br><span class="line">一致性 hash ...</span><br></pre></td></tr></table></figure></p>
@@ -201,216 +178,98 @@
 <p><img src="/img/lnmp log.png" alt=""></p>
 <p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;这里提到的只是一部分,更详细具体的用法,请直接参考nginx官方文档,另外,nginx负载均衡较适合用于日pv 2000W以下的站点</p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/lbd/">#lbd</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/07/28/nginx-lbd/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/07/28/nginx-lbd/&text=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/07/28/nginx-lbd/&is_video=false&description=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于 nginx 的七层负载均衡实现初步&body=Check out this article: https://apt404.github.io/2017/07/28/nginx-lbd/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/07/28/nginx-lbd/&title=基于 nginx 的七层负载均衡实现初步"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/07/28/nginx-lbd/&name=基于 nginx 的七层负载均衡实现初步&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 此次演示环境&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;NginxHttp ip: 192.168.3.49 	作为负载均衡器,测试域名为 `lb.org`,生产环境中,最好自己新建个虚拟ip来做负载均衡,方便后续迁徙&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;OldLamp   ip: 192.168.3.45 	后端真实处理请求的web服务器 httpd-2.2.34&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;OldLnmp	  ip: 192.168.3.42 	后端真实处理请求的web服务器 nginx-1.12.2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;NewLnmp	  ip: 192.168.3.43	作为访问客户端,测试各种负载均衡算法是否工作&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;先改下当前nginx负载均衡器的host解析,即&lt;code&gt;NginxHttp&lt;/code&gt;机器,因为等会儿要直接用机器名去访问后端的web节点&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# vi /etc/hosts&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  192.168.3.42	test.bwapp.org bwapp.org&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  192.168.3.45	bwapp.cc www.bwapp.cc&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;再来改下&lt;code&gt;Newlnmp机器&lt;/code&gt;的host解析,添加如下内容,因为等会儿要用它来进行测试访问&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# vi /etc/hosts&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  192.168.3.49 lb.org&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 以下是一些常用的负载均衡调度算法&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;rr   	 [ 正常轮询 ] 即按照事先给定的后端节点顺序挨个轮询,适合性能相近,业务相同的场景&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;wrr  	 [ 权重轮询 ] 即按照事先设置好的后端节点轮询比例,进行轮询,适合机器性能差距较大,业务相同的场景&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;ip_hash  [ ip hash ] 也就是说只要客户端ip不变,在一段时间内就只访问固定的后端节点,`常用于会话保持`,如session,cookie,不过这样保持,负载就不均衡了&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;fair	 [ 动态算法 ] 属于第三方算法,即根据节点的响应时间来分配请求,响应快的节点优先分配&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;url_hash [ 节点取模 ] 也属于第三方节点,根据url来分配后端节点,命中率比较低,不过非常适合做web缓存&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;一致性 hash ...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x03 在 nginx 中可用来实现负载均衡的主要模块&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;upstream   模块 定义好后端节点及所使用调度算法,大致工作过程是这样的,它会先读取upstream中的配置,然后通过server标签中的proxy_pass来进行实际的调用&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;http_proxy 模块	主要负责实际的转发行为&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

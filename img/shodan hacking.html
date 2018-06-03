@@ -1,173 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="title: 熟练利用shodan hacking 辅助我们快速渗透 [ 通常针对大中型目标 ]date: 2014-12-15 10:09:10tags: shodan hackingcategories: “shodan hacking” author: klion shodan 入门[在入侵一些网络设备的时候还是非常好使的,俗称”工控设备渗透”]:1不像谷歌,bing那样只是单单是基于we">
+<meta name="keywords" content="专注于 APT 攻防研究">
+<meta property="og:type" content="website">
+<meta property="og:title" content="APT404-不疯不魔怎么活">
+<meta property="og:url" content="https://apt404.github.io/img/shodan hacking.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="title: 熟练利用shodan hacking 辅助我们快速渗透 [ 通常针对大中型目标 ]date: 2014-12-15 10:09:10tags: shodan hackingcategories: “shodan hacking” author: klion shodan 入门[在入侵一些网络设备的时候还是非常好使的,俗称”工控设备渗透”]:1不像谷歌,bing那样只是单单是基于we">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/shodan%20webserver.png">
+<meta property="og:image" content="https://apt404.github.io/img/shodan%20apache.png">
+<meta property="og:image" content="https://apt404.github.io/img/shodan%20webserver%20iis.png">
+<meta property="og:image" content="https://apt404.github.io/img/shodan%20webserver%20mssql.png">
+<meta property="og:image" content="https://apt404.github.io/img/shodan%20webserver%203389.png">
+<meta property="og:image" content="https://apt404.github.io/img/shodan%20webserver%20hong%20kong%203389.png">
+<meta property="og:image" content="https://apt404.github.io/img/shodan%20webserver%20netcam.png">
+<meta property="og:updated_time" content="2017-06-02T03:13:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="APT404-不疯不魔怎么活">
+<meta name="twitter:description" content="title: 熟练利用shodan hacking 辅助我们快速渗透 [ 通常针对大中型目标 ]date: 2014-12-15 10:09:10tags: shodan hackingcategories: “shodan hacking” author: klion shodan 入门[在入侵一些网络设备的时候还是非常好使的,俗称”工控设备渗透”]:1不像谷歌,bing那样只是单单是基于we">
+<meta name="twitter:image" content="https://apt404.github.io/img/shodan%20webserver.png">
     
-        <meta name="description" content="title: 熟练利用shodan hacking 辅助我们快速渗透 [ 通常针对大中型目标 ]date: 2014-12-15 10:09:10tags: shodan hackingcategories: “shodan hacking”
-author: klion
-shodan 入门[在入侵一">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="APT404-不疯不魔怎么活"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="website" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
+    <!-- title -->
     <title>APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
-
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
-    </div>
-</div>
-
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index my4">
         
-            <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
-        
+          <header id="header">
+  <a href="/">
+  
+    
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+    
+  
+    <div id="title">
+      <h1>APT404-不疯不魔怎么活</h1>
     </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">Home</a></li>
+       
+        <li><a href="/about/">About</a></li>
+       
+        <li><a href="/Search/">Search</a></li>
+      
+    </ul>
+  </div>
 </header>
-            <section class="main">
-                
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/img/shodan hacking.html">
-                Untitled
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2018-06-02</span>
-            
-            
-            
-        </div>
-    </div>
-
-    <div class="content">
-
-        <!-- Gallery -->
         
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  
+  
 
-        <!-- Post Content -->
-        <hr>
+  <div class="content" itemprop="articleBody">
+    <hr>
 <p>title: 熟练利用shodan hacking 辅助我们快速渗透 [ 通常针对大中型目标 ]<br>date: 2014-12-15 10:09:10<br>tags: shodan hacking<br>categories: “shodan hacking”</p>
 <h2 id="author-klion"><a href="#author-klion" class="headerlink" title="author: klion"></a>author: klion</h2><p><br></p>
 <h5 id="shodan-入门-在入侵一些网络设备的时候还是非常好使的-俗称”工控设备渗透”"><a href="#shodan-入门-在入侵一些网络设备的时候还是非常好使的-俗称”工控设备渗透”" class="headerlink" title="shodan 入门[在入侵一些网络设备的时候还是非常好使的,俗称”工控设备渗透”]:"></a>shodan 入门[在入侵一些网络设备的时候还是非常好使的,俗称”工控设备渗透”]:</h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不像谷歌,bing那样只是单单是基于web爬行,shodan则是基于全网旗标搜索,我们主要可以用它来撞撞各种网络设备的默认密码默认只能看到<span class="number">50</span>个结果,可能需要付点费才能看到的更多,同样它提供查询api,非常方便写脚本]</span><br></pre></td></tr></table></figure>
@@ -203,211 +130,46 @@ shodan 入门[在入侵一">
 <h5 id="一点小结"><a href="#一点小结" class="headerlink" title="一点小结:"></a>一点小结:</h5><p>&nbsp;&nbsp;&nbsp;&nbsp;关于google和shodan的用法,大概就介绍到这里了,使用都比较简单,基本就是几个过滤器来回的组装,随意的根据自己的实际需求拼装特征,说道底,还是看大家的想象力和对现有信息特征的敏感度,大家也看到了,如果完全手工的话,确实挺累的,为什么不写成自动化的脚本来帮我们完成呢,当然,这类的工具也有很多现成的,不过并不是按照咱们的想法来的,所以,最好自己动手……不过在写脚本之前,自己首先要能熟练使用才是,这样写出来的工具杀伤力才能更大些,当然,关于这类web搜索引擎所能产生的渗透效果的强弱,主要是还是看搜索引擎对目标收录的多少,如果目标站点建立的时间比较长,而且各大搜索引擎的收录量也比较好的话,这时候你利用谷歌固然成效显著,但如果一个站点刚建立不久,谷歌收录量也非常少,这时谷歌对你来讲也许就只是个摆设,这里说到的内容可能还只是各个搜索引擎利用的冰山一角,更多更强大的功能,还要靠大家一起来慢慢挖掘,对了,最后再说明一点,用这些搜索引擎的时候,最好全程挂上vpn,推荐美国的,原因大家应该都明白,自家人对自家人的限制几乎是最少的,不要问我为什么不介绍百度没办法,太不堪(原因大家都懂……)</p>
 <h5 id="一点心得"><a href="#一点心得" class="headerlink" title="一点心得:"></a>一点心得:</h5><p>&nbsp;&nbsp;&nbsp;&nbsp;一般我们在搜索引擎上搜集目标信息的时候,首先,应该直奔一些比较高危的漏洞特征,比如能快速getshell的,比如,默认账号密码,进去以后就只可以直接传shell的,此外,如果目标有支持jsp脚本的机器,我们首先就应该从jsp开始入手,因为jsp程序的权限一般都非常高,几乎是服务器的管理员权限,所以我们平时在搜集信息过程中,也尽量先找一些最好能直取权限的信息,孰轻孰重,自己心里一定要有分寸,这样可以避免我们做太多的无用功,当然,如果你手上有个开源的web程序未公开的0day,然后配合类似的搜索引擎利用,那结果可想而知,反正我们利用各种搜索引擎的最终目的无非就是想尽快找个目标边界先进去……<br><br></p>
 
-    </div>
+  </div>
+</article>
 
+    </div>
     
-
-    
-
-    <!-- Comments -->
-    
-
-</div>
-            </section>
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
         
-    </div>
-</div>
-
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
-    </div>
-
-
-
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
-</div>
-
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

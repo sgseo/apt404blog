@@ -1,177 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 关于Tomcat,更多详情大家可直接参考百科说明1https://zh.wikipedia.org/wiki/Apache_Tomcat 此次演示环境12CentOS7 x86_64 	ip: 192.168.3.64Apache Tomcat/8.5.24 	建议大家使用较新版的稳定版本 0x02 首先,在正式部署Tomcat之前,需要先来准备好jdk环境,因为毕竟底层还是在靠java">
+<meta name="keywords" content="Tomcat 安全部署实战指南">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat 安全部署实战指南">
+<meta property="og:url" content="https://apt404.github.io/2017/12/17/tomcat-sec/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 关于Tomcat,更多详情大家可直接参考百科说明1https://zh.wikipedia.org/wiki/Apache_Tomcat 此次演示环境12CentOS7 x86_64 	ip: 192.168.3.64Apache Tomcat/8.5.24 	建议大家使用较新版的稳定版本 0x02 首先,在正式部署Tomcat之前,需要先来准备好jdk环境,因为毕竟底层还是在靠java">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/java%20web.jpg">
+<meta property="og:image" content="https://apt404.github.io/img/virtual%20host%20tomcat.png">
+<meta property="og:image" content="https://apt404.github.io/img/dir%20list.png">
+<meta property="og:image" content="https://apt404.github.io/img/tomcat%20version.png">
+<meta property="og:image" content="https://apt404.github.io/img/version%20tomcat%20display.png">
+<meta property="og:image" content="https://apt404.github.io/img/host%20allow.png">
+<meta property="og:image" content="https://apt404.github.io/img/new%20log%20format.png">
+<meta property="og:updated_time" content="2017-12-30T12:34:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tomcat 安全部署实战指南">
+<meta name="twitter:description" content="0x01 关于Tomcat,更多详情大家可直接参考百科说明1https://zh.wikipedia.org/wiki/Apache_Tomcat 此次演示环境12CentOS7 x86_64 	ip: 192.168.3.64Apache Tomcat/8.5.24 	建议大家使用较新版的稳定版本 0x02 首先,在正式部署Tomcat之前,需要先来准备好jdk环境,因为毕竟底层还是在靠java">
+<meta name="twitter:image" content="https://apt404.github.io/img/java%20web.jpg">
     
-        <meta name="description" content="0x01 关于Tomcat,更多详情大家可直接参考百科说明1https://zh.wikipedia.org/wiki/Apache_Tomcat
-此次演示环境12CentOS7 x86_64 	ip: 192.168.3.64Apache Tomcat/8.5.24 	建议大家使用较新版的稳定版本
-0x02 首先,在正式部署Tomcat之前,需要先来准备好jdk环境,因为毕竟底层还是在靠java来处理,所以必须要先得有java的运行环境才行,其实,在实际生产环境中,也可以单独使用jre,不过个人觉得这和安全的关系并不大,试想,如果你手里都已经拿到了一个可以运行java的环境了,我在本地用对应版本的jdk编译好了再丢上运行也是一样,防不住啥,太泛泛123456789101112131415# tar xf jdk-8u151-linux-x64.tar.gz# mv jdk1.8.0_151/ /usr/local/# ln -s /usr/local/jdk1.8.0_151/ /usr/local/jdk# tar xf apache-tomcat-8.5.24.tar.gz# mv apache-tomcat-8.5.24 /usr/local/# ln -s /usr/local/apache-tomcat-8.5.24/ /usr/local/tomcat# ll /usr/local/# vi /etc/profile  export JAVA_HOME=/usr/local/jdk/   export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH   export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar  export TOMCAT_HOME=/usr/local/tomcat# source /etc/profile# java -version# javac">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="Tomcat 安全部署实战指南"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>Tomcat 安全部署实战指南 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>Tomcat 安全部署实战指南</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/12/21/ldap-sec/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/12/13/samba-sec/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/12/17/tomcat-sec/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/12/17/tomcat-sec/&text=Tomcat 安全部署实战指南"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/12/17/tomcat-sec/&is_video=false&description=Tomcat 安全部署实战指南"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Tomcat 安全部署实战指南&body=Check out this article: https://apt404.github.io/2017/12/17/tomcat-sec/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/12/17/tomcat-sec/&name=Tomcat 安全部署实战指南&description=&lt;p&gt;0x01 关于Tomcat,更多详情大家可直接参考百科说明&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;https://zh.wikipedia.org/wiki/Apache_Tomcat&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;此次演示环境&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;CentOS7 x86_64 	ip: 192.168.3.64&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Apache Tomcat/8.5.24 	建议大家使用较新版的稳定版本&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 首先,在正式部署Tomcat之前,需要先来准备好jdk环境,因为毕竟底层还是在靠java来处理,所以必须要先得有java的运行环境才行,其实,在实际生产环境中,也可以单独使用&lt;code&gt;jre&lt;/code&gt;,不过个人觉得这和安全的关系并不大,试想,如果你手里都已经拿到了一个可以运行java的环境了,我在本地用对应版本的jdk编译好了再丢上运行也是一样,防不住啥,太泛泛&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# tar xf jdk-8u151-linux-x64.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# mv jdk1.8.0_151/ /usr/local/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ln -s /usr/local/jdk1.8.0_151/ /usr/local/jdk&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# tar xf apache-tomcat-8.5.24.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# mv apache-tomcat-8.5.24 /usr/local/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ln -s /usr/local/apache-tomcat-8.5.24/ /usr/local/tomcat&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ll /usr/local/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# vi /etc/profile&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export JAVA_HOME=/usr/local/jdk/ &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export TOMCAT_HOME=/usr/local/tomcat&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# source /etc/profile&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# java -version&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# javac&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Tomcat 安全部署实战指南
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/12/17/tomcat-sec/">
-                Tomcat 安全部署实战指南
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-12-17</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/Tomcat-安全部署实战指南/">Tomcat 安全部署实战指南</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-12-16T20:09:17.000Z" itemprop="datePublished">2017-12-17</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Tomcat-安全部署实战指南/">Tomcat 安全部署实战指南</a>
+    </div>
 
-        <!-- Post Content -->
-        <p>0x01 关于Tomcat,更多详情大家可直接参考百科说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://zh.wikipedia.org/wiki/Apache_Tomcat</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>0x01 关于Tomcat,更多详情大家可直接参考百科说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://zh.wikipedia.org/wiki/Apache_Tomcat</span><br></pre></td></tr></table></figure></p>
 <p>此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CentOS7 x86_64 	ip: 192.168.3.64</span><br><span class="line">Apache Tomcat/8.5.24 	建议大家使用较新版的稳定版本</span><br></pre></td></tr></table></figure></p>
 <p>0x02 首先,在正式部署Tomcat之前,需要先来准备好jdk环境,因为毕竟底层还是在靠java来处理,所以必须要先得有java的运行环境才行,其实,在实际生产环境中,也可以单独使用<code>jre</code>,不过个人觉得这和安全的关系并不大,试想,如果你手里都已经拿到了一个可以运行java的环境了,我在本地用对应版本的jdk编译好了再丢上运行也是一样,防不住啥,太泛泛<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># tar xf jdk-8u151-linux-x64.tar.gz</span><br><span class="line"># mv jdk1.8.0_151/ /usr/local/</span><br><span class="line"># ln -s /usr/local/jdk1.8.0_151/ /usr/local/jdk</span><br><span class="line"># tar xf apache-tomcat-8.5.24.tar.gz</span><br><span class="line"># mv apache-tomcat-8.5.24 /usr/local/</span><br><span class="line"># ln -s /usr/local/apache-tomcat-8.5.24/ /usr/local/tomcat</span><br><span class="line"># ll /usr/local/</span><br><span class="line"># vi /etc/profile</span><br><span class="line">  export JAVA_HOME=/usr/local/jdk/ </span><br><span class="line">  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH </span><br><span class="line">  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar</span><br><span class="line">  export TOMCAT_HOME=/usr/local/tomcat</span><br><span class="line"># source /etc/profile</span><br><span class="line"># java -version</span><br><span class="line"># javac</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
@@ -208,216 +187,96 @@
 <p>0x20 最后,时常去关注tomcat官方发布的一些高危漏洞补丁,tomcat 8.x 已经相对比较稳定了,所以也建议大家,务必在稳定的前提下使用更新一点的版本</p>
 <p><br><br>后话:<br>&nbsp;&nbsp;&nbsp;&nbsp;因为关注的点不同,所以肯定有所偏颇,此处还是旨在防入侵,至于<code>针对jvm的各种性能优化</code>,后续有机会我们再单独说明,因为tomcat几乎都不会直接面向用户,大多都是通过反向代理的方式来提供服务的,另外,java自身的安全性和性能<code>采用编译的方式来运行</code>都要优于php,所以,针对tomcat的安全并没有像nginx或者apache压力那么大,而且由于tomcat是在后端,也相对比较好控制,虽然它到现在对java的一些类库支持的还不是很完整,但那些对我们而言暂时无需关心,以上部署仅供参考,并不完整,后续还会不断更新,大家可根据自己的实际业务需求再做进更进一步调整,关于java对渗透的功用,比如,免杀…想必大家也都非常熟悉了,这里就不多说了,更多其它内容,也非常欢迎大家来一起私信交流 ^_^</p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/Tomcat-安全部署实战指南/">#Tomcat 安全部署实战指南</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/12/17/tomcat-sec/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/12/17/tomcat-sec/&text=Tomcat 安全部署实战指南"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/12/17/tomcat-sec/&is_video=false&description=Tomcat 安全部署实战指南"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Tomcat 安全部署实战指南&body=Check out this article: https://apt404.github.io/2017/12/17/tomcat-sec/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/12/17/tomcat-sec/&title=Tomcat 安全部署实战指南"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/12/17/tomcat-sec/&name=Tomcat 安全部署实战指南&description=&lt;p&gt;0x01 关于Tomcat,更多详情大家可直接参考百科说明&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;https://zh.wikipedia.org/wiki/Apache_Tomcat&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;此次演示环境&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;CentOS7 x86_64 	ip: 192.168.3.64&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Apache Tomcat/8.5.24 	建议大家使用较新版的稳定版本&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 首先,在正式部署Tomcat之前,需要先来准备好jdk环境,因为毕竟底层还是在靠java来处理,所以必须要先得有java的运行环境才行,其实,在实际生产环境中,也可以单独使用&lt;code&gt;jre&lt;/code&gt;,不过个人觉得这和安全的关系并不大,试想,如果你手里都已经拿到了一个可以运行java的环境了,我在本地用对应版本的jdk编译好了再丢上运行也是一样,防不住啥,太泛泛&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# tar xf jdk-8u151-linux-x64.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# mv jdk1.8.0_151/ /usr/local/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ln -s /usr/local/jdk1.8.0_151/ /usr/local/jdk&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# tar xf apache-tomcat-8.5.24.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# mv apache-tomcat-8.5.24 /usr/local/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ln -s /usr/local/apache-tomcat-8.5.24/ /usr/local/tomcat&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ll /usr/local/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# vi /etc/profile&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export JAVA_HOME=/usr/local/jdk/ &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  export TOMCAT_HOME=/usr/local/tomcat&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# source /etc/profile&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# java -version&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# javac&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

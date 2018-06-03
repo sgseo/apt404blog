@@ -1,179 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么1234567挖0day,抱歉,并不在今天的讨论范畴 ^_^允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录允许匿名下载,造成的敏感文件信息泄露爆破,亦可造成敏感配置泄露嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透提权,linux平">
+<meta name="keywords" content="vsftpd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简述 FTP 入侵与防御 [ vsftpd ]">
+<meta property="og:url" content="https://apt404.github.io/2017/12/10/vsftp-secfig/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么1234567挖0day,抱歉,并不在今天的讨论范畴 ^_^允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录允许匿名下载,造成的敏感文件信息泄露爆破,亦可造成敏感配置泄露嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透提权,linux平">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/facl%20vsftpd.png">
+<meta property="og:image" content="https://apt404.github.io/img/facl%20vsftpd%20anon.png">
+<meta property="og:image" content="https://apt404.github.io/img/local%20user%20login.png">
+<meta property="og:image" content="https://apt404.github.io/img/local%20user%20login%20list.png">
+<meta property="og:image" content="https://apt404.github.io/img/virutal%20user%20login.png">
+<meta property="og:image" content="https://apt404.github.io/img/virutal%20user%20login%20res.png">
+<meta property="og:image" content="https://apt404.github.io/img/virutal%20user%20login%20tcpdump.png">
+<meta property="og:image" content="https://apt404.github.io/img/virutal%20user%20login%20flashftp.png">
+<meta property="og:image" content="https://apt404.github.io/img/virutal%20user%20login%20access.png">
+<meta property="og:updated_time" content="2017-12-23T02:02:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简述 FTP 入侵与防御 [ vsftpd ]">
+<meta name="twitter:description" content="0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么1234567挖0day,抱歉,并不在今天的讨论范畴 ^_^允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录允许匿名下载,造成的敏感文件信息泄露爆破,亦可造成敏感配置泄露嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透提权,linux平">
+<meta name="twitter:image" content="https://apt404.github.io/img/facl%20vsftpd.png">
     
-        <meta name="description" content="0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么1234567挖0day,抱歉,并不在今天的讨论范畴 ^_^允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录允许匿名下载,造成的敏感文件信息泄露爆破,亦可造成敏感配置泄露嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透提权,linux平台下基本不可能...
-0x02 相对主流的一些ftp工具1vsftpd proftpd filezilla ...
-0x03 深入理解ftp的主动与被动工作模式
-命令连接123在客户端向ftp服务端发起连接请求时,客户端会随机选择本地的某个tcp端口与ftp服务端的21端口进行连接这中间会进行一系列的身份验证过程,待验证通过后,客户端与ftp服务端即会成功建立 `命令连接`所谓的 `命令传输连接` 也就是说,仅仅只会用这个连接来传输命令本身
-主动模式1234在 `命令连接` 建立成功后,客户端可能还需要进行一系列的数据传输动作,如,上传,下载文件...此时,客户端会先在本地另启一个端口监听等待连接,并利用先前与ftp客户端建立好的`命令连接`通道,告诉ftp服务端客户端所监听的端口而后,ftp服务端会利用自身的20端口和刚才ftp客户端所告知的端口进行数据连接,随后就开始利用此连接来进行各类数据传输注意,此时`数据连接`在建立的过程中,是ftp服务端的20端口主动连接FTP客户端的随机端口的,也就是我们所说的`主动模式`">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="简述 FTP 入侵与防御 [ vsftpd ]"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>简述 FTP 入侵与防御 [ vsftpd ] - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>简述 FTP 入侵与防御 [ vsftpd ]</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/12/11/svn-config-sec/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/11/27/apache-sec/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/12/10/vsftp-secfig/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&text=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&is_video=false&description=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=简述 FTP 入侵与防御 [ vsftpd ]&body=Check out this article: https://apt404.github.io/2017/12/10/vsftp-secfig/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&name=简述 FTP 入侵与防御 [ vsftpd ]&description=&lt;p&gt;0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;挖0day,抱歉,并不在今天的讨论范畴 ^_^&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;允许匿名下载,造成的敏感文件信息泄露&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;爆破,亦可造成敏感配置泄露&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;提权,linux平台下基本不可能&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 相对主流的一些ftp工具&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;vsftpd proftpd filezilla ...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x03 深入理解ftp的主动与被动工作模式&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;命令连接&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;在客户端向ftp服务端发起连接请求时,客户端会随机选择本地的某个tcp端口与ftp服务端的21端口进行连接&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;这中间会进行一系列的身份验证过程,待验证通过后,客户端与ftp服务端即会成功建立 `命令连接`&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;所谓的 `命令传输连接` 也就是说,仅仅只会用这个连接来传输命令本身&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;主动模式&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;在 `命令连接` 建立成功后,客户端可能还需要进行一系列的数据传输动作,如,上传,下载文件...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;此时,客户端会先在本地另启一个端口监听等待连接,并利用先前与ftp客户端建立好的`命令连接`通道,告诉ftp服务端客户端所监听的端口&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;而后,ftp服务端会利用自身的20端口和刚才ftp客户端所告知的端口进行数据连接,随后就开始利用此连接来进行各类数据传输&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;注意,此时`数据连接`在建立的过程中,是ftp服务端的20端口主动连接FTP客户端的随机端口的,也就是我们所说的`主动模式`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        简述 FTP 入侵与防御 [ vsftpd ]
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/12/10/vsftp-secfig/">
-                简述 FTP 入侵与防御 [ vsftpd ]
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-12-10</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/vsftp/">vsftp</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-12-09T20:09:17.000Z" itemprop="datePublished">2017-12-10</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/vsftpd/">vsftpd</a>
+    </div>
 
-        <!-- Post Content -->
-        <p>0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">挖0day,抱歉,并不在今天的讨论范畴 ^_^</span><br><span class="line">允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录</span><br><span class="line">允许匿名下载,造成的敏感文件信息泄露</span><br><span class="line">爆破,亦可造成敏感配置泄露</span><br><span class="line">嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透</span><br><span class="line">提权,linux平台下基本不可能</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">挖0day,抱歉,并不在今天的讨论范畴 ^_^</span><br><span class="line">允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录</span><br><span class="line">允许匿名下载,造成的敏感文件信息泄露</span><br><span class="line">爆破,亦可造成敏感配置泄露</span><br><span class="line">嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透</span><br><span class="line">提权,linux平台下基本不可能</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
 <p>0x02 相对主流的一些ftp工具<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vsftpd proftpd filezilla ...</span><br></pre></td></tr></table></figure></p>
 <p>0x03 深入理解ftp的主动与被动工作模式</p>
 <p><code>命令连接</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">在客户端向ftp服务端发起连接请求时,客户端会随机选择本地的某个tcp端口与ftp服务端的21端口进行连接</span><br><span class="line">这中间会进行一系列的身份验证过程,待验证通过后,客户端与ftp服务端即会成功建立 `命令连接`</span><br><span class="line">所谓的 `命令传输连接` 也就是说,仅仅只会用这个连接来传输命令本身</span><br></pre></td></tr></table></figure></p>
@@ -210,216 +191,98 @@
 <p>0x12 勤于关注官方所发布的各类高危补丁,及时进行修补,vsftpd不比其它工具,漏洞是经常的,而且一般还都是可直接被远程利用的,所以,务必多留点儿心<br><br></p>
 <p>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;关于ftp安全,其实,差不多就这些了,只要时刻记住不要让客户端直接以本地系统用户身份来登陆操作,让ftp服务始终运行在一个较低的系统权限下,禁止匿名或者禁止匿名可写,别人此时再想通过ftp来拿到服务器权限就比较困难了,而且像ftp这种极小规模的文件共享服务,适用场景绝大多数都在内网,另外,vsftpd虚拟用户身份验证除了上面在这种基于文件的方式,同样也可以基于数据库来进行认证,如,mysql,非常简单,换汤不换药,大家有兴趣可以去自己尝试,只不过,基于数据库会更加灵活,因为非常方便通过脚本进行进一步处理,如,php,python…今天就先到这里吧,祝大家好运,也欢迎多来一起交流 ^_^</p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/vsftpd/">#vsftpd</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/12/10/vsftp-secfig/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&text=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&is_video=false&description=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=简述 FTP 入侵与防御 [ vsftpd ]&body=Check out this article: https://apt404.github.io/2017/12/10/vsftp-secfig/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&title=简述 FTP 入侵与防御 [ vsftpd ]"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/12/10/vsftp-secfig/&name=简述 FTP 入侵与防御 [ vsftpd ]&description=&lt;p&gt;0x01 首先,我们先来简单思考下,当你面对一台 ftp 时,到底能做些什么&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;挖0day,抱歉,并不在今天的讨论范畴 ^_^&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;允许匿名可写,直接上传webshell,一般极小的个人站才有可能,ftp目录即网站目录&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;允许匿名下载,造成的敏感文件信息泄露&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;爆破,亦可造成敏感配置泄露&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;嗅探,搜集各种明文账号密码,然后再拿着这些账号密码,去撞目标的其它入口,或以此进行进一步的内网渗透&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;提权,linux平台下基本不可能&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 相对主流的一些ftp工具&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;vsftpd proftpd filezilla ...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x03 深入理解ftp的主动与被动工作模式&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;命令连接&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;在客户端向ftp服务端发起连接请求时,客户端会随机选择本地的某个tcp端口与ftp服务端的21端口进行连接&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;这中间会进行一系列的身份验证过程,待验证通过后,客户端与ftp服务端即会成功建立 `命令连接`&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;所谓的 `命令传输连接` 也就是说,仅仅只会用这个连接来传输命令本身&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;主动模式&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;在 `命令连接` 建立成功后,客户端可能还需要进行一系列的数据传输动作,如,上传,下载文件...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;此时,客户端会先在本地另启一个端口监听等待连接,并利用先前与ftp客户端建立好的`命令连接`通道,告诉ftp服务端客户端所监听的端口&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;而后,ftp服务端会利用自身的20端口和刚才ftp客户端所告知的端口进行数据连接,随后就开始利用此连接来进行各类数据传输&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;注意,此时`数据连接`在建立的过程中,是ftp服务端的20端口主动连接FTP客户端的随机端口的,也就是我们所说的`主动模式`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

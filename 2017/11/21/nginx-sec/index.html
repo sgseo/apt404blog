@@ -1,178 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 关于 nginx12345配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低上面这些话的意思也就是说,你的C要牛逼">
+<meta name="keywords" content="nginsec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 0 开始构建一个 &quot;固若金汤&quot; 的nginx">
+<meta property="og:url" content="https://apt404.github.io/2017/11/21/nginx-sec/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 关于 nginx12345配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低上面这些话的意思也就是说,你的C要牛逼">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/hidden%20nginx%20version.png">
+<meta property="og:image" content="https://apt404.github.io/img/hidden%20nginx%20version%20res.png">
+<meta property="og:image" content="https://apt404.github.io/img/hidden%20compile%20args.png">
+<meta property="og:image" content="https://apt404.github.io/img/vmmac%20domain.png">
+<meta property="og:image" content="https://apt404.github.io/img/vmmac%20port.png">
+<meta property="og:image" content="https://apt404.github.io/img/vmmac%20ip.png">
+<meta property="og:image" content="https://apt404.github.io/img/vmmac%20domain%20status.png">
+<meta property="og:image" content="https://apt404.github.io/img/access%20log%20autocut.png">
+<meta property="og:image" content="https://apt404.github.io/img/vmmac%20rwrite.png">
+<meta property="og:image" content="https://apt404.github.io/img/fastcgi.png">
+<meta property="og:image" content="https://apt404.github.io/img/phpinfo.png">
+<meta property="og:image" content="https://apt404.github.io/img/nginx%20upload.png">
+<meta property="og:image" content="https://apt404.github.io/img/ip%20403.png">
+<meta property="og:image" content="https://apt404.github.io/img/nginx%20method.png">
+<meta property="og:image" content="https://apt404.github.io/img/svn%20403.png">
+<meta property="og:image" content="https://apt404.github.io/img/nginx%20webshell%20baidu.png">
+<meta property="og:updated_time" content="2017-12-03T11:18:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从 0 开始构建一个 &quot;固若金汤&quot; 的nginx">
+<meta name="twitter:description" content="0x01 关于 nginx12345配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低上面这些话的意思也就是说,你的C要牛逼">
+<meta name="twitter:image" content="https://apt404.github.io/img/hidden%20nginx%20version.png">
     
-        <meta name="description" content="0x01 关于 nginx12345配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低上面这些话的意思也就是说,你的C要牛逼到一定的程度,不然,想做深度二次开发基本是扯淡,真心挺佩服毛子的更多说明,请直接参考官方文档...
-0x02 正确理解 linux 对文件,目录,[ 读 写 执行 ] 权限的真正含义,这东西不能靠干说,因为根本理解不扎实,大家可以自己在系统中创建两个普通用户,不停地切换目录文件权限,以深入仔细体会,后面网站目录权限设置要用到这些基础,如果连这些都搞不清,想灵活应用就难了,耐心点,等透彻理解之后,你就会发现真TM简单 
-目录 读[r / 4] 写[w / 2] 执行[x / 1]123读:   ls , dir ... 			表示可查看该目录下的文件列表写:   rm , mv, cp, mkdir ,touch ...	表示可在该目录下创建,删除,修改文件或者子目录,不过在这之前,一定要先有执行权限,不然进都进不去,又怎么写呢执行: cd  ...				表示可进入该目录
-文件 读[r / 4] 写[w / 2] 执行[x / 1]123读:	cat , tac , more , less ,head , tail ... 表示可查看该文件中的内容写:	vi , nano , echo ...			 只表示可对文件中的 内容 进行增删改,删除文件还要取决于当前用户对该文件所在目录是否有写权限执行:	可执行文件,shell脚本...			 在linux中任何文件都可以有执行权限,但只有可执行文件和脚本才能真正执行">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>从 0 开始构建一个 &#34;固若金汤&#34; 的nginx - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>从 0 开始构建一个 &#34;固若金汤&#34; 的nginx</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/11/23/mysqlconfigsec/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/11/19/lsyncd/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/11/21/nginx-sec/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/11/21/nginx-sec/&text=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/11/21/nginx-sec/&is_video=false&description=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx&body=Check out this article: https://apt404.github.io/2017/11/21/nginx-sec/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/11/21/nginx-sec/&name=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx&description=&lt;p&gt;0x01 关于 nginx&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;上面这些话的意思也就是说,你的C要牛逼到一定的程度,不然,想做深度二次开发基本是扯淡,真心挺佩服毛子的&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;更多说明,请直接参考官方文档...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 正确理解 linux 对文件,目录,&lt;code&gt;[ 读 写 执行 ]&lt;/code&gt; 权限的真正含义,这东西不能靠干说,因为根本理解不扎实,大家可以自己在系统中创建两个普通用户,不停地切换目录文件权限,以深入仔细体会,后面网站目录权限设置要用到这些基础,如果连这些都搞不清,想灵活应用就难了,耐心点,等透彻理解之后,你就会发现真TM简单 &lt;/p&gt;
+&lt;p&gt;目录 &lt;code&gt;读[r / 4]&lt;/code&gt; &lt;code&gt;写[w / 2]&lt;/code&gt; &lt;code&gt;执行[x / 1]&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;读:   ls , dir ... 			表示可查看该目录下的文件列表&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;写:   rm , mv, cp, mkdir ,touch ...	表示可在该目录下创建,删除,修改文件或者子目录,不过在这之前,一定要先有执行权限,不然进都进不去,又怎么写呢&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;执行: cd  ...				表示可进入该目录&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;文件 &lt;code&gt;读[r / 4]&lt;/code&gt; &lt;code&gt;写[w / 2]&lt;/code&gt; &lt;code&gt;执行[x / 1]&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;读:	cat , tac , more , less ,head , tail ... 表示可查看该文件中的内容&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;写:	vi , nano , echo ...			 只表示可对文件中的 内容 进行增删改,删除文件还要取决于当前用户对该文件所在目录是否有写权限&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;执行:	可执行文件,shell脚本...			 在linux中任何文件都可以有执行权限,但只有可执行文件和脚本才能真正执行&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        从 0 开始构建一个 &#34;固若金汤&#34; 的nginx
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/11/21/nginx-sec/">
-                从 0 开始构建一个 "固若金汤" 的nginx
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-11-21</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/nginxsec/">nginxsec</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-11-20T20:09:17.000Z" itemprop="datePublished">2017-11-21</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/nginsec/">nginsec</a>
+    </div>
 
-        <!-- Post Content -->
-        <p>0x01 关于 nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右</span><br><span class="line">支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度</span><br><span class="line">默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低</span><br><span class="line">上面这些话的意思也就是说,你的C要牛逼到一定的程度,不然,想做深度二次开发基本是扯淡,真心挺佩服毛子的</span><br><span class="line">更多说明,请直接参考官方文档...</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>0x01 关于 nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右</span><br><span class="line">支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度</span><br><span class="line">默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低</span><br><span class="line">上面这些话的意思也就是说,你的C要牛逼到一定的程度,不然,想做深度二次开发基本是扯淡,真心挺佩服毛子的</span><br><span class="line">更多说明,请直接参考官方文档...</span><br></pre></td></tr></table></figure></p>
 <p>0x02 正确理解 linux 对文件,目录,<code>[ 读 写 执行 ]</code> 权限的真正含义,这东西不能靠干说,因为根本理解不扎实,大家可以自己在系统中创建两个普通用户,不停地切换目录文件权限,以深入仔细体会,后面网站目录权限设置要用到这些基础,如果连这些都搞不清,想灵活应用就难了,耐心点,等透彻理解之后,你就会发现真TM简单 </p>
 <p>目录 <code>读[r / 4]</code> <code>写[w / 2]</code> <code>执行[x / 1]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读:   ls , dir ... 			表示可查看该目录下的文件列表</span><br><span class="line">写:   rm , mv, cp, mkdir ,touch ...	表示可在该目录下创建,删除,修改文件或者子目录,不过在这之前,一定要先有执行权限,不然进都进不去,又怎么写呢</span><br><span class="line">执行: cd  ...				表示可进入该目录</span><br></pre></td></tr></table></figure></p>
 <p>文件 <code>读[r / 4]</code> <code>写[w / 2]</code> <code>执行[x / 1]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读:	cat , tac , more , less ,head , tail ... 表示可查看该文件中的内容</span><br><span class="line">写:	vi , nano , echo ...			 只表示可对文件中的 内容 进行增删改,删除文件还要取决于当前用户对该文件所在目录是否有写权限</span><br><span class="line">执行:	可执行文件,shell脚本...			 在linux中任何文件都可以有执行权限,但只有可执行文件和脚本才能真正执行</span><br></pre></td></tr></table></figure></p>
@@ -269,216 +257,97 @@
 <p>0x33 更多,待续…<br><br></p>
 <p>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;实际部署过程中做好这些最基本的防御措施即可,nginx自身能做事情确实还有很多,但完全想利用nginx实现一个准waf的效果,毕竟不太现实,也真的没那必要,如果对安全性真的有特别要求,建议大家还是自行去深度定制各类开源waf,说这么多,只是想告诉大家,真正的防御并不是盲目的人云亦云,漫无目的的象征性做做样子,你自己也要时刻跟进入侵者的各种猥琐攻击手法,仔细不停地复现分析,适时针对性改进防御策略才行,在安全的字典里,没有一劳永逸,有的是只是永无休止的对抗,唯一的办法就是未雨绸缪,只有比敌人更勤奋,才有占得先机的可能,另外,这里说的单单也只是针对nginx,大家都很清楚,安全本来就是一个面,只是一个节点的安全,根本就算不上安全,另外,关于脚本自身的安全以后还会有非常大篇幅说明,<code>web</code>,作为入侵者的首选途径,也是我们的重点防御对象,如果真正防住了web,基本就防住了绝大部分的外部入侵,话说回来,这一切还都是建立在对方没有手握各种远程0day的情况下,<code>如果人人都像NSA那样,基本也就没啥是安全的了,只需一个端口,就直接捅到你怀疑人生</code>,当然,你的实际价值肯定要先远远要超过买0day的钱,别人才有可能会用0day,毕竟这个东西基本上就是一次性的,万一被被别人的蜜罐套走了,岂不得不偿失,这里突然想起别人说过的一句话<code>0day固然可怕,但,你还不配</code>,哈哈……说一千道一万,nginx的主要作用还是为了更好的提供web服务<code>[ 一切还以满足实际业务需求和高性能为主 ]</code>,总不能一味地为了安全连钱都不挣了吧,好好活下去比什么都重要,今天不自觉废话稍微有点儿多了,大家不要建议哈,祝好运 ^_^</p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/nginsec/">#nginsec</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/11/21/nginx-sec/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/11/21/nginx-sec/&text=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/11/21/nginx-sec/&is_video=false&description=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx&body=Check out this article: https://apt404.github.io/2017/11/21/nginx-sec/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/11/21/nginx-sec/&title=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/11/21/nginx-sec/&name=从 0 开始构建一个 &#34;固若金汤&#34; 的nginx&description=&lt;p&gt;0x01 关于 nginx&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;配置灵活,简单,运行时占用系统资源较少,功能模块繁多,可扩展性极强,基于 C ,整个工具大小1M左右&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;支持高并发,仅限于全部为纯静态文件的情况下,因为最终还要取决于后端 [ 脚本和数据库 ] 的实际处理速度&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;默认 nginx 会自动选择最佳的网络I/O模型,和nginx不同的是,apache默认就会使用select模型,效率较低&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;上面这些话的意思也就是说,你的C要牛逼到一定的程度,不然,想做深度二次开发基本是扯淡,真心挺佩服毛子的&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;更多说明,请直接参考官方文档...&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;0x02 正确理解 linux 对文件,目录,&lt;code&gt;[ 读 写 执行 ]&lt;/code&gt; 权限的真正含义,这东西不能靠干说,因为根本理解不扎实,大家可以自己在系统中创建两个普通用户,不停地切换目录文件权限,以深入仔细体会,后面网站目录权限设置要用到这些基础,如果连这些都搞不清,想灵活应用就难了,耐心点,等透彻理解之后,你就会发现真TM简单 &lt;/p&gt;
+&lt;p&gt;目录 &lt;code&gt;读[r / 4]&lt;/code&gt; &lt;code&gt;写[w / 2]&lt;/code&gt; &lt;code&gt;执行[x / 1]&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;读:   ls , dir ... 			表示可查看该目录下的文件列表&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;写:   rm , mv, cp, mkdir ,touch ...	表示可在该目录下创建,删除,修改文件或者子目录,不过在这之前,一定要先有执行权限,不然进都进不去,又怎么写呢&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;执行: cd  ...				表示可进入该目录&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;文件 &lt;code&gt;读[r / 4]&lt;/code&gt; &lt;code&gt;写[w / 2]&lt;/code&gt; &lt;code&gt;执行[x / 1]&lt;/code&gt;&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;读:	cat , tac , more , less ,head , tail ... 表示可查看该文件中的内容&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;写:	vi , nano , echo ...			 只表示可对文件中的 内容 进行增删改,删除文件还要取决于当前用户对该文件所在目录是否有写权限&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;执行:	可执行文件,shell脚本...			 在linux中任何文件都可以有执行权限,但只有可执行文件和脚本才能真正执行&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

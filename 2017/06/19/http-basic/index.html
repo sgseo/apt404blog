@@ -1,176 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角">
+<meta name="keywords" content="http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从入侵者的眼中去理解 http 协议">
+<meta property="og:url" content="https://apt404.github.io/2017/06/19/http-basic/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/http%20options.png">
+<meta property="og:image" content="https://apt404.github.io/img/iis%20put%20create.png">
+<meta property="og:image" content="https://apt404.github.io/img/iis%20put%20create%20res.png">
+<meta property="og:updated_time" content="2017-10-14T23:47:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从入侵者的眼中去理解 http 协议">
+<meta name="twitter:description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角">
+<meta name="twitter:image" content="https://apt404.github.io/img/http%20options.png">
     
-        <meta name="description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角度上来重新理解http协议最核心的一些点,中间也会穿插着说明这些点容易带来的一些安全问题,如果大家真的非常有兴趣,想继续深入学习http协议,建议参考 《http权威指南》,着实是本http方面的好书,起码,个人是这样觉得的,既然是说协议,也就意味着某些东西可能会有些抽象,不过大家不用担心,我会用尽量用最容易理解的方式把它说明白,废话到此为止,咱们开始
-0x02 初始 http 简要工作过程&amp;nbsp;&amp;nbsp;客户端向web服务器请求所指定的资源(request)  =&amp;gt; web服务器(默认端口通常为80,8080)&amp;nbsp;&amp;nbsp;web服务器响应给客户端所请求的对应的资源数据(response) =&amp;gt; 客户端(随机端口和目标web服务端口进行连接)&amp;nbsp;&amp;nbsp;简单来讲,http就是一套用来规定”请求(request)”和”响应(response)”的规范,以此来保证客户端和服务端能够正常的进行通信&amp;nbsp;&amp;nbsp;用白话来讲 客户端向服务器端请求,然后服务器端把被请求的东西交给客户端 这就算一次完整的http通信">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="从入侵者的眼中去理解 http 协议"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>从入侵者的眼中去理解 http 协议 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>从入侵者的眼中去理解 http 协议</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/07/04/inotify-rsync/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/05/21/web-pentest-options/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/06/19/http-basic/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/06/19/http-basic/&text=从入侵者的眼中去理解 http 协议"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/06/19/http-basic/&is_video=false&description=从入侵者的眼中去理解 http 协议"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从入侵者的眼中去理解 http 协议&body=Check out this article: https://apt404.github.io/2017/06/19/http-basic/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/06/19/http-basic/&name=从入侵者的眼中去理解 http 协议&description=&lt;p&gt;0x01 前言&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角度上来重新理解http协议最核心的一些点,中间也会穿插着说明这些点容易带来的一些安全问题,如果大家真的非常有兴趣,想继续深入学习http协议,建议参考 《http权威指南》,着实是本http方面的好书,起码,个人是这样觉得的,既然是说协议,也就意味着某些东西可能会有些抽象,不过大家不用担心,我会用尽量用最容易理解的方式把它说明白,废话到此为止,咱们开始&lt;/p&gt;
+&lt;p&gt;0x02 初始 http 简要工作过程&lt;br&gt;&amp;nbsp;&amp;nbsp;客户端向web服务器请求所指定的资源(request)  =&amp;gt; web服务器(默认端口通常为80,8080)&lt;br&gt;&amp;nbsp;&amp;nbsp;web服务器响应给客户端所请求的对应的资源数据(response) =&amp;gt; 客户端(随机端口和目标web服务端口进行连接)&lt;br&gt;&amp;nbsp;&amp;nbsp;简单来讲,http就是一套用来规定”请求(request)”和”响应(response)”的规范,以此来保证客户端和服务端能够正常的进行通信&lt;br&gt;&amp;nbsp;&amp;nbsp;用白话来讲 &lt;font size=&#34;3&#34; color=&#34;red&#34;&gt;客户端向服务器端请求,然后服务器端把被请求的东西交给客户端&lt;/font&gt; 这就算一次完整的http通信&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        从入侵者的眼中去理解 http 协议
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/06/19/http-basic/">
-                从入侵者的眼中去理解 http 协议
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-06-19</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/http/">http</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">klion</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-06-18T19:46:52.000Z" itemprop="datePublished">2017-06-19</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/http/">http</a>
+    </div>
 
-        <!-- Post Content -->
-        <p>0x01 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角度上来重新理解http协议最核心的一些点,中间也会穿插着说明这些点容易带来的一些安全问题,如果大家真的非常有兴趣,想继续深入学习http协议,建议参考 《http权威指南》,着实是本http方面的好书,起码,个人是这样觉得的,既然是说协议,也就意味着某些东西可能会有些抽象,不过大家不用担心,我会用尽量用最容易理解的方式把它说明白,废话到此为止,咱们开始</p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>0x01 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角度上来重新理解http协议最核心的一些点,中间也会穿插着说明这些点容易带来的一些安全问题,如果大家真的非常有兴趣,想继续深入学习http协议,建议参考 《http权威指南》,着实是本http方面的好书,起码,个人是这样觉得的,既然是说协议,也就意味着某些东西可能会有些抽象,不过大家不用担心,我会用尽量用最容易理解的方式把它说明白,废话到此为止,咱们开始</p>
 <p>0x02 初始 http 简要工作过程<br>&nbsp;&nbsp;客户端向web服务器请求所指定的资源(request)  =&gt; web服务器(默认端口通常为80,8080)<br>&nbsp;&nbsp;web服务器响应给客户端所请求的对应的资源数据(response) =&gt; 客户端(随机端口和目标web服务端口进行连接)<br>&nbsp;&nbsp;简单来讲,http就是一套用来规定”请求(request)”和”响应(response)”的规范,以此来保证客户端和服务端能够正常的进行通信<br>&nbsp;&nbsp;用白话来讲 <font size="3" color="red">客户端向服务器端请求,然后服务器端把被请求的东西交给客户端</font> 这就算一次完整的http通信<br><a id="more"></a><br>0x03 理解http最基础的一些特性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">简洁快速: 客户端只需要传输具体的 &quot;请求方法&quot; 和要请求的 &quot;资源路径&quot;,服务器便可根据此快速把数据响应给客户端</span><br><span class="line">灵  活:   http 几乎可以传输 &quot;任意类型&quot; 的数据[支持什么样的类型都是被定义在MIME中的],比如:文本,视频,图片,压缩包,二进制程序等等……</span><br><span class="line">无连接:   每次连接只处理一个请求,服务器处理完请求并收到客户端正确应答后,即立刻断开连接,这样可以大大的节省传输时间</span><br><span class="line">无状态:   其实,说白点,就是客户端和服务器之间的每个连接都是相互独立的,彼此并不知道彼此的存在,所以,每个连接并不能相互依赖或者在彼此上附加数据,比如:</span><br><span class="line"> 	  一个连接的数据没有处理完,那么它就必须再重新传,而不能继续再&apos;断点&apos;上累加,也就是所谓的 &quot;http是无记忆的&quot;,不过在 http 1.1 会保持一个tcp连接</span><br></pre></td></tr></table></figure></p>
 <p>0x04 需要熟记的一些http请求头字段作用 [因为请求头对于我们来讲是可控的,所以针对http的利用大多也都集中在请求头中] :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http请求方法[常用的GET,POST,HEAD]  所请求的资源在服务器上的位置  所使用的http协议版本(1.1/1.0)</span><br><span class="line">POST  /drupal/?q=node&amp;destination=node  HTTP/1.1</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">指明host请求头[如果使用 http 1.1版本 必须指定该字段,它通常是目标域名,比如,如果有多个虚拟主机,我们就必须指定不同的域名才能访问到不同的网站目录]</span><br><span class="line">Host: www.target.org</span><br></pre></td></tr></table></figure>
@@ -251,216 +226,95 @@
 <p><br></p>
 <p>一点小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;对于渗透来讲,我们需要熟练掌握http最重要的地方,一个是请求头中的各个字段作用,如,各种请求方法,cookie,user-agent,referer等……另一个就是响应头中的各个字段,如,状态码,server头,等……以及由此衍生出来的各种安全问题,时间有限,这里仅仅只是先带大家入个门,其实,就http协议本身内容还是非常多的,毕竟个人能力精力篇幅都很有限,所以不得不有所侧重,不对的地方还望大家多多指正…… </p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/http/">#http</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/06/19/http-basic/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/06/19/http-basic/&text=从入侵者的眼中去理解 http 协议"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/06/19/http-basic/&is_video=false&description=从入侵者的眼中去理解 http 协议"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从入侵者的眼中去理解 http 协议&body=Check out this article: https://apt404.github.io/2017/06/19/http-basic/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/06/19/http-basic/&title=从入侵者的眼中去理解 http 协议"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/06/19/http-basic/&name=从入侵者的眼中去理解 http 协议&description=&lt;p&gt;0x01 前言&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;不管对于web开发亦或是渗透来讲,熟练掌握http协议的核心运作要点都是入门必备科目,如果连这些最基础的东西都没掌握熟练,又何谈下一步呢,因为http会贯穿于后续整个web渗透过程,当然啦,就http协议本身来讲,还是非常非常复杂的,单单靠一篇文章就想全面透彻的掌握http协议,毕竟不太现实,所以我们今天也只是模拟站在一个专业入侵者的角度上来重新理解http协议最核心的一些点,中间也会穿插着说明这些点容易带来的一些安全问题,如果大家真的非常有兴趣,想继续深入学习http协议,建议参考 《http权威指南》,着实是本http方面的好书,起码,个人是这样觉得的,既然是说协议,也就意味着某些东西可能会有些抽象,不过大家不用担心,我会用尽量用最容易理解的方式把它说明白,废话到此为止,咱们开始&lt;/p&gt;
+&lt;p&gt;0x02 初始 http 简要工作过程&lt;br&gt;&amp;nbsp;&amp;nbsp;客户端向web服务器请求所指定的资源(request)  =&amp;gt; web服务器(默认端口通常为80,8080)&lt;br&gt;&amp;nbsp;&amp;nbsp;web服务器响应给客户端所请求的对应的资源数据(response) =&amp;gt; 客户端(随机端口和目标web服务端口进行连接)&lt;br&gt;&amp;nbsp;&amp;nbsp;简单来讲,http就是一套用来规定”请求(request)”和”响应(response)”的规范,以此来保证客户端和服务端能够正常的进行通信&lt;br&gt;&amp;nbsp;&amp;nbsp;用白话来讲 &lt;font size=&#34;3&#34; color=&#34;red&#34;&gt;客户端向服务器端请求,然后服务器端把被请求的东西交给客户端&lt;/font&gt; 这就算一次完整的http通信&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

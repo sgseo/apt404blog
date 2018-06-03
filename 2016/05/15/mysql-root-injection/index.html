@@ -1,177 +1,162 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html lang=zh>
 <head>
-
+    <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1,mysql root权限,实例注入点,如下:1http://vuln.com/news_view.php?id=9&amp;amp;vid=192  2,尝试用单引号去干扰vid参数,数据库报错,唉,竟然没顺带一起丢出目标网站的物理路径,差评,嘿嘿……1http://vuln.com/news_view.php?id=9&amp;amp;vid=192&apos;  3,尝试闭合1http://vuln.com/new">
+<meta name="keywords" content="sqlinjection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql注入入门 之 mysql root权限下的注入利用方式">
+<meta property="og:url" content="https://apt404.github.io/2016/05/15/mysql-root-injection/index.html">
+<meta property="og:site_name" content="APT404-不疯不魔怎么活">
+<meta property="og:description" content="1,mysql root权限,实例注入点,如下:1http://vuln.com/news_view.php?id=9&amp;amp;vid=192  2,尝试用单引号去干扰vid参数,数据库报错,唉,竟然没顺带一起丢出目标网站的物理路径,差评,嘿嘿……1http://vuln.com/news_view.php?id=9&amp;amp;vid=192&apos;  3,尝试闭合1http://vuln.com/new">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root1.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root2.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root3.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root4.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root5.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root6.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root7.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root8.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root8_1.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root9.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root10.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root11.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root12.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root13.png">
+<meta property="og:image" content="https://apt404.github.io/img/mysql_root14.png">
+<meta property="og:updated_time" content="2017-06-24T15:59:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sql注入入门 之 mysql root权限下的注入利用方式">
+<meta name="twitter:description" content="1,mysql root权限,实例注入点,如下:1http://vuln.com/news_view.php?id=9&amp;amp;vid=192  2,尝试用单引号去干扰vid参数,数据库报错,唉,竟然没顺带一起丢出目标网站的物理路径,差评,嘿嘿……1http://vuln.com/news_view.php?id=9&amp;amp;vid=192&apos;  3,尝试闭合1http://vuln.com/new">
+<meta name="twitter:image" content="https://apt404.github.io/img/mysql_root1.png">
     
-        <meta name="description" content="1,mysql root权限,实例注入点,如下:1http://vuln.com/news_view.php?id=9&amp;amp;vid=192
-
-2,尝试用单引号去干扰vid参数,数据库报错,唉,竟然没顺带一起丢出目标网站的物理路径,差评,嘿嘿……1http://vuln.com/news_view">
     
-
-    <!--Author-->
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
     
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="sql注入入门 之 mysql root权限下的注入利用方式"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>sql注入入门 之 mysql root权限下的注入利用方式 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
+    <!-- title -->
+    <title>sql注入入门 之 mysql root权限下的注入利用方式</title>
+    <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <!-- persian styles -->
     
-
-
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/05/16/mysql-wide-byte-injection/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2016/05/14/mysql-bool-blind-injection/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/05/15/mysql-root-injection/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&text=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&is_video=false&description=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sql注入入门 之 mysql root权限下的注入利用方式&body=Check out this article: https://apt404.github.io/2016/05/15/mysql-root-injection/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&name=sql注入入门 之 mysql root权限下的注入利用方式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
     </div>
+    <div id="toc">
+      
+    </div>
+  </span>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+    
+    <div class="content index my4">
         
-    </div>
-</header>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        sql注入入门 之 mysql root权限下的注入利用方式
+    </h1>
 
-        <section class="main">
-            
-<div class="post">
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2016/05/15/mysql-root-injection/">
-                sql注入入门 之 mysql root权限下的注入利用方式
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2016-05-15</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/all-sql-injection/">all sql injection</a>
-                </span>
-            
-        </div>
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">APT404-不疯不魔怎么活</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-05-14T17:13:07.000Z" itemprop="datePublished">2016-05-15</time>
     </div>
 
-    <div class="content">
 
-        <!-- Gallery -->
-        
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/sqlinjection/">sqlinjection</a>
+    </div>
 
-        <!-- Post Content -->
-        <p><br><br>1,mysql root权限,实例注入点,如下:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/vuln.com/news</span>_view.php?id=<span class="number">9</span>&amp;vid=<span class="number">192</span></span><br></pre></td></tr></table></figure></p>
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><br><br>1,mysql root权限,实例注入点,如下:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/vuln.com/news</span>_view.php?id=<span class="number">9</span>&amp;vid=<span class="number">192</span></span><br></pre></td></tr></table></figure></p>
 <p><img src="/img/mysql_root1.png" alt="&#39;&#39;"><br></p>
 <p>2,尝试用单引号去干扰vid参数,数据库报错,唉,竟然没顺带一起丢出目标网站的物理路径,差评,嘿嘿……<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/vuln.com/news</span>_view.php?id=<span class="number">9</span>&amp;vid=<span class="number">192</span><span class="string">'</span></span><br></pre></td></tr></table></figure></p>
 <p><img src="/img/mysql_root2.png" alt="&#39;&#39;"><br></p>
@@ -202,216 +187,94 @@
 <p>关于mysql root权限下的权限利用需要注意的一些点:<br><code>(1),正常情况下mysql的root用户确实可以在数据库中为所欲为,但这并不意味着你在目标操作系统中也可以为所欲为,如果启动mysql服务的用户身份只是系统的一个普通用户,那么你在系统中的权限撑死了也就只是个普通用户权限,因为你继承的是那个启动mysql服务的用户权限,说这些只是为了让大家对于mysql root权限下的文件读写利用有个更清晰的认识,大多数时候你会发现,即使你确实是mysql的root用户,但依然没法正常的读写文件,原因就是我上面说的这些,因为你的mysql服务用户只是个普通用户权限,而这个用户对你要操作的那个目录或文件没有读写权限,自然就读写不了,当然,这是基于系统的文件系统权限而言</code><br><code>(2),另外,还有一种情况,假设你对目标的网站目录有正常的读写权限,但是目标在安装完mysql以后对root用户进行了一些权限优化,比如,我想让root只能正常的增删改查,之外的权限全删掉,这时候,你再想进行文件读写,也可能是不行的,因为file权限很可能被干掉了</code><br><code>(3),最后,还可能会有一些别的情况,比如,网站目录被waf或其他的一些防护工具所监控,当你写webshell时,直接就被杀掉或者报警拦截之类的</code><br><code>(4),退一万步来讲,即使你真的没办法读写文件,但这并不妨碍你正常查询数据,拿到网站管理员的账号密码,登到后台传shell也是可以的,不用一条路走到黑,多变通</code><br><code>(5),其实,有时候也可以利用root用户执行系统命令,即udf,有一种提权方法,叫udf提权,利用的就是此特性,还是那句话,即使能执行系统命令,但这并不意味一定可以达到提权(对于linux来讲是直接提到root权限)的效果,关于udf的东西,我们后续再单独说,这里就暂时先放过</code><br><br></p>
 <p>一点小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;其实,就mysql本身的文件读写来讲,非常简单,只是背后的权限映射,需要大家稍微理解下,个人觉得挺好理解的,又没什么拐弯抹角的,都是死东西,相信你只要以前好好琢磨过操作系统的用户组权限,这个对你来说,基本是一点就通,在操作系统中,所有的程序,都是工作在某种安全上下文中的,而这个安全上下文大多数都是由用户来控制和决定的,好吧,稍不留神又TM跑题了,汗……<br><br></p>
 
-    </div>
+  </div>
+</article>
 
-    
 
-    
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/sqlinjection/">#sqlinjection</a>
-        </div>
-    
-
-    <!-- Comments -->
-    
-
-</div>
-        </section>
 
     </div>
-</div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
 
-
-</div>
-
-<!-- Footer -->
-<div class="push"></div>
-
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
     </div>
 
+    <div id="toc-footer" style="display: none">
+      
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/05/15/mysql-root-injection/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&text=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&is_video=false&description=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sql注入入门 之 mysql root权限下的注入利用方式&body=Check out this article: https://apt404.github.io/2016/05/15/mysql-root-injection/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&title=sql注入入门 之 mysql root权限下的注入利用方式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/05/15/mysql-root-injection/&name=sql注入入门 之 mysql root权限下的注入利用方式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/other/">other</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/PS1/">PS1</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-    </ul>
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/Search/">Search</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-<!-- After footer scripts -->
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
 <script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
-
-</body>
-
-</html>

@@ -1,159 +1,178 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="en">
+
+<!-- Head tag -->
 <head>
-    <!-- so meta -->
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转">
-<meta name="keywords" content="fpipe">
-<meta property="og:type" content="article">
-<meta property="og:title" content="通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]">
-<meta property="og:url" content="https://apt404.github.io/2016/09/21/fpipe-redirect-port/index.html">
-<meta property="og:site_name" content="APT404-不疯不魔怎么活">
-<meta property="og:description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://apt404.github.io/img/fpipe%20help.png">
-<meta property="og:image" content="https://apt404.github.io/img/firewall_win.png">
-<meta property="og:image" content="https://apt404.github.io/img/firewall_rules.png">
-<meta property="og:image" content="https://apt404.github.io/img/fpipe_80_rdp.png">
-<meta property="og:image" content="https://apt404.github.io/img/fpipe_80_rdp_question.png">
-<meta property="og:image" content="https://apt404.github.io/img/fpipe_80_rdp_result.png">
-<meta property="og:image" content="https://apt404.github.io/img/fpipe_80_ssh.png">
-<meta property="og:image" content="https://apt404.github.io/img/fpipe_80_ssh_res.png">
-<meta property="og:image" content="https://apt404.github.io/img/fpipe_80_ssh_connect.png">
-<meta property="og:updated_time" content="2017-11-11T12:08:20.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]">
-<meta name="twitter:description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转">
-<meta name="twitter:image" content="https://apt404.github.io/img/fpipe%20help.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
     
+        <meta name="description" content="0x01 前言:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转到本地某个指定的端口上[转发],再通过转到的这个本地端口去连远程机器的某个端口[管道],而不是像netsh只是单纯的把端口转过去,简易通信流程如下
+1外部端口访问 &amp;lt;-&amp;gt; 本地监听来自外部的这个端口并它转到本地的另一个端口上(在本地绑定两个端口) &amp;lt;-&amp;gt; 通过本地的另一个端口和远程机器的某个端口通信
+工具选项如下,非常简单,看选项说明基本就懂了:
+0x02 我们可以拿它来做什么&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;刚刚在上面已经说过,它并非直接转发,而是又自己建立了一个新的通道,这样的好处在哪里呢,很明显,我们可以通过这样的方式来轻松bypass掉各类应用层防火墙">
     
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
+
+    <!--Author-->
     
-    <!-- title -->
-    <title>通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]</title>
-    <!-- styles -->
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
+
+    <!-- Google Analytics -->
     
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
+
+
 </head>
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2016/09/22/ssh-portforward/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2016/09/19/iptables-portfward/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/09/21/fpipe-redirect-port/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&text=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&is_video=false&description=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]&body=Check out this article: https://apt404.github.io/2016/09/21/fpipe-redirect-port/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&name=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前言:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转到本地某个指定的端口上[转发],再通过转到的这个本地端口去连远程机器的某个端口[管道],而不是像netsh只是单纯的把端口转过去,简易通信流程如下&lt;/p&gt;
-&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;外部端口访问 &amp;lt;-&amp;gt; 本地监听来自外部的这个端口并它转到本地的另一个端口上(在本地绑定两个端口) &amp;lt;-&amp;gt; 通过本地的另一个端口和远程机器的某个端口通信&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;工具选项如下,非常简单,看选项说明基本就懂了:&lt;br&gt;&lt;img src=&#34;/img/fpipe help.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;0x02 我们可以拿它来做什么&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;刚刚在上面已经说过,它并非直接转发,而是又自己建立了一个新的通道,这样的好处在哪里呢,很明显,我们可以通过这样的方式来轻松bypass掉各类应用层防火墙&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
 
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
     </div>
-    <div id="toc">
-      
-    </div>
-  </span>
 </div>
 
-    
-    <div class="content index my4">
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
         
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]
-    </h1>
+    </div>
+</header>
 
+        <section class="main">
+            
+<div class="post">
 
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">klion</span>
-      </span>
-      
-    <div class="postdate">
-        <time datetime="2016-09-20T20:09:17.000Z" itemprop="datePublished">2016-09-21</time>
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2016/09/21/fpipe-redirect-port/">
+                通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2016-09-21</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/fpipe/">fpipe</a>
+                </span>
+            
+        </div>
     </div>
 
+    <div class="content">
 
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/fpipe/">fpipe</a>
-    </div>
+        <!-- Gallery -->
+        
 
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p><br><br>0x01 前言:<br>&nbsp;&nbsp;&nbsp;&nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转到本地某个指定的端口上[转发],再通过转到的这个本地端口去连远程机器的某个端口[管道],而不是像netsh只是单纯的把端口转过去,简易通信流程如下</p>
+        <!-- Post Content -->
+        <p><br><br>0x01 前言:<br>&nbsp;&nbsp;&nbsp;&nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转到本地某个指定的端口上[转发],再通过转到的这个本地端口去连远程机器的某个端口[管道],而不是像netsh只是单纯的把端口转过去,简易通信流程如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">外部端口访问 &lt;-&gt; 本地监听来自外部的这个端口并它转到本地的另一个端口上(在本地绑定两个端口) &lt;-&gt; 通过本地的另一个端口和远程机器的某个端口通信</span><br></pre></td></tr></table></figure>
 <p>工具选项如下,非常简单,看选项说明基本就懂了:<br><img src="/img/fpipe help.png" alt=""></p>
 <p>0x02 我们可以拿它来做什么<br>&nbsp;&nbsp;&nbsp;&nbsp;刚刚在上面已经说过,它并非直接转发,而是又自己建立了一个新的通道,这样的好处在哪里呢,很明显,我们可以通过这样的方式来轻松bypass掉各类应用层防火墙</p>
@@ -168,97 +187,216 @@
 <p><img src="/img/fpipe_80_ssh.png" alt=""><br><img src="/img/fpipe_80_ssh_res.png" alt=""><br><img src="/img/fpipe_80_ssh_connect.png" alt=""></p>
 <p>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;在实际渗透中,你可以在提权以后自己手工加一条允许某个端口的规则,注意建立管道绑的端口不要和系统中现有的端口冲突,用这个的主要原因还是希望能把内网中的一些出不来[不能连外网]的机器,通过这种方式一起给带出来,实际渗透中不一定非要用,实在没办法的时候可以尝试下,如果真是遇到那种什么都出不来的内网,好吧,算你走运,像类似的疑难杂症我们后续还会用大量的篇幅来说明[具体问题具体对待嘛],说实话,有些比较棘手的问题,我自己也不是搞的特别通透,仍在不断学习中…</p>
 
-  </div>
-</article>
-
-
-
     </div>
+
     
-      <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </div>
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/fpipe/">#fpipe</a>
+        </div>
+    
 
-    <div id="toc-footer" style="display: none">
-      
-    </div>
+    <!-- Comments -->
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/09/21/fpipe-redirect-port/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&text=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&is_video=false&description=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]&body=Check out this article: https://apt404.github.io/2016/09/21/fpipe-redirect-port/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&title=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/09/21/fpipe-redirect-port/&name=通向彼岸 之内网代理转发 [ 利用端口重定向bypass各类应用层防火墙 fpipe ]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前言:&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果你觉得netsh和iptables配置稍微有点儿繁琐,有款小工具可能会适合你,fpipe 一款专门用于端口重定向的小工具,从名字就能猜出来它是干啥的,很明显,forward pipe[转发,通过管道],虽然功能上和netsh有一点点类似,但确实不是一类东西,同样是监听来自外部的某个端口,但它多做了一步,它会把来自外部端口的流量先转到本地某个指定的端口上[转发],再通过转到的这个本地端口去连远程机器的某个端口[管道],而不是像netsh只是单纯的把端口转过去,简易通信流程如下&lt;/p&gt;
-&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;外部端口访问 &amp;lt;-&amp;gt; 本地监听来自外部的这个端口并它转到本地的另一个端口上(在本地绑定两个端口) &amp;lt;-&amp;gt; 通过本地的另一个端口和远程机器的某个端口通信&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;工具选项如下,非常简单,看选项说明基本就懂了:&lt;br&gt;&lt;img src=&#34;/img/fpipe help.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;0x02 我们可以拿它来做什么&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;刚刚在上面已经说过,它并非直接转发,而是又自己建立了一个新的通道,这样的好处在哪里呢,很明显,我们可以通过这样的方式来轻松bypass掉各类应用层防火墙&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+</div>
+        </section>
 
     </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
 </div>
 
-    
-    <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2018 John Doe
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
         
-      </ul>
-    </nav>
-  </div>
+        <li>
+            <a class="footer-post" href="/categories/CVE/">CVE</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
-</body>
-</html>
-<!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+<!-- After footer scripts -->
 
-<!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
 <script src="/js/main.js"></script>
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
+
+</body>
+
+</html>

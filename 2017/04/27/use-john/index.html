@@ -1,166 +1,176 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="en">
+
+<!-- Head tag -->
 <head>
-    <!-- so meta -->
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="0x00 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧 0x01 尝试在Ubuntu16.04.2 LTS上编译安装john 1.8[当然啦,也有">
-<meta name="keywords" content="john">
-<meta property="og:type" content="article">
-<meta property="og:title" content="快速破解各种散列hash [ john入门篇 ]">
-<meta property="og:url" content="https://apt404.github.io/2017/04/27/use-john/index.html">
-<meta property="og:site_name" content="APT404-不疯不魔怎么活">
-<meta property="og:description" content="0x00 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧 0x01 尝试在Ubuntu16.04.2 LTS上编译安装john 1.8[当然啦,也有">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://apt404.github.io/img/john%20compile%20install.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20install%20test.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20default%20crack.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20single.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20wordlist.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20shells.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20incremental%20digits.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20default%20crack%20show.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20md5.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20nt2.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20mssql12.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20mysql.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20oracle11g.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20offices2016.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20drupal7.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20rar.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20rar5.png">
-<meta property="og:image" content="https://apt404.github.io/img/john%20zip.png">
-<meta property="og:updated_time" content="2017-07-17T00:09:08.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快速破解各种散列hash [ john入门篇 ]">
-<meta name="twitter:description" content="0x00 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧 0x01 尝试在Ubuntu16.04.2 LTS上编译安装john 1.8[当然啦,也有">
-<meta name="twitter:image" content="https://apt404.github.io/img/john%20compile%20install.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
     
+        <meta name="description" content="0x00 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧
+0x01 尝试在Ubuntu16.04.2 LTS上编译安装john 1.8[当然啦,也有已经编译好对应的win版下的,不过实际破解还是更推荐用linux],像类似的hash破解工具,不用多说,单独找个显卡或者CPU性能好点的机器是必须的,要不,意义何在呢,编译安装的过程就非常简单了,如下[如果嫌手敲的累,自己放脚本里跑跑就好了]123456789# wget http://www.openwall.com/john/j/john-1.8.0.tar.xz# tar xvfJ john-1.8.0.tar.xz# cd john-1.8.0/src# make 选择对应的系统平台进行编译# make clean linux-x86-64# echo $?# cd ../run/# ./john --test 测试当前系统的破解速度# echo $?">
     
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
+
+    <!--Author-->
     
-    <!-- title -->
-    <title>快速破解各种散列hash [ john入门篇 ]</title>
-    <!-- styles -->
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="快速破解各种散列hash [ john入门篇 ]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>快速破解各种散列hash [ john入门篇 ] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
+
+    <!-- Google Analytics -->
     
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
+
+
 </head>
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2017/05/01/GPU-HASH-CRACK/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2017/04/26/use-hashcat-crack-hash/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/04/27/use-john/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/04/27/use-john/&text=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/04/27/use-john/&is_video=false&description=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=快速破解各种散列hash [ john入门篇 ]&body=Check out this article: https://apt404.github.io/2017/04/27/use-john/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/04/27/use-john/&name=快速破解各种散列hash [ john入门篇 ]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x00 前言&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧&lt;/p&gt;
-&lt;p&gt;0x01 尝试在Ubuntu16.04.2 LTS上编译安装john 1.8[当然啦,也有已经编译好对应的win版下的,不过实际破解还是更推荐用linux],像类似的hash破解工具,不用多说,单独找个显卡或者CPU性能好点的机器是必须的,要不,意义何在呢,编译安装的过程就非常简单了,如下[如果嫌手敲的累,自己放脚本里跑跑就好了]&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# wget http://www.openwall.com/john/j/john-1.8.0.tar.xz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# tar xvfJ john-1.8.0.tar.xz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd john-1.8.0/src&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# make 选择对应的系统平台进行编译&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# make clean linux-x86-64&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# echo $?&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd ../run/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ./john --test 测试当前系统的破解速度&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# echo $?&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
 
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
     </div>
-    <div id="toc">
-      
-    </div>
-  </span>
 </div>
 
-    
-    <div class="content index my4">
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
         
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        快速破解各种散列hash [ john入门篇 ]
-    </h1>
+    </div>
+</header>
 
+        <section class="main">
+            
+<div class="post">
 
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">klion</span>
-      </span>
-      
-    <div class="postdate">
-        <time datetime="2017-04-26T23:50:57.000Z" itemprop="datePublished">2017-04-27</time>
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/04/27/use-john/">
+                快速破解各种散列hash [ john入门篇 ]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-27</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/john/">john</a>
+                </span>
+            
+        </div>
     </div>
 
+    <div class="content">
 
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/john/">john</a>
-    </div>
+        <!-- Gallery -->
+        
 
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p><br><br>0x00 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧</p>
+        <!-- Post Content -->
+        <p><br><br>0x00 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧</p>
 <p>0x01 尝试在Ubuntu16.04.2 LTS上编译安装john 1.8[当然啦,也有已经编译好对应的win版下的,不过实际破解还是更推荐用linux],像类似的hash破解工具,不用多说,单独找个显卡或者CPU性能好点的机器是必须的,要不,意义何在呢,编译安装的过程就非常简单了,如下[如果嫌手敲的累,自己放脚本里跑跑就好了]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># wget http://www.openwall.com/john/j/john-1.8.0.tar.xz</span><br><span class="line"># tar xvfJ john-1.8.0.tar.xz</span><br><span class="line"># cd john-1.8.0/src</span><br><span class="line"># make 选择对应的系统平台进行编译</span><br><span class="line"># make clean linux-x86-64</span><br><span class="line"># echo $?</span><br><span class="line"># cd ../run/</span><br><span class="line"># ./john --test 测试当前系统的破解速度</span><br><span class="line"># echo $?</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
 <p>安装完以后,看到如下的情况,基本就算安装成功了<br><img src="/img/john compile install.png" alt=""><br><img src="/img/john install test.png" alt=""><br></p>
@@ -211,95 +221,216 @@
 <p>破解jpg加密[后期成功再贴上来吧]:<br><br><br>0x10 最后,提供两个简明john使用帮助:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://countuponsecurity.files.wordpress.com/2016/09/jtr-cheat-sheet.pdf</span><br><span class="line">http://msu-nftc.org/courses/intro/material/9%20Password%20Cracking/Tools/John%20the%20Ripper.pdf</span><br></pre></td></tr></table></figure></p>
 <p><br><br>0x10 一点小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;作为john的入门使用,到这里基本就差不多了,确实非常简单,里面所支持的散列类型这里就不一一演示了,破解方式几乎都是一样的,关键是知道各种爆破模式的工作细节和各类hash的提取方法,这才是今天要关注的重点,关于自定义规则后续有空会再单独说明,它比hashcat唯一好一点的是,如果你不指定目标的hash类型它会自动匹配,但实际破解中跟hashcat还是有着比较大差距的[就免费版来说],估计专业版应该会好很多吧,反正我自己没用过</p>
 
-  </div>
-</article>
-
-
-
     </div>
+
     
-      <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </div>
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/john/">#john</a>
+        </div>
+    
 
-    <div id="toc-footer" style="display: none">
-      
-    </div>
+    <!-- Comments -->
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/04/27/use-john/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/04/27/use-john/&text=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/04/27/use-john/&is_video=false&description=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=快速破解各种散列hash [ john入门篇 ]&body=Check out this article: https://apt404.github.io/2017/04/27/use-john/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/04/27/use-john/&title=快速破解各种散列hash [ john入门篇 ]"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/04/27/use-john/&name=快速破解各种散列hash [ john入门篇 ]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x00 前言&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;john[又名JTR] 本身是用来专门破解linux系统用户hash的,但现在已经不再那么局限了,它同样也提供了非常多的散列类型,虽然,跟hashcat在某些方面确实还差了一个量级,但它也有自己很独到的地方,多用你就知道了,废话不多说,咱们开始吧&lt;/p&gt;
-&lt;p&gt;0x01 尝试在Ubuntu16.04.2 LTS上编译安装john 1.8[当然啦,也有已经编译好对应的win版下的,不过实际破解还是更推荐用linux],像类似的hash破解工具,不用多说,单独找个显卡或者CPU性能好点的机器是必须的,要不,意义何在呢,编译安装的过程就非常简单了,如下[如果嫌手敲的累,自己放脚本里跑跑就好了]&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# wget http://www.openwall.com/john/j/john-1.8.0.tar.xz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# tar xvfJ john-1.8.0.tar.xz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd john-1.8.0/src&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# make 选择对应的系统平台进行编译&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# make clean linux-x86-64&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# echo $?&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd ../run/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ./john --test 测试当前系统的破解速度&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# echo $?&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+</div>
+        </section>
 
     </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
 </div>
 
-    
-    <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2018 John Doe
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
         
-      </ul>
-    </nav>
-  </div>
+        <li>
+            <a class="footer-post" href="/categories/CVE/">CVE</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
-</body>
-</html>
-<!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+<!-- After footer scripts -->
 
-<!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
 <script src="/js/main.js"></script>
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
+
+</body>
+
+</html>

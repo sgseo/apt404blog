@@ -1,160 +1,177 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="en">
+
+<!-- Head tag -->
 <head>
-    <!-- so meta -->
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考 首先,到kali的官网去下载最新版的kali iso镜像或者虚拟机文件个人还是更建议直接用它官方提供的虚拟机,这里我就直接用它已经配好的虚拟机来做演示说明,也建议大家直接用它官方提供好的虚拟机,不用官方iso镜像是有原因的,以后大家就会明白的,只是">
-<meta name="keywords" content="kali">
-<meta property="og:type" content="article">
-<meta property="og:title" content="kali 实战渗透环境配置指南">
-<meta property="og:url" content="https://apt404.github.io/2017/04/24/kali-config/index.html">
-<meta property="og:site_name" content="APT404-不疯不魔怎么活">
-<meta property="og:description" content="0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考 首先,到kali的官网去下载最新版的kali iso镜像或者虚拟机文件个人还是更建议直接用它官方提供的虚拟机,这里我就直接用它已经配好的虚拟机来做演示说明,也建议大家直接用它官方提供好的虚拟机,不用官方iso镜像是有原因的,以后大家就会明白的,只是">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://apt404.github.io/img/vpn_configses.png">
-<meta property="og:image" content="https://apt404.github.io/img/wireshark_lua.png">
-<meta property="og:image" content="https://apt404.github.io/img/vi_config.png">
-<meta property="og:image" content="https://apt404.github.io/img/firoxo_plugins.png">
-<meta property="og:image" content="https://apt404.github.io/img/armitage.png">
-<meta property="og:image" content="https://apt404.github.io/img/beef_test.png">
-<meta property="og:image" content="https://apt404.github.io/img/maltegose.png">
-<meta property="og:image" content="https://apt404.github.io/img/ness_test.png">
-<meta property="og:image" content="https://apt404.github.io/img/oepnvas_test.png">
-<meta property="og:image" content="https://apt404.github.io/img/pen_vmare_test.png">
-<meta property="og:image" content="https://apt404.github.io/img/stat_zanshi.png">
-<meta property="og:updated_time" content="2017-12-10T07:19:52.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kali 实战渗透环境配置指南">
-<meta name="twitter:description" content="0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考 首先,到kali的官网去下载最新版的kali iso镜像或者虚拟机文件个人还是更建议直接用它官方提供的虚拟机,这里我就直接用它已经配好的虚拟机来做演示说明,也建议大家直接用它官方提供好的虚拟机,不用官方iso镜像是有原因的,以后大家就会明白的,只是">
-<meta name="twitter:image" content="https://apt404.github.io/img/vpn_configses.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
     
+        <meta name="description" content="0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考
+首先,到kali的官网去下载最新版的kali iso镜像或者虚拟机文件个人还是更建议直接用它官方提供的虚拟机,这里我就直接用它已经配好的虚拟机来做演示说明,也建议大家直接用它官方提供好的虚拟机,不用官方iso镜像是有原因的,以后大家就会明白的,只是不想在部署系统上浪费太多时间12https://images.offensive-security.com/virtual-images/Kali-Linux-2017.1-vm-amd64.7zhttps://images.offensive-security.com/virtual-images/Kali-Linux-2017.1-vm-i686.7z
+0x02 虚拟机下载好以后,解压该虚拟机文件,然后到VMware中选择并打开该虚拟机,root的默认密码是toor,进入系统后,编辑source.list文件,修改为官方提供的apt源,强烈建议这里只保留官网提供的apt源即可,尽量不要用任何第三方源,如果被挂马,概不负责,^_^ 务必谨记12# vi /etc/apt/sources.list  deb http://http.kali.org/kali kali-rolling main non-free contrib">
     
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
+
+    <!--Author-->
     
-    <!-- title -->
-    <title>kali 实战渗透环境配置指南</title>
-    <!-- styles -->
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="kali 实战渗透环境配置指南"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>kali 实战渗透环境配置指南 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
+
+    <!-- Google Analytics -->
     
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
+
+
 </head>
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2017/04/25/SquirrelMail-RCE/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2017/04/23/dirty/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/04/24/kali-config/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/04/24/kali-config/&text=kali 实战渗透环境配置指南"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/04/24/kali-config/&is_video=false&description=kali 实战渗透环境配置指南"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=kali 实战渗透环境配置指南&body=Check out this article: https://apt404.github.io/2017/04/24/kali-config/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/04/24/kali-config/&name=kali 实战渗透环境配置指南&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考&lt;/p&gt;
-&lt;p&gt;首先,到kali的官网去下载最新版的kali iso镜像或者虚拟机文件&lt;code&gt;个人还是更建议直接用它官方提供的虚拟机&lt;/code&gt;,这里我就直接用它已经配好的虚拟机来做演示说明,也建议大家直接用它官方提供好的虚拟机,不用官方iso镜像是有原因的,以后大家就会明白的,只是不想在部署系统上浪费太多时间&lt;br&gt;&lt;figure class=&#34;highlight ruby&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;symbol&#34;&gt;https:&lt;/span&gt;/&lt;span class=&#34;regexp&#34;&gt;/images.offensive-security.com/virtual&lt;/span&gt;-images/Kali-Linux-&lt;span class=&#34;number&#34;&gt;2017.1&lt;/span&gt;-vm-amd64.&lt;span class=&#34;number&#34;&gt;7&lt;/span&gt;z&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;symbol&#34;&gt;https:&lt;/span&gt;/&lt;span class=&#34;regexp&#34;&gt;/images.offensive-security.com/virtual&lt;/span&gt;-images/Kali-Linux-&lt;span class=&#34;number&#34;&gt;2017.1&lt;/span&gt;-vm-i686.&lt;span class=&#34;number&#34;&gt;7&lt;/span&gt;z&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;0x02 虚拟机下载好以后,解压该虚拟机文件,然后到VMware中选择并打开该虚拟机,root的默认密码是toor,进入系统后,编辑source.list文件,修改为官方提供的apt源,强烈建议这里只保留官网提供的apt源即可,尽量不要用任何第三方源,如果被挂马,概不负责,^_^ 务必谨记&lt;br&gt;&lt;figure class=&#34;highlight ruby&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# vi /etc/apt/sources.list&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  deb &lt;span class=&#34;symbol&#34;&gt;http:&lt;/span&gt;/&lt;span class=&#34;regexp&#34;&gt;/http.kali.org/kali&lt;/span&gt; kali-rolling main non-free contrib&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
 
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
     </div>
-    <div id="toc">
-      
-    </div>
-  </span>
 </div>
 
-    
-    <div class="content index my4">
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
         
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        kali 实战渗透环境配置指南
-    </h1>
+    </div>
+</header>
 
+        <section class="main">
+            
+<div class="post">
 
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">klion</span>
-      </span>
-      
-    <div class="postdate">
-        <time datetime="2017-04-24T14:14:02.000Z" itemprop="datePublished">2017-04-24</time>
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/04/24/kali-config/">
+                kali 实战渗透环境配置指南
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-04-24</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/kali-config/">kali config</a>
+                </span>
+            
+        </div>
     </div>
 
+    <div class="content">
 
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/kali/">kali</a>
-    </div>
+        <!-- Gallery -->
+        
 
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p><br><br>0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考</p>
+        <!-- Post Content -->
+        <p><br><br>0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考</p>
 <p>首先,到kali的官网去下载最新版的kali iso镜像或者虚拟机文件<code>个人还是更建议直接用它官方提供的虚拟机</code>,这里我就直接用它已经配好的虚拟机来做演示说明,也建议大家直接用它官方提供好的虚拟机,不用官方iso镜像是有原因的,以后大家就会明白的,只是不想在部署系统上浪费太多时间<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">https:</span>/<span class="regexp">/images.offensive-security.com/virtual</span>-images/Kali-Linux-<span class="number">2017.1</span>-vm-amd64.<span class="number">7</span>z</span><br><span class="line"><span class="symbol">https:</span>/<span class="regexp">/images.offensive-security.com/virtual</span>-images/Kali-Linux-<span class="number">2017.1</span>-vm-i686.<span class="number">7</span>z</span><br></pre></td></tr></table></figure></p>
 <p>0x02 虚拟机下载好以后,解压该虚拟机文件,然后到VMware中选择并打开该虚拟机,root的默认密码是toor,进入系统后,编辑source.list文件,修改为官方提供的apt源,强烈建议这里只保留官网提供的apt源即可,尽量不要用任何第三方源,如果被挂马,概不负责,^_^ 务必谨记<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/apt/sources.list</span></span><br><span class="line">  deb <span class="symbol">http:</span>/<span class="regexp">/http.kali.org/kali</span> kali-rolling main non-free contrib</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
@@ -205,96 +222,216 @@
 <p>将硬盘设置为 <code>独立</code>-&gt; <code>非永久</code>,一定要记得,重要数据提前备份好,莫怪我没提醒,一旦关机,砸电脑也于事无补,已经不想再说被伤过多少次了,希望大家千万别再踏我踏过的坑,有些代价实在承受不起<br><img src="/img/stat_zanshi.png" alt="vm"><br><br></p>
 <p>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;至此,一个相对符合我们自己操作习惯的<code>干净</code>的渗透系统就基本部署完成了,至于后面还有很多各种各样的工具脚本,当我们用到时,再单独装就可以了,强烈建议不要一开始就把系统搞的特别臃肿,用什么开什么就好了,不用的时候全部关掉,尽可能的节省系统资源做更多的事情,大家可能注意到,我从始至终都没有执行过<code>apt-get upgrdae</code> 来更新系统,当然,这并不是因为我下的就是最新版的[没错,通常这时候更新也是最少的,这也正是我为什么选择在这个时候部署系统的主要原因],其实,对于渗透来讲,我们并不一定什么都必须要是最新的,相反,我们要的更多可能是实用和稳定,如果连这两点最基本的条件都不能保证,尤其对于一个渗透系统来讲,那就太可悲了,因为实际渗透中,我们可能并没有太多时间会花在解决系统自身的问题上,另外,还是那句话,强烈不建议隔一段时间就大规模更新系统,这样做的后果很可能会破坏掉系统原有的工具架构,尤其是一些依赖库版本的问题,最后可能导致的结果往往就是各种工具在运行时总是出现这样或那样的异常甚至不停报错,系统在第一次全部部署完成后,后续尽量就不要再进行大规模的更新,只要不是爆了很严重的,比如那种可以直接远程get到你的系统root的shell的0day,都不必太过担心,最后,因为我们部署该系统的初衷也并不是想把它作为我们的日常系统来用,所以,关于其他的一些娱乐办公方面的东西,这里不就说了,也强烈不建议把那些乱七八糟的东西都搞到系统里,很显然,这样做是非常不明智的,我们的最终目的,只是为了方便拿它来渗透,而不是装逼炫酷,所以,完全没必要把大把的时间都浪费在折腾系统上,真的不值当,只能告诉大家,东西装太多不好,是真的不好,尤其是我们很少用到的东西,除了会加重系统的负载,几乎是毫无用处,最后,再嘱咐大家一句,严禁安装flash[这个溢出王],要不然,哪一天被挂马,就尴尬了,总之一句话,用于实际渗渗透的系统尽量保持精简高效,实用和稳定即可,更具体情况还要根据大家自身的实际情况来考量,这里统统仅仅只是作为参考,当然,如果大家真的有非常熟练的<code>LFS</code>能力,完全可以自己去尝试从0构建一个专属的渗透发行版,这也是我一直想做的,不过,像我这种搓逼,也就只能用centos最小化或者在ubuntu[主要是看着舒服]上简单定制下了……总之,祝大家好运吧！<br><br></p>
 
-  </div>
-</article>
-
-
-
     </div>
+
     
-      <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </div>
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/kali/">#kali</a>
+        </div>
+    
 
-    <div id="toc-footer" style="display: none">
-      
-    </div>
+    <!-- Comments -->
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/04/24/kali-config/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/04/24/kali-config/&text=kali 实战渗透环境配置指南"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/04/24/kali-config/&is_video=false&description=kali 实战渗透环境配置指南"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=kali 实战渗透环境配置指南&body=Check out this article: https://apt404.github.io/2017/04/24/kali-config/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/04/24/kali-config/&title=kali 实战渗透环境配置指南"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/04/24/kali-config/&name=kali 实战渗透环境配置指南&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 最近刚好看到kali有更新,想想自己用的系统似乎很久也没更新过了,这里就顺手记录一些关于部署渗透系统的注意事项,留给有需要的朋友做些简单参考&lt;/p&gt;
-&lt;p&gt;首先,到kali的官网去下载最新版的kali iso镜像或者虚拟机文件&lt;code&gt;个人还是更建议直接用它官方提供的虚拟机&lt;/code&gt;,这里我就直接用它已经配好的虚拟机来做演示说明,也建议大家直接用它官方提供好的虚拟机,不用官方iso镜像是有原因的,以后大家就会明白的,只是不想在部署系统上浪费太多时间&lt;br&gt;&lt;figure class=&#34;highlight ruby&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;symbol&#34;&gt;https:&lt;/span&gt;/&lt;span class=&#34;regexp&#34;&gt;/images.offensive-security.com/virtual&lt;/span&gt;-images/Kali-Linux-&lt;span class=&#34;number&#34;&gt;2017.1&lt;/span&gt;-vm-amd64.&lt;span class=&#34;number&#34;&gt;7&lt;/span&gt;z&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;symbol&#34;&gt;https:&lt;/span&gt;/&lt;span class=&#34;regexp&#34;&gt;/images.offensive-security.com/virtual&lt;/span&gt;-images/Kali-Linux-&lt;span class=&#34;number&#34;&gt;2017.1&lt;/span&gt;-vm-i686.&lt;span class=&#34;number&#34;&gt;7&lt;/span&gt;z&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;0x02 虚拟机下载好以后,解压该虚拟机文件,然后到VMware中选择并打开该虚拟机,root的默认密码是toor,进入系统后,编辑source.list文件,修改为官方提供的apt源,强烈建议这里只保留官网提供的apt源即可,尽量不要用任何第三方源,如果被挂马,概不负责,^_^ 务必谨记&lt;br&gt;&lt;figure class=&#34;highlight ruby&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;# vi /etc/apt/sources.list&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  deb &lt;span class=&#34;symbol&#34;&gt;http:&lt;/span&gt;/&lt;span class=&#34;regexp&#34;&gt;/http.kali.org/kali&lt;/span&gt; kali-rolling main non-free contrib&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+</div>
+        </section>
 
     </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
 </div>
 
-    
-    <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2018 John Doe
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
         
-      </ul>
-    </nav>
-  </div>
+        <li>
+            <a class="footer-post" href="/categories/CVE/">CVE</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
-</body>
-</html>
-<!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+<!-- After footer scripts -->
 
-<!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
 <script src="/js/main.js"></script>
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
+
+</body>
+
+</html>

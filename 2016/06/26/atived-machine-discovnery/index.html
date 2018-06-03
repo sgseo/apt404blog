@@ -1,176 +1,176 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="en">
+
+<!-- Head tag -->
 <head>
-    <!-- so meta -->
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="0x01 基于不同平台下的各种arp扫描方法&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;首先,尝试基于arp的各种内网主机发现方式,它可以轻易bypass掉各类应用层防火墙,这是大家都知道的,如果是专业的arp防火墙,呵呵…… 0x02 在win下进行各种arp扫描:1# start /b arpscan.exe -t 192.168.3.0/24 &amp;gt;&amp;gt; result.txt  利">
-<meta name="keywords" content="discovery">
-<meta property="og:type" content="article">
-<meta property="og:title" content="如何在目标内网中发现更多存活主机 [arp,icmp,tcp&#x2F;udp,smb,snmp ...]">
-<meta property="og:url" content="https://apt404.github.io/2016/06/26/atived-machine-discovnery/index.html">
-<meta property="og:site_name" content="APT404-不疯不魔怎么活">
-<meta property="og:description" content="0x01 基于不同平台下的各种arp扫描方法&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;首先,尝试基于arp的各种内网主机发现方式,它可以轻易bypass掉各类应用层防火墙,这是大家都知道的,如果是专业的arp防火墙,呵呵…… 0x02 在win下进行各种arp扫描:1# start /b arpscan.exe -t 192.168.3.0/24 &amp;gt;&amp;gt; result.txt  利">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_arp.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_arp_powershell2.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_arp_empire.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_arp_nmap.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_arp_cain.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_arp_nmap_win.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_arp_scan_linux.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_arp_netdis.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_arp_msf.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_arp_scan_msf_linux.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_dos_icmp.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_win_nmap_connect.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_dos_nping.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_ethnet_arp_powershell1.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_ping_scan.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_linux_nmap_connect.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/linux_nping.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_nbtscan.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_nbtscan_linux.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/msf_smb_version_s.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_sl.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_nmap_smbshares.png">
-<meta property="og:image" content="https://apt404.github.io/img/common_superscan.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_msf_portscan.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/common_f_nascan.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/web_commom_aspx.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/web_commom_php.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/web_commom_jsp.jpg">
-<meta property="og:image" content="https://apt404.github.io/img/domain.jpg">
-<meta property="og:updated_time" content="2017-11-21T01:50:44.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何在目标内网中发现更多存活主机 [arp,icmp,tcp&#x2F;udp,smb,snmp ...]">
-<meta name="twitter:description" content="0x01 基于不同平台下的各种arp扫描方法&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;首先,尝试基于arp的各种内网主机发现方式,它可以轻易bypass掉各类应用层防火墙,这是大家都知道的,如果是专业的arp防火墙,呵呵…… 0x02 在win下进行各种arp扫描:1# start /b arpscan.exe -t 192.168.3.0/24 &amp;gt;&amp;gt; result.txt  利">
-<meta name="twitter:image" content="https://apt404.github.io/img/common_ethnet_arp.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
     
+        <meta name="description" content="0x01 基于不同平台下的各种arp扫描方法&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;首先,尝试基于arp的各种内网主机发现方式,它可以轻易bypass掉各类应用层防火墙,这是大家都知道的,如果是专业的arp防火墙,呵呵……
+0x02 在win下进行各种arp扫描:1# start /b ar">
     
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
+
+    <!--Author-->
     
-    <!-- title -->
-    <title>如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]</title>
-    <!-- styles -->
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
+
+    <!-- Google Analytics -->
     
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
+
+
 </head>
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2016/06/27/php-inclusion-exploit/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2016/06/25/Midlamp/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/06/26/atived-machine-discovnery/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&text=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&is_video=false&description=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]&body=Check out this article: https://apt404.github.io/2016/06/26/atived-machine-discovnery/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&name=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
 
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
     </div>
-    <div id="toc">
-      
-    </div>
-  </span>
 </div>
 
-    
-    <div class="content index my4">
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
         
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]
-    </h1>
+    </div>
+</header>
 
+        <section class="main">
+            
+<div class="post">
 
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">klion</span>
-      </span>
-      
-    <div class="postdate">
-        <time datetime="2016-06-26T00:25:20.000Z" itemprop="datePublished">2016-06-26</time>
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2016/06/26/atived-machine-discovnery/">
+                如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2016-06-26</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/pentset/">pentset</a>
+                </span>
+            
+        </div>
     </div>
 
+    <div class="content">
 
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/discovery/">discovery</a>
-    </div>
+        <!-- Gallery -->
+        
 
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p><br><br>0x01 基于不同平台下的各种arp扫描方法<br>&nbsp;&nbsp;&nbsp;&nbsp;首先,尝试基于arp的各种内网主机发现方式,它可以轻易bypass掉各类应用层防火墙,这是大家都知道的,如果是专业的arp防火墙,呵呵……</p>
+        <!-- Post Content -->
+        <p><br><br>0x01 基于不同平台下的各种arp扫描方法<br>&nbsp;&nbsp;&nbsp;&nbsp;首先,尝试基于arp的各种内网主机发现方式,它可以轻易bypass掉各类应用层防火墙,这是大家都知道的,如果是专业的arp防火墙,呵呵……</p>
 <p>0x02 在win下进行各种arp扫描:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># start /b arpscan.exe -t 192.168.3.0/24 &gt;&gt; result.txt</span><br></pre></td></tr></table></figure></p>
 <p><img src="/img/common_ethnet_arp.png" alt="&#39;&#39;"></p>
 <p>利用powershell脚本进行arp扫描,这也是个人比较推荐的方式,轻量且免杀效果较好,系统自带,灵活方便:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># powershell.exe -exec bypass -Command &quot;Import-Module C:\Invoke-ARPScan.ps1;Invoke-ARPScan -CIDR 192.168.3.0/24&quot;  &gt;&gt; result.txt</span><br></pre></td></tr></table></figure></p>
@@ -232,94 +232,216 @@
 <p>一个查端口对应的服务的小工具,有兴趣可自行尝试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whatportis</span><br></pre></td></tr></table></figure></p>
 <p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;所有的扫描,有条件的情况下务必都在管理员权限下运行,对于内网主机发现,个人平时大概用到的,基本也就这些了,只不过在实际扫的时候,记得线程给的不要太高,一次扫的端口不要过多,如果工具里面自带的有随机扫ip的选项,最好也把它加上,另外,在内网中,理论上来讲,你应该首先瞄准找一些能快速getshell的内网机器,比如,sa,smb,ftp<code>针对linux</code>,能读写的匿名共享等……严禁大规模漫无目的的扫描,当你拿到一台机器以后,马上上去把能抓的密码hash都抓一下,比如,浏览器中的各种密码,本机的hash,常用软件中的各种密码hash等等……,实在不行再上键盘记录,拿到这些密码以后再慢慢拓展其它机器,切记,尽量不要进行长时间大流量的扫描动作<code>基本上我们现在所用的工具报文标志早已被写进各类ids的识别规则里了,尤其是针对nmap的</code>,会在对方系统中留下大批的扫描日志不说,稍微严谨点儿的内网可能会触发报警,甚至直接锁定ip,内网不比web,在web中你也许可以相对放开点去搞,但内网中,务必小心谨慎,权限来之不易,绝对不能让它轻易的掉了,尽你所能的稳住当前机器,另外,在平时的内网渗透中,能用系统自身工具搞定的,尽量都用系统自带的工具来搞<code>其实,系统自己就已经有非常多的渗透工具,可能只是暂时还没有很好的被发掘出来</code>,这一点非常重要,大家从现在开始,也应该尽量养成自己这样的习惯,尽可能的减少使用一些外部工具,越少越好,安全性没法保障的同时,可能实际使用中也并不是很方便,灵活性就更不用说了,尤其在一些比较畸形的内网中,由于种种限制,从远程下工具还是比较困难的,另外,别人的工具很可能有相当一部分工具都是需要自己免杀的<code>单单基于汇编层免杀还是很有限的</code>,如果你不会免杀,这事儿就很麻烦了,毕竟不是源自自己的手,用别人的始终不太放心,所以,有些东西还是大家自己考量吧……这里只是一点个人建议而已,当然,如果你有喜欢逆别人工具的习惯,这里所说的一切,您都可以直接忽略,如果自己不会逆向,还是谨慎点儿好,如果你想更仔细的去观察基于不同协议更底层的扫描细节,用wireshark吧,它绝对是我见过的最牛最实用的渗透工具,是的,没有之一,祝,愉快</p>
 
-  </div>
-</article>
-
-
-
     </div>
+
     
-      <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </div>
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/discovery/">#discovery</a>
+        </div>
+    
 
-    <div id="toc-footer" style="display: none">
-      
-    </div>
+    <!-- Comments -->
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/06/26/atived-machine-discovnery/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&text=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&is_video=false&description=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]&body=Check out this article: https://apt404.github.io/2016/06/26/atived-machine-discovnery/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&title=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/06/26/atived-machine-discovnery/&name=如何在目标内网中发现更多存活主机 [arp,icmp,tcp/udp,smb,snmp ...]&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+</div>
+        </section>
 
     </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
 </div>
 
-    
-    <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2018 John Doe
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
         
-      </ul>
-    </nav>
-  </div>
+        <li>
+            <a class="footer-post" href="/categories/CVE/">CVE</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
-</body>
-</html>
-<!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+<!-- After footer scripts -->
 
-<!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
 <script src="/js/main.js"></script>
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
+
+</body>
+
+</html>

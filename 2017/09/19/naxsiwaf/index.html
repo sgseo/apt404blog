@@ -1,158 +1,178 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="en">
+
+<!-- Head tag -->
 <head>
-    <!-- so meta -->
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="0x01 关于naxsi&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试">
-<meta name="keywords" content="protect of waf">
-<meta property="og:type" content="article">
-<meta property="og:title" content="定制轻量高效的WAF Naxsi [一]">
-<meta property="og:url" content="https://apt404.github.io/2017/09/19/naxsiwaf/index.html">
-<meta property="og:site_name" content="APT404-不疯不魔怎么活">
-<meta property="og:description" content="0x01 关于naxsi&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_core_rules.png">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_code.png">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_sqli.png">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_xss.png">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_cmd.png">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_rfi.png">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_dir.png">
-<meta property="og:image" content="https://apt404.github.io/img/naxsi_log.png">
-<meta property="og:updated_time" content="2017-10-25T02:38:50.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="定制轻量高效的WAF Naxsi [一]">
-<meta name="twitter:description" content="0x01 关于naxsi&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试">
-<meta name="twitter:image" content="https://apt404.github.io/img/naxsi_core_rules.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
     
+        <meta name="description" content="0x01 关于naxsi&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试中貌似暂时只能拦截从get或者post过来的数据,这也是个小遗憾
+0x02 依然是拿之前编译好的lnmp环境[具体如何编译配置,请参考博客相关文章]来做演示,我这里先把之前的配置文件备份下,等会儿好直接拿过来用1php5.5.38 + mysql-5.5.32 + nginx-1.12.1 + centOS6.8_x64
+12345# netstat -tulnp | grep &amp;quot;80&amp;quot;# pkill nginx# cp /usr/local/nginx/conf/nginx.conf ./# cp /usr/local/nginx/conf/extra/bwapp.conf  ./# rm -rf /usr/local/nginx*
+0x03 下载naxsi,重新编译安装nginx,主要是要把naxsi模块加载进去,这里的nginx直接用的最新版的稳定版本1234567891011# git clone https://github.com/nbs-system/naxsi.git# wget http://nginx.org/download/nginx-1.12.1.tar.gz# yum install pcre pcre-devel openssl openssl-devel -y# useradd -s /sbin/nologin -M nginx# tar xf nginx-1.12.1.tar.gz# cd nginx-1.12.1# ./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module --with-file-aio --with-http_dav_module --add-module=../naxsi/naxsi_src/# make &amp;amp;&amp;amp; make install# ln -s /usr/local/nginx-1.12.1/ /usr/local/nginx# cd /usr/local/nginx/conf/# mv nginx.conf nginx.conf.bak &amp;amp;&amp;amp; egrep -v &amp;quot;^$|#&amp;quot; nginx.conf.bak &amp;gt;&amp;gt; nginx.conf">
     
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
+
+    <!--Author-->
     
-    <!-- title -->
-    <title>定制轻量高效的WAF Naxsi [一]</title>
-    <!-- styles -->
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="定制轻量高效的WAF Naxsi [一]"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>定制轻量高效的WAF Naxsi [一] - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
+
+    <!-- Google Analytics -->
     
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
+
+
 </head>
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2017/09/21/mysql-mul-server/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2017/09/09/pentestaction/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/09/19/naxsiwaf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/09/19/naxsiwaf/&text=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/09/19/naxsiwaf/&is_video=false&description=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=定制轻量高效的WAF Naxsi [一]&body=Check out this article: https://apt404.github.io/2017/09/19/naxsiwaf/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/09/19/naxsiwaf/&name=定制轻量高效的WAF Naxsi [一]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 关于naxsi&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库&lt;code&gt;其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动&lt;/code&gt;,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试中貌似暂时只能拦截从get或者post过来的数据,这也是个小遗憾&lt;/p&gt;
-&lt;p&gt;0x02 依然是拿之前编译好的lnmp环境[具体如何编译配置,请参考博客相关文章]来做演示,我这里先把之前的配置文件备份下,等会儿好直接拿过来用&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;php5.5.38 + mysql-5.5.32 + nginx-1.12.1 + centOS6.8_x64&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# netstat -tulnp | grep &amp;quot;80&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# pkill nginx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cp /usr/local/nginx/conf/nginx.conf ./&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cp /usr/local/nginx/conf/extra/bwapp.conf  ./&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# rm -rf /usr/local/nginx*&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;0x03 下载naxsi,重新编译安装nginx,主要是要把naxsi模块加载进去,这里的nginx直接用的最新版的稳定版本&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# git clone https://github.com/nbs-system/naxsi.git&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# wget http://nginx.org/download/nginx-1.12.1.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# yum install pcre pcre-devel openssl openssl-devel -y&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# useradd -s /sbin/nologin -M nginx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# tar xf nginx-1.12.1.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd nginx-1.12.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module --with-file-aio --with-http_dav_module --add-module=../naxsi/naxsi_src/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# make &amp;amp;&amp;amp; make install&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ln -s /usr/local/nginx-1.12.1/ /usr/local/nginx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd /usr/local/nginx/conf/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# mv nginx.conf nginx.conf.bak &amp;amp;&amp;amp; egrep -v &amp;quot;^$|#&amp;quot; nginx.conf.bak &amp;gt;&amp;gt; nginx.conf&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
 
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
     </div>
-    <div id="toc">
-      
-    </div>
-  </span>
 </div>
 
-    
-    <div class="content index my4">
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
         
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        定制轻量高效的WAF Naxsi [一]
-    </h1>
+    </div>
+</header>
 
+        <section class="main">
+            
+<div class="post">
 
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">klion</span>
-      </span>
-      
-    <div class="postdate">
-        <time datetime="2017-09-19T03:11:52.000Z" itemprop="datePublished">2017-09-19</time>
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2017/09/19/naxsiwaf/">
+                定制轻量高效的WAF Naxsi [一]
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2017-09-19</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/env/">env</a>
+                </span>
+            
+        </div>
     </div>
 
+    <div class="content">
 
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/protect-of-waf/">protect of waf</a>
-    </div>
+        <!-- Gallery -->
+        
 
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p><br><br>0x01 关于naxsi<br>&nbsp;&nbsp;&nbsp;&nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库<code>其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动</code>,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试中貌似暂时只能拦截从get或者post过来的数据,这也是个小遗憾</p>
+        <!-- Post Content -->
+        <p><br><br>0x01 关于naxsi<br>&nbsp;&nbsp;&nbsp;&nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库<code>其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动</code>,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试中貌似暂时只能拦截从get或者post过来的数据,这也是个小遗憾</p>
 <p>0x02 依然是拿之前编译好的lnmp环境[具体如何编译配置,请参考博客相关文章]来做演示,我这里先把之前的配置文件备份下,等会儿好直接拿过来用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php5.5.38 + mysql-5.5.32 + nginx-1.12.1 + centOS6.8_x64</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># netstat -tulnp | grep &quot;80&quot;</span><br><span class="line"># pkill nginx</span><br><span class="line"># cp /usr/local/nginx/conf/nginx.conf ./</span><br><span class="line"># cp /usr/local/nginx/conf/extra/bwapp.conf  ./</span><br><span class="line"># rm -rf /usr/local/nginx*</span><br></pre></td></tr></table></figure>
 <p>0x03 下载naxsi,重新编译安装nginx,主要是要把naxsi模块加载进去,这里的nginx直接用的最新版的稳定版本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># git clone https://github.com/nbs-system/naxsi.git</span><br><span class="line"># wget http://nginx.org/download/nginx-1.12.1.tar.gz</span><br><span class="line"># yum install pcre pcre-devel openssl openssl-devel -y</span><br><span class="line"># useradd -s /sbin/nologin -M nginx</span><br><span class="line"># tar xf nginx-1.12.1.tar.gz</span><br><span class="line"># cd nginx-1.12.1</span><br><span class="line"># ./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module --with-file-aio --with-http_dav_module --add-module=../naxsi/naxsi_src/</span><br><span class="line"># make &amp;&amp; make install</span><br><span class="line"># ln -s /usr/local/nginx-1.12.1/ /usr/local/nginx</span><br><span class="line"># cd /usr/local/nginx/conf/</span><br><span class="line"># mv nginx.conf nginx.conf.bak &amp;&amp; egrep -v &quot;^$|#&quot; nginx.conf.bak &gt;&gt; nginx.conf</span><br></pre></td></tr></table></figure></p>
@@ -172,97 +192,216 @@
 <p>0x07 关于配合实际业务,设置白名单的问题,还需要根据你自己实际的业务参数来,设置方法我们后续再说</p>
 <p>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;关于 Naxsi,当然并非仅仅这些,还有很多可以深挖的地方,待续……</p>
 
-  </div>
-</article>
-
-
-
     </div>
+
     
-      <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </div>
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/protect-of-waf/">#protect of waf</a>
+        </div>
+    
 
-    <div id="toc-footer" style="display: none">
-      
-    </div>
+    <!-- Comments -->
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2017/09/19/naxsiwaf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2017/09/19/naxsiwaf/&text=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2017/09/19/naxsiwaf/&is_video=false&description=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=定制轻量高效的WAF Naxsi [一]&body=Check out this article: https://apt404.github.io/2017/09/19/naxsiwaf/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2017/09/19/naxsiwaf/&title=定制轻量高效的WAF Naxsi [一]"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2017/09/19/naxsiwaf/&name=定制轻量高效的WAF Naxsi [一]&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 关于naxsi&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;同为开源waf,但跟Modsecurity的不同是,它对nginx的兼容性非常好,而且不依赖现有规则库&lt;code&gt;其实,我们心里都很清楚,单单基于规则库的拦截可能需要经常更新,且容易被绕过,防御起来比较被动&lt;/code&gt;,naxsi安装定制都非常简单方便,占用系统资源相对较少,对实际业务的适用性更强[方便的白名单设置],有一定的学习能力,不过,实际测试中貌似暂时只能拦截从get或者post过来的数据,这也是个小遗憾&lt;/p&gt;
-&lt;p&gt;0x02 依然是拿之前编译好的lnmp环境[具体如何编译配置,请参考博客相关文章]来做演示,我这里先把之前的配置文件备份下,等会儿好直接拿过来用&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;php5.5.38 + mysql-5.5.32 + nginx-1.12.1 + centOS6.8_x64&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# netstat -tulnp | grep &amp;quot;80&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# pkill nginx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cp /usr/local/nginx/conf/nginx.conf ./&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cp /usr/local/nginx/conf/extra/bwapp.conf  ./&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# rm -rf /usr/local/nginx*&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;0x03 下载naxsi,重新编译安装nginx,主要是要把naxsi模块加载进去,这里的nginx直接用的最新版的稳定版本&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# git clone https://github.com/nbs-system/naxsi.git&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# wget http://nginx.org/download/nginx-1.12.1.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# yum install pcre pcre-devel openssl openssl-devel -y&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# useradd -s /sbin/nologin -M nginx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# tar xf nginx-1.12.1.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd nginx-1.12.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ./configure --prefix=/usr/local/nginx-1.12.1 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module --with-file-aio --with-http_dav_module --add-module=../naxsi/naxsi_src/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# make &amp;amp;&amp;amp; make install&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# ln -s /usr/local/nginx-1.12.1/ /usr/local/nginx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# cd /usr/local/nginx/conf/&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# mv nginx.conf nginx.conf.bak &amp;amp;&amp;amp; egrep -v &amp;quot;^$|#&amp;quot; nginx.conf.bak &amp;gt;&amp;gt; nginx.conf&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+</div>
+        </section>
 
     </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
 </div>
 
-    
-    <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2018 John Doe
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
         
-      </ul>
-    </nav>
-  </div>
+        <li>
+            <a class="footer-post" href="/categories/CVE/">CVE</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
-</body>
-</html>
-<!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+<!-- After footer scripts -->
 
-<!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
 <script src="/js/main.js"></script>
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
+
+</body>
+
+</html>

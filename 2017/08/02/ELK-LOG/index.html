@@ -1,177 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
-<!-- Head tag -->
 <head>
-
     <meta charset="utf-8">
+    
+    <title>利用 ELK 深度定制实时入侵日志分析平台初步 | APT404-不疯不魔怎么活</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--Description-->
-    
-        <meta name="description" content="0x01 首先,快速安装配置好jdk 1.8,因为ES基于java:1234567891011121314# export LANG=en# tar xf jdk-8u131-linux-x64.tar.gz# mv jdk1.8.0_131/ /usr/local/jdk# ll /usr/local/jdk# chown -R root.root /usr/local/jdk/# ll /usr/local/jdk# vi /etc/profile  export JAVA_HOME=/usr/local/jdk/  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar  export TOMCAT_HOME=/usr/local/tomcat# source /etc/profile# java -version# javac
-0x02 再来熟悉一些必要的关于elasticsearch的基础概念:1索引 -&amp;gt; 文档 -&amp;gt; 分片和副本
-0x03 下载配置 elasticsearch:1234# wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.2.tar.gz# tar -xf elasticsearch-1.7.2.tar.gz# mv elasticsearch-1.7.2 /usr/local/# ln -s /usr/local/elasticsearch-1.7.2/ /usr/local/elasticsearch">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="利用 ELK 深度定制实时入侵日志分析平台初步"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>利用 ELK 深度定制实时入侵日志分析平台初步 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon/favicon.ico">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/tagplugins.css">
+    <link rel="stylesheet" href="/css/highlight.css">
     
 
 
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="APT404-不疯不魔怎么活" type="application/atom+xml" />
+    
 </head>
 
-
 <body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
-    </div>
+  <div class="blog-header">
+   <a id="menu-nav-icon"><img src="/image/menu.png"/></a>
+   <div class="nav-container">
+     <nav id="main-nav">
+       
+         <a class="main-nav-link" href="/">Home</a>
+       
+         <a class="main-nav-link" href="/archives">Archives</a>
+       
+     </nav>
+   </div>
+   <!--
+   <div id="search-form-wrap">
+     <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://apt404.github.io"></form>
+   </div>
+ -->
+    <h1 class="blog-title">APT404-不疯不魔怎么活</h1>
+    <p class="lead blog-description">在接下来的余生中,只做一件事,从 0 到 1</p>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+  <div id='main-part'>
+      <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    <h1 class="blog-post-title">
+        <a href="/2017/08/02/ELK-LOG/">
+            利用 ELK 深度定制实时入侵日志分析平台初步
+        </a>
+    </h1>
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-08-02
         
-    </div>
-</header>
-
-        <section class="main">
-            
-<div class="post">
-
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/08/02/ELK-LOG/">
-                利用 ELK 深度定制实时入侵日志分析平台初步
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-08-02</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/ELK/">ELK</a>
-                </span>
-            
-        </div>
-    </div>
-
-    <div class="content">
-
-        <!-- Gallery -->
+            by klion
         
+    </p>
 
-        <!-- Post Content -->
-        <p><br><br>0x01 首先,快速安装配置好jdk 1.8,因为ES基于java:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># export LANG=en</span><br><span class="line"># tar xf jdk-8u131-linux-x64.tar.gz</span><br><span class="line"># mv jdk1.8.0_131/ /usr/local/jdk</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># chown -R root.root /usr/local/jdk/</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># vi /etc/profile</span><br><span class="line">  export JAVA_HOME=/usr/local/jdk/</span><br><span class="line">  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH</span><br><span class="line">  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar</span><br><span class="line">  export TOMCAT_HOME=/usr/local/tomcat</span><br><span class="line"># source /etc/profile</span><br><span class="line"># java -version</span><br><span class="line"># javac</span><br></pre></td></tr></table></figure></p>
+    
+
+    <!-- Content -->
+    <p><br><br>0x01 首先,快速安装配置好jdk 1.8,因为ES基于java:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># export LANG=en</span><br><span class="line"># tar xf jdk-8u131-linux-x64.tar.gz</span><br><span class="line"># mv jdk1.8.0_131/ /usr/local/jdk</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># chown -R root.root /usr/local/jdk/</span><br><span class="line"># ll /usr/local/jdk</span><br><span class="line"># vi /etc/profile</span><br><span class="line">  export JAVA_HOME=/usr/local/jdk/</span><br><span class="line">  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH</span><br><span class="line">  export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar</span><br><span class="line">  export TOMCAT_HOME=/usr/local/tomcat</span><br><span class="line"># source /etc/profile</span><br><span class="line"># java -version</span><br><span class="line"># javac</span><br></pre></td></tr></table></figure></p>
 <p>0x02 再来熟悉一些必要的关于elasticsearch的基础概念:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">索引 -&gt; 文档 -&gt; 分片和副本</span><br></pre></td></tr></table></figure></p>
 <p>0x03 下载配置 elasticsearch:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.2.tar.gz</span><br><span class="line"># tar -xf elasticsearch-1.7.2.tar.gz</span><br><span class="line"># mv elasticsearch-1.7.2 /usr/local/</span><br><span class="line"># ln -s /usr/local/elasticsearch-1.7.2/ /usr/local/elasticsearch</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
@@ -191,215 +84,98 @@
 <p>0x10 平时经常要搜集的一些日志:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">各类系统平台运行日志</span><br><span class="line">各类服务访问,错误日志</span><br><span class="line">各类程序自身的运行日志</span><br><span class="line">基于web和内网的各种攻击特征日志</span><br><span class="line">其它的各类业务日志等...</span><br><span class="line">.....</span><br></pre></td></tr></table></figure></p>
 <p>一点小结:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">这里仅仅也只是先把日志搜集平台大体框架搭起来,中间并未涉及任何具体应用</span><br><span class="line">和运维不同的是,他们可能更偏向于去解决各类系统,服务故障,性能调优以及一些实际的业务规划,架构设计等等....</span><br><span class="line">看日志的大多目的可能也都主要集中在这些点上,安全可能往往只是顺带考虑下而已,毕竟,不是专门做安全的</span><br><span class="line">但作为一名防御者,我们关注更多的,可能还是存在日志中的各种各样的攻击特征</span><br><span class="line">如果能实时捕捉到这些高危入侵特征,并实现可视化及高效报警,我想肯定会是一件非常有意思的事情</span><br><span class="line">但同时也有个非常现实的问题,如果日志量特别大,想做到接近实时就非常困难了</span><br><span class="line">这时,ELK也许会是个非常不错的选择...当然,已经有很多类似的商业产品,如,相对比较成熟的splunk</span><br><span class="line">但splunk并非主要专注安全,不过好在splunk已经提供了非常强大的api</span><br><span class="line">后续我们会再重点介绍它,也是一款非常不错的工具,但就是要收点儿钱</span><br><span class="line">所以,在不想花钱的情况下,ELK绝对是个非常不错的选择</span><br><span class="line">根据自己实际的渗透经验加上py,在此基础上定制一套极具针对性的&quot;入侵日志监控系统&quot;还是非常现实的.....</span><br><span class="line">对了,像ES和logstash,每次这样手工启动,确实比较累,不过别人已经写好对应的系统启动脚本</span><br><span class="line">这里毕竟不是运维,所以也就没仔细说,大家可自行去谷歌上找找,或者自己写写都行....</span><br><span class="line">.....</span><br></pre></td></tr></table></figure></p>
 
-    </div>
+
+    <!-- Social share choices -->
+    
+  <div id="social-share">
+    <a data-url="https://apt404.github.io/2017/08/02/ELK-LOG/" href="https://plus.google.com/share?url=" class="googleplus"><img src="/image/googleplusicon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/08/02/ELK-LOG/" href="https://twitter.com/intent/tweet?url=" class="twitter"><img src="/image/twittericon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/08/02/ELK-LOG/" href="http://pinterest.com/pin/create/button/?url=" class="pinterest"><img src="/image/pinteresticon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/08/02/ELK-LOG/" href="https://www.facebook.com/sharer/sharer.php?u=" class="facebook"><img src="/image/facebookicon.png" alt=""/></a>
+  </div>
+
+
+
+
+
+<!--
+
+
+https://www.facebook.com/sharer/sharer.php?u=https://apt404.github.io/2017/08/02/ELK-LOG/
+https://apt404.github.io/2017/08/02/ELK-LOG/
+-->
+
+
+
+    <hr />
+
+
+    <!-- Tags and Categories links -->
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/ELK/">ELK</a>
+</div>
+
 
     
 
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/ELK/">#ELK</a>
+</div>
+
+
+
+    <!-- Comment using disqus -->
     
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/ELK/">#ELK</a>
-        </div>
+
+</div>
+</div>
+
+
+  </div>
+  <!-- Footer -->
+  <div id="footer">
+  <div id="footer-social">
     
-
-    <!-- Comments -->
     
-
-</div>
-        </section>
-
-    </div>
-</div>
-
-
+    
+    
+    
+    
 </div>
 
-<!-- Footer -->
-<div class="push"></div>
+  <p id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> -
+    Theme <a href="https://github.com/Suolawangzai/hexo-theme-nebula" target="_blank">nebula</a>
+  </p>
 
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
-    </div>
-
-
-
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/privilege/">privilege</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
-        </li>
-        
-    </ul>
+  <div id="busuanzi">
+    <span id="busuanzi_container_site_pv">
+      &hearts;
+    Total visits: <span id="busuanzi_value_site_pv"></span>
+    </span>
+  </div>
+  <!--
+  <div id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+-->
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+  <!-- After footer scripts -->
+  <!-- Disqus Comments -->
 
-<!-- After footer scripts -->
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="/js/main.js"></script>
-
-<!-- Disqus Comments -->
-
-
 
 </body>
 

@@ -1,178 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
-<!-- Head tag -->
 <head>
-
     <meta charset="utf-8">
+    
+    <title>入侵取证 [ web日志分析初步 ] | APT404-不疯不魔怎么活</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--Description-->
-    
-        <meta name="description" content="0x01 前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;既然是取证, 不妨就从一个稍微全局点的角度来理解,最先应该搞清楚的, 可能就是, 到底哪些地方会留下入侵者的痕迹 , 这次单单就以最基础的web服务 [ 暂不涉及脚本引擎,数据库及系统方面的东西 ] 基本取证流程为例, 其实很简单,入侵者一般喜欢从哪里下手,就必然会在那里留下痕迹, 可能在此之前我们还需要搞清楚客户端的http数据到底都是从什么地方过来的, 有GET 的 URL 中传来的数据 , POST 中传来的数据,从http头中获取的各类客户端数据 [ 如,cookie,user-agent,Referer,X-Forwarded-For ], 像这些很基础的东西,早该在最开始部署服务的时候就想到,不然,等到真出事的那一天,自己真正能掌握的资料就着实比较少了
-0x02 环境简介&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;暂以 nginx 为例,一个最基本的日志格式大概是下面这个样子,当然,这种格式可能会造成你的日志文件特别大 [ 存的东西多嘛 ], 但实际部署时还是需要你根据自己的实际的业务来,这里也仅仅只是做个参考
-先在指定的 server 标签中定义好cookie变量12345678server&amp;#123;...    set $dm_cookie &amp;quot;&amp;quot;;    if ($http_cookie ~* &amp;quot;(.+)(?:;|$)&amp;quot;) &amp;#123;        set $dm_cookie $1;    &amp;#125;...&amp;#125;
-这时再回到 nginx 主配置文件中, 引用刚刚设置的cookie变量, 这样, 头里面的那几个字段数据就都可以被记录了1234567http &amp;#123;...    log_format main &amp;apos;$remote_addr - $remote_user  [$time_local]  &amp;apos;    &amp;apos; &amp;quot;$request&amp;quot; $request_body $status  $body_bytes_sent  &amp;apos;    &amp;apos; &amp;quot;$http_referer&amp;quot;  &amp;quot;$http_user_agent&amp;quot;  &amp;quot;$http_x_forwarded_for&amp;quot; &amp;quot;$dm_cookie&amp;quot; &amp;apos;;...&amp;#125;">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="入侵取证 [ web日志分析初步 ]"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>入侵取证 [ web日志分析初步 ] - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon/favicon.ico">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/tagplugins.css">
+    <link rel="stylesheet" href="/css/highlight.css">
     
 
 
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="APT404-不疯不魔怎么活" type="application/atom+xml" />
+    
 </head>
 
-
 <body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
-    </div>
+  <div class="blog-header">
+   <a id="menu-nav-icon"><img src="/image/menu.png"/></a>
+   <div class="nav-container">
+     <nav id="main-nav">
+       
+         <a class="main-nav-link" href="/">Home</a>
+       
+         <a class="main-nav-link" href="/archives">Archives</a>
+       
+     </nav>
+   </div>
+   <!--
+   <div id="search-form-wrap">
+     <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://apt404.github.io"></form>
+   </div>
+ -->
+    <h1 class="blog-title">APT404-不疯不魔怎么活</h1>
+    <p class="lead blog-description">在接下来的余生中,只做一件事,从 0 到 1</p>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+  <div id='main-part'>
+      <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    <h1 class="blog-post-title">
+        <a href="/2017/08/02/log-find/">
+            入侵取证 [ Web日志分析初步 ]
+        </a>
+    </h1>
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-08-02
         
-    </div>
-</header>
-
-        <section class="main">
-            
-<div class="post">
-
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/08/02/log-find/">
-                入侵取证 [ web日志分析初步 ]
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-08-02</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/log/">log</a>
-                </span>
-            
-        </div>
-    </div>
-
-    <div class="content">
-
-        <!-- Gallery -->
+            by klion
         
+    </p>
 
-        <!-- Post Content -->
-        <p><br><br>0x01 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;既然是取证, 不妨就从一个稍微全局点的角度来理解,最先应该搞清楚的, 可能就是, 到底哪些地方会留下入侵者的痕迹 , 这次单单就以最基础的web服务 [ 暂不涉及脚本引擎,数据库及系统方面的东西 ] 基本取证流程为例, 其实很简单,入侵者一般喜欢从哪里下手,就必然会在那里留下痕迹, 可能在此之前我们还需要搞清楚客户端的http数据到底都是从什么地方过来的, 有GET 的 URL 中传来的数据 , POST 中传来的数据,从http头中获取的各类客户端数据 [ 如,cookie,user-agent,Referer,X-Forwarded-For ], 像这些很基础的东西,早该在最开始部署服务的时候就想到,不然,等到真出事的那一天,自己真正能掌握的资料就着实比较少了</p>
+    
+
+    <!-- Content -->
+    <p><br><br>0x01 前言<br>&nbsp;&nbsp;&nbsp;&nbsp;既然是取证, 不妨就从一个稍微全局点的角度来理解,最先应该搞清楚的, 可能就是, 到底哪些地方会留下入侵者的痕迹 , 这次单单就以最基础的web服务 [ 暂不涉及脚本引擎,数据库及系统方面的东西 ] 基本取证流程为例, 其实很简单,入侵者一般喜欢从哪里下手,就必然会在那里留下痕迹, 可能在此之前我们还需要搞清楚客户端的http数据到底都是从什么地方过来的, 有GET 的 URL 中传来的数据 , POST 中传来的数据,从http头中获取的各类客户端数据 [ 如,cookie,user-agent,Referer,X-Forwarded-For ], 像这些很基础的东西,早该在最开始部署服务的时候就想到,不然,等到真出事的那一天,自己真正能掌握的资料就着实比较少了</p>
 <p>0x02 环境简介<br>&nbsp;&nbsp;&nbsp;&nbsp;暂以 nginx 为例,一个最基本的日志格式大概是下面这个样子,当然,这种格式可能会造成你的日志文件特别大 [ 存的东西多嘛 ], 但实际部署时还是需要你根据自己的实际的业务来,这里也仅仅只是做个参考</p>
 <p>先在指定的 server 标签中定义好cookie变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">...</span><br><span class="line">    set $dm_cookie &quot;&quot;;</span><br><span class="line">    if ($http_cookie ~* &quot;(.+)(?:;|$)&quot;) &#123;</span><br><span class="line">        set $dm_cookie $1;</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这时再回到 nginx 主配置文件中, 引用刚刚设置的cookie变量, 这样, 头里面的那几个字段数据就都可以被记录了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">...</span><br><span class="line">    log_format main &apos;$remote_addr - $remote_user  [$time_local]  &apos;</span><br><span class="line">    &apos; &quot;$request&quot; $request_body $status  $body_bytes_sent  &apos;</span><br><span class="line">    &apos; &quot;$http_referer&quot;  &quot;$http_user_agent&quot;  &quot;$http_x_forwarded_for&quot; &quot;$dm_cookie&quot; &apos;;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -210,215 +102,98 @@
 <p>0x05 在实际分析web日志过程中的经常会出现的一些窘境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">也许你看我这个貌似挺简单的,但实际生产环境下就并非如此了,你要考虑到的东西也许会比较的多</span><br><span class="line">不过万变不离其宗,基本思路有了,剩下的只是实践,针对性改进,和经验的问题</span><br><span class="line">经验老道的入侵者,可能对日志处理的也比较到位,很难捕捉到什么有用的东西</span><br><span class="line">比如,最典型的,替换伪造,以此混淆试听,直接把某个时间段内的日志整个干掉,甚至,直接干扰破坏系统正常的日志记录服务,这无疑也会给取证带来不小的困难</span><br><span class="line">入侵者一般都会挂vpn或者利用tor来频繁切换ip节点,很难溯源到入侵者的真实ip,大部分要依靠拿到的现有的一些入侵者信息再配合社工一起利用</span><br><span class="line">基于各类形式编码后的请求很容易被现有的正则遗漏掉</span><br><span class="line">各类免杀webshell,单纯的依靠静态查杀特征很难被捕捉到</span><br><span class="line">比如,各种利用包含,回调,编码,数组循环进行字符拼接...所构造的webshell,waf就很难捕捉到</span><br><span class="line">对于那种直接插到正常代码中或者直接驻留在内存中的webshell,查杀可能就更困难了</span><br><span class="line">虽然有的杀软可以帮我们干这事儿[比如,nod32],但那个毕竟也很有限</span><br><span class="line">单个日志文件太大,普通的文本编辑器编辑起来可能有点儿费劲,不过这个也不算什么问题,毕竟10G下的vi虽然有些吃力,但凑活用……</span><br><span class="line">关于实时网站目录入侵监控方案,现在也有一些,不过,跟自己的想法多多少少还是有些出入</span><br><span class="line">这里所说的实时网站入侵监控,依然会从http这一层走,目前自己也还正在不断积累学习中,待后期沉淀成干货后,再仔细分享给大家....</span><br><span class="line">可能有人会问,这种东西为什么不写脚本呢,嘿嘿……脚本是很方便,但并不是什么都可以用脚本干,毕竟有目的的取证并非流水线,很多时候还是需要人为分析</span><br><span class="line">我们的最终目的可能还是像更精准的溯源到入侵者,并非为了写工具而写工具</span><br><span class="line">当然,如果这种东西能再配合着大数据一起无疑是非常好的,不过,这可能需要一个很成熟的平台,需要有一定的数据积攒才行</span><br><span class="line">今天就只提了最简单的web服务,关于其它服务和系统层取证,后续还会有一个完整的系列来说...待续ing,嘿嘿...</span><br></pre></td></tr></table></figure></p>
 <p>大家如果有兴趣,也可以去关注 <font size="3" color="red"><a href="https://zhuanlan.zhihu.com/c_133332109" target="_blank" rel="noopener">我的知乎专栏 </a></font>‘攻防之路’  ,以后有新文章,也都会同步往那里发,谢谢</p>
 
-    </div>
+
+    <!-- Social share choices -->
+    
+  <div id="social-share">
+    <a data-url="https://apt404.github.io/2017/08/02/log-find/" href="https://plus.google.com/share?url=" class="googleplus"><img src="/image/googleplusicon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/08/02/log-find/" href="https://twitter.com/intent/tweet?url=" class="twitter"><img src="/image/twittericon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/08/02/log-find/" href="http://pinterest.com/pin/create/button/?url=" class="pinterest"><img src="/image/pinteresticon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/08/02/log-find/" href="https://www.facebook.com/sharer/sharer.php?u=" class="facebook"><img src="/image/facebookicon.png" alt=""/></a>
+  </div>
+
+
+
+
+
+<!--
+
+
+https://www.facebook.com/sharer/sharer.php?u=https://apt404.github.io/2017/08/02/log-find/
+https://apt404.github.io/2017/08/02/log-find/
+-->
+
+
+
+    <hr />
+
+
+    <!-- Tags and Categories links -->
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/log/">log</a>
+</div>
+
 
     
 
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/log/">#log</a>
+</div>
+
+
+
+    <!-- Comment using disqus -->
     
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/log/">#log</a>
-        </div>
+
+</div>
+</div>
+
+
+  </div>
+  <!-- Footer -->
+  <div id="footer">
+  <div id="footer-social">
     
-
-    <!-- Comments -->
     
-
-</div>
-        </section>
-
-    </div>
-</div>
-
-
+    
+    
+    
+    
 </div>
 
-<!-- Footer -->
-<div class="push"></div>
+  <p id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> -
+    Theme <a href="https://github.com/Suolawangzai/hexo-theme-nebula" target="_blank">nebula</a>
+  </p>
 
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
-    </div>
-
-
-
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/privilege/">privilege</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
-        </li>
-        
-    </ul>
+  <div id="busuanzi">
+    <span id="busuanzi_container_site_pv">
+      &hearts;
+    Total visits: <span id="busuanzi_value_site_pv"></span>
+    </span>
+  </div>
+  <!--
+  <div id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+-->
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+  <!-- After footer scripts -->
+  <!-- Disqus Comments -->
 
-<!-- After footer scripts -->
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="/js/main.js"></script>
-
-<!-- Disqus Comments -->
-
-
 
 </body>
 

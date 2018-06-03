@@ -1,177 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
-<!-- Head tag -->
 <head>
-
     <meta charset="utf-8">
+    
+    <title>熟练使用 dsniff套件 进行嗅探 | APT404-不疯不魔怎么活</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--Description-->
-    
-        <meta name="description" content="0x01 嗅探之前,我们有必要先来大致回顾下arp和rarp的基本通信流程,假设现在交换机中的mac地址表中暂时还没有任何对应关系A机器想和B机器进行通信12345arp  地址解析协议,即通过ip找对应的mac:首先,A会先发arp请求[广播],向同一交换机下的所有其它机器询问,谁有B的这个ip当B收到这条消息时,就会再用arp响应给A,说,我有这个ip,我的mac是多少...当完成第一次正常通信之后就会在交换机的mac地址表中记录下这层指向对应关系后续就直接按照mac地址表中已有的指向来通信,而不再用广播询问,这就是一次极为常规的arp通信过程
-1234rarp  反向地址解析协议,即通过mac找对应的ip:理解完arp以后,我们再来看rarp,同样是先发请求,这个请求简单来讲也是一个广播,不过,在此广播中声明了自己的mac并请求任何收到此请求的rarp服务器分配一个ip,当同网段的rarp服务器收到此请求后会检查自己的rarp列表找到该mac对应的ip如果此mac的ip被找到,就直接响应对方使用,如果没找到,最后就会提示初始化失败
-0x02 关于arp欺骗最核心的细节12345假设同一交换机下有三台机器,分别为 A , B , C,正常情况下B和C的通信数据,A是不可能看到的但在ARP缓存表机制中存在一个缺陷,就是当请求主机收到ARP应答包后,不会去验证自己曾经是否向对方主机发送过ARP请求就直接就把这个应答包中的IP与MAC地址的对应关系更新到自己本地的ARP缓存表中,这时就直接导致原有IP的对应关系被恶意替换通俗点儿理解,也就是说,我强制刷新了对方的arp缓存对应关系,把原来ip的指向现在换成了我自己的地址导致现在B和C的通信都要先经过A,那么,我们在A上自然就可以顺利的看到C和B之间的所有明文通信数据,即实现了所谓的监听">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="熟练使用 dsniff套件 进行嗅探"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>熟练使用 dsniff套件 进行嗅探 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon/favicon.ico">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/tagplugins.css">
+    <link rel="stylesheet" href="/css/highlight.css">
     
 
 
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="APT404-不疯不魔怎么活" type="application/atom+xml" />
+    
 </head>
 
-
 <body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
-    </div>
+  <div class="blog-header">
+   <a id="menu-nav-icon"><img src="/image/menu.png"/></a>
+   <div class="nav-container">
+     <nav id="main-nav">
+       
+         <a class="main-nav-link" href="/">Home</a>
+       
+         <a class="main-nav-link" href="/archives">Archives</a>
+       
+     </nav>
+   </div>
+   <!--
+   <div id="search-form-wrap">
+     <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://apt404.github.io"></form>
+   </div>
+ -->
+    <h1 class="blog-title">APT404-不疯不魔怎么活</h1>
+    <p class="lead blog-description">在接下来的余生中,只做一件事,从 0 到 1</p>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+  <div id='main-part'>
+      <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    <h1 class="blog-post-title">
+        <a href="/2017/10/24/dsniff/">
+            熟练使用 Dsniff套件 进行嗅探
+        </a>
+    </h1>
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-10-24
         
-    </div>
-</header>
-
-        <section class="main">
-            
-<div class="post">
-
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2017/10/24/dsniff/">
-                熟练使用 dsniff套件 进行嗅探
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2017-10-24</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/dsniff/">dsniff</a>
-                </span>
-            
-        </div>
-    </div>
-
-    <div class="content">
-
-        <!-- Gallery -->
+            by klion
         
+    </p>
 
-        <!-- Post Content -->
-        <p><br><br>0x01 嗅探之前,我们有必要先来大致回顾下arp和rarp的基本通信流程,假设现在交换机中的mac地址表中暂时还没有任何对应关系<code>A机器想和B机器进行通信</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arp  地址解析协议,即通过ip找对应的mac:</span><br><span class="line">首先,A会先发arp请求[广播],向同一交换机下的所有其它机器询问,谁有B的这个ip</span><br><span class="line">当B收到这条消息时,就会再用arp响应给A,说,我有这个ip,我的mac是多少...</span><br><span class="line">当完成第一次正常通信之后就会在交换机的mac地址表中记录下这层指向对应关系</span><br><span class="line">后续就直接按照mac地址表中已有的指向来通信,而不再用广播询问,这就是一次极为常规的arp通信过程</span><br></pre></td></tr></table></figure></p>
+    
+
+    <!-- Content -->
+    <p><br><br>0x01 嗅探之前,我们有必要先来大致回顾下arp和rarp的基本通信流程,假设现在交换机中的mac地址表中暂时还没有任何对应关系<code>A机器想和B机器进行通信</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arp  地址解析协议,即通过ip找对应的mac:</span><br><span class="line">首先,A会先发arp请求[广播],向同一交换机下的所有其它机器询问,谁有B的这个ip</span><br><span class="line">当B收到这条消息时,就会再用arp响应给A,说,我有这个ip,我的mac是多少...</span><br><span class="line">当完成第一次正常通信之后就会在交换机的mac地址表中记录下这层指向对应关系</span><br><span class="line">后续就直接按照mac地址表中已有的指向来通信,而不再用广播询问,这就是一次极为常规的arp通信过程</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rarp  反向地址解析协议,即通过mac找对应的ip:</span><br><span class="line">理解完arp以后,我们再来看rarp,同样是先发请求,这个请求简单来讲也是一个广播,不过,在此广播中声明了自己的mac</span><br><span class="line">并请求任何收到此请求的rarp服务器分配一个ip,当同网段的rarp服务器收到此请求后会检查自己的rarp列表找到该mac对应的ip</span><br><span class="line">如果此mac的ip被找到,就直接响应对方使用,如果没找到,最后就会提示初始化失败</span><br></pre></td></tr></table></figure>
 <p>0x02 关于arp欺骗最核心的细节<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">假设同一交换机下有三台机器,分别为 A , B , C,正常情况下B和C的通信数据,A是不可能看到的</span><br><span class="line">但在ARP缓存表机制中存在一个缺陷,就是当请求主机收到ARP应答包后,不会去验证自己曾经是否向对方主机发送过ARP请求</span><br><span class="line">就直接就把这个应答包中的IP与MAC地址的对应关系更新到自己本地的ARP缓存表中,这时就直接导致原有IP的对应关系被恶意替换</span><br><span class="line">通俗点儿理解,也就是说,我强制刷新了对方的arp缓存对应关系,把原来ip的指向现在换成了我自己的地址</span><br><span class="line">导致现在B和C的通信都要先经过A,那么,我们在A上自然就可以顺利的看到C和B之间的所有明文通信数据,即实现了所谓的监听</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
@@ -202,215 +95,98 @@
 <p>0x05 关于arp防御的问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">绑定网关ip与mac</span><br><span class="line">绑定本机Arp缓存表中网关的Mac IP</span><br><span class="line">上靠谱的arp防火墙</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
 <p><br><br>后话:<br>&nbsp;&nbsp;&nbsp;&nbsp;迫不得已要嗅的时候,最好先仔细挑好目标机器,有针对性的嗅,切记千万不要一上来就全网段大规模的嗅,如果对方网络比较大,你的网卡很可能会撑不住,极易把别人搞掉线,另外,这样干,动静儿也非常大,一般拿到有用的东西,立马停掉即可,嗅的时间最好也不要太长,另外,关于嗅https明文密码和其它各类嗅探工具的使用,我们后续会慢慢再说,其实,说心里话,防护稍微好一点的内网,基本是没什么太多的机会给你嗅的,不过C段的时候还是可以试试的,^_^ 待续…</p>
 
-    </div>
+
+    <!-- Social share choices -->
+    
+  <div id="social-share">
+    <a data-url="https://apt404.github.io/2017/10/24/dsniff/" href="https://plus.google.com/share?url=" class="googleplus"><img src="/image/googleplusicon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/10/24/dsniff/" href="https://twitter.com/intent/tweet?url=" class="twitter"><img src="/image/twittericon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/10/24/dsniff/" href="http://pinterest.com/pin/create/button/?url=" class="pinterest"><img src="/image/pinteresticon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2017/10/24/dsniff/" href="https://www.facebook.com/sharer/sharer.php?u=" class="facebook"><img src="/image/facebookicon.png" alt=""/></a>
+  </div>
+
+
+
+
+
+<!--
+
+
+https://www.facebook.com/sharer/sharer.php?u=https://apt404.github.io/2017/10/24/dsniff/
+https://apt404.github.io/2017/10/24/dsniff/
+-->
+
+
+
+    <hr />
+
+
+    <!-- Tags and Categories links -->
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/dsniff/">dsniff</a>
+</div>
+
 
     
 
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/dsniff/">#dsniff</a>
+</div>
+
+
+
+    <!-- Comment using disqus -->
     
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/dsniff/">#dsniff</a>
-        </div>
+
+</div>
+</div>
+
+
+  </div>
+  <!-- Footer -->
+  <div id="footer">
+  <div id="footer-social">
     
-
-    <!-- Comments -->
     
-
-</div>
-        </section>
-
-    </div>
-</div>
-
-
+    
+    
+    
+    
 </div>
 
-<!-- Footer -->
-<div class="push"></div>
+  <p id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> -
+    Theme <a href="https://github.com/Suolawangzai/hexo-theme-nebula" target="_blank">nebula</a>
+  </p>
 
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
-    </div>
-
-
-
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/privilege/">privilege</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
-        </li>
-        
-    </ul>
+  <div id="busuanzi">
+    <span id="busuanzi_container_site_pv">
+      &hearts;
+    Total visits: <span id="busuanzi_value_site_pv"></span>
+    </span>
+  </div>
+  <!--
+  <div id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+-->
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+  <!-- After footer scripts -->
+  <!-- Disqus Comments -->
 
-<!-- After footer scripts -->
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="/js/main.js"></script>
-
-<!-- Disqus Comments -->
-
-
 
 </body>
 

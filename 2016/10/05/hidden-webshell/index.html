@@ -1,386 +1,164 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
-<!-- Head tag -->
 <head>
-
     <meta charset="utf-8">
+    
+    <title>放心地种下你的webshell 之 webshell隐藏小记 | APT404-不疯不魔怎么活</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--Description-->
-    
-        <meta name="description" content="1234567891011121314151617拿到webshell以后的第一件事儿,就是顺手把webshell时间属性改为和同目录下其它文件相同的时间戳,一般在大马里或其它的一些webshell管理工具都提供了类似的功能尽量放在那些程序员和管理都不会经常光顾到的目录中,比如:各种第三方工具(ph">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="John Doe">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="放心地种下你的webshell 之 webshell隐藏小记"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="APT404-不疯不魔怎么活"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>放心地种下你的webshell 之 webshell隐藏小记 - APT404-不疯不魔怎么活</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Google Analytics -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon/favicon.ico">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/tagplugins.css">
+    <link rel="stylesheet" href="/css/highlight.css">
     
 
 
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="APT404-不疯不魔怎么活" type="application/atom+xml" />
+    
 </head>
 
-
 <body>
-
-<div class="bg-gradient"></div>
-<div class="bg-pattern"></div>
-
-<!-- Menu -->
-<!--Menu Links and Overlay-->
-<div class="menu-bg">
-    <div class="menu-container">
-        <ul>
-            
-            <li class="menu-item">
-                <a href="/">
-                    Home
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/archives">
-                    Archives
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/about.html">
-                    About
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/tags">
-                    Tags
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/categories">
-                    Categories
-                </a>
-            </li>
-            
-            <li class="menu-item">
-                <a href="/contact.html">
-                    Contact
-                </a>
-            </li>
-            
-        </ul>
-    </div>
+  <div class="blog-header">
+   <a id="menu-nav-icon"><img src="/image/menu.png"/></a>
+   <div class="nav-container">
+     <nav id="main-nav">
+       
+         <a class="main-nav-link" href="/">Home</a>
+       
+         <a class="main-nav-link" href="/archives">Archives</a>
+       
+     </nav>
+   </div>
+   <!--
+   <div id="search-form-wrap">
+     <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://apt404.github.io"></form>
+   </div>
+ -->
+    <h1 class="blog-title">APT404-不疯不魔怎么活</h1>
+    <p class="lead blog-description">在接下来的余生中,只做一件事,从 0 到 1</p>
 </div>
 
-<!--Hamburger Icon-->
-<nav>
-    <a href="#menu"></a>
-</nav>
-
-<div class="container">
-
-    <!-- Main Content -->
-    <div class="row">
-    <div class="col-sm-12">
-
-        <!--Title and Logo-->
-        <header>
-    <div class="logo">
-        <a href="/"><i class="logo-icon fa fa-cube" aria-hidden="true"></i></a>
+  <div id='main-part'>
+      <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    <h1 class="blog-post-title">
+        <a href="/2016/10/05/hidden-webshell/">
+            放心地种下你的Webshell 之 Webshell隐藏小记
+        </a>
+    </h1>
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2016-10-05
         
-    </div>
-</header>
-
-        <section class="main">
-            
-<div class="post">
-
-    <div class="post-header">
-        <h1 class="title">
-            <a href="/2016/10/05/hidden-webshell/">
-                放心地种下你的webshell 之 webshell隐藏小记
-            </a>
-        </h1>
-        <div class="post-info">
-            
-                <span class="date">2016-10-05</span>
-            
-            
-            
-                <span class="category">
-                    <a href="/categories/webshell-hidden/">webshell hidden</a>
-                </span>
-            
-        </div>
-    </div>
-
-    <div class="content">
-
-        <!-- Gallery -->
+            by klion
         
+    </p>
 
-        <!-- Post Content -->
-        <p><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">拿到webshell以后的第一件事儿,就是顺手把webshell时间属性改为和同目录下其它文件相同的时间戳,一般在大马里或其它的一些webshell管理工具都提供了类似的功能</span><br><span class="line">尽量放在那些程序员和管理都不会经常光顾到的目录中,比如:各种第三方工具(phpmyadmin)的一些插件目录,主题目录以及临时目录等等……</span><br><span class="line">webshell所在目录层级自然是越深越好,平时网站不出问题的话,一般四五级目录下很少会被人注意到……</span><br><span class="line">webshell的名字尽量不要太招摇,尤其是像带有shell,spy,hack,0day,love,shit……这种很典型常见的关键字(我们渗透最最终的目的还是希望拿到自己想要的东西而不被人察觉,不要因为自己的无知和愚蠢,而造成一些不必要的麻烦),……,在给webshell起名字的时候尽量模仿着当前目录的一些名字特征来取,以混淆视听,比如,我们在目标网站目录中,发现有个叫&apos;node.tpl.php&apos;的文件,那我们就可以模仿他取个叫&apos;plugins.tpl.php&apos;的名字,这样相对容易蒙混过关</span><br><span class="line">webshell里面尽量不要用带有类似eval这种的危险特征,如果是在linux中管理员只需要find grep 一句话就能锁定特征,除了eval,还有比如:exec,system,passthru,shell_exec,assert……这些函数都最好不要用,你可以尝试创建个自定义函数,然后调用它,函数里面可以接你的webshell参数,不仅能在一定程度上延长webshell的存活时间,也加大了管理的查找难度,可以暂时性躲避一些功能比较简陋的waf查杀,此外,我们也可以使用一些类似:call_user_func,call_user_func_array,诸如此类的回调函数特性来想办法构造我们的webshell,关于webshell免杀,后续会专门再说,这里先提一嘴</span><br><span class="line">你也可以尝试直接把一句话函数插到目标网站自己的脚本文件里面,当然最好是一个非常不起眼的地方,比如:函数库文件,配置文件里面等等,然后你再到另一个导该函数库的脚本文件中去调用那个一句话…</span><br><span class="line">如果已经拿到服务器权限,可以把网站日志中的所有关于webshell的访问记录以及渗透时造成的一些网站报错记录以及你自己的一些ip访问日志,顺手删掉或者替换都行,如果是linux那就很好办了,sed或者egrep几句话就搞定了,如果windows,嫌麻烦就清空吧,关于记录清理也是个比较大的问题,后续单独说</span><br><span class="line">尝试利用静态文件(比如,各类图片,css,js,html,txt文件等等)隐藏一句话,然后用.htaccess 进行解析,不这过需要目标开启重写才行,例如.htaccess实现自解析,确实比较老套了,基于.htaccess实现的变种其实还有非常多,这里就不一一说了</span><br><span class="line">利用php.ini或者user.ini来解析你的webshell,想必大家也已经用的比较多了,烂大街了</span><br><span class="line">如果是大马的话,尽量把里面的一些注释和作者信息全部都去掉,比如intitle能搜到的各种信息等等,最好先通读代码,把里面的webshell箱子剔除一下,推荐用开源的大马,方便定制,记住,我们的webshell尽量不要编码,因为编码也并不能很好解决waf的问题,你知道的,正常的脚本文件是绝对不会编码的,一旦稍微有经验的程序员或者管理看到这些东西,肯定就会被发现,还有,大马中一般都会带有pass或者password类的字符,建议把这些敏感字段全部换成别的,因为管理依然可以通过这种方式快速定位到我们的webshell</span><br><span class="line">养成好习惯,为了防止权限很快丢失,最好再上传几个备用webshell到不同的目录位置,注意,每个webshell的路径和名字千万不要都一样更不要在同一个目录下,多跳几层,传上去以后确定shell正常访问就可以了,不到万不得已不用去访问它,防止留的日志太多,暴露自己</span><br><span class="line">在你已经有机器权限的情况下,还可以看看管理员还有没有自己写的一些webshell监测脚本,比如一些非常可疑的硬链接</span><br><span class="line">上传图片马,然后再到另一个不起眼的地方尝试去包含它,也是烂大街的东西了,想必大家也已非常熟悉</span><br><span class="line">如果有可能的话,可以抽空审计下目标代码,尝试在正常的代码中利用回掉的方式构造执行自己的webshell,这种没有任何文件的后门确实比较隐蔽</span><br><span class="line">脚本执行完以后进行自删除,然后直接把webshell代码驻留在内存中,当然,这种方式有个非常大的弊端,一旦目标重启web服务就废了</span><br><span class="line">尝试给webshell文件设置一些特殊属性</span><br><span class="line">更多,待续……</span><br></pre></td></tr></table></figure></p>
+    
+
+    <!-- Content -->
+    <p><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">拿到webshell以后的第一件事儿,就是顺手把webshell时间属性改为和同目录下其它文件相同的时间戳,一般在大马里或其它的一些webshell管理工具都提供了类似的功能</span><br><span class="line">尽量放在那些程序员和管理都不会经常光顾到的目录中,比如:各种第三方工具(phpmyadmin)的一些插件目录,主题目录以及临时目录等等……</span><br><span class="line">webshell所在目录层级自然是越深越好,平时网站不出问题的话,一般四五级目录下很少会被人注意到……</span><br><span class="line">webshell的名字尽量不要太招摇,尤其是像带有shell,spy,hack,0day,love,shit……这种很典型常见的关键字(我们渗透最最终的目的还是希望拿到自己想要的东西而不被人察觉,不要因为自己的无知和愚蠢,而造成一些不必要的麻烦),……,在给webshell起名字的时候尽量模仿着当前目录的一些名字特征来取,以混淆视听,比如,我们在目标网站目录中,发现有个叫&apos;node.tpl.php&apos;的文件,那我们就可以模仿他取个叫&apos;plugins.tpl.php&apos;的名字,这样相对容易蒙混过关</span><br><span class="line">webshell里面尽量不要用带有类似eval这种的危险特征,如果是在linux中管理员只需要find grep 一句话就能锁定特征,除了eval,还有比如:exec,system,passthru,shell_exec,assert……这些函数都最好不要用,你可以尝试创建个自定义函数,然后调用它,函数里面可以接你的webshell参数,不仅能在一定程度上延长webshell的存活时间,也加大了管理的查找难度,可以暂时性躲避一些功能比较简陋的waf查杀,此外,我们也可以使用一些类似:call_user_func,call_user_func_array,诸如此类的回调函数特性来想办法构造我们的webshell,关于webshell免杀,后续会专门再说,这里先提一嘴</span><br><span class="line">你也可以尝试直接把一句话函数插到目标网站自己的脚本文件里面,当然最好是一个非常不起眼的地方,比如:函数库文件,配置文件里面等等,然后你再到另一个导该函数库的脚本文件中去调用那个一句话…</span><br><span class="line">如果已经拿到服务器权限,可以把网站日志中的所有关于webshell的访问记录以及渗透时造成的一些网站报错记录以及你自己的一些ip访问日志,顺手删掉或者替换都行,如果是linux那就很好办了,sed或者egrep几句话就搞定了,如果windows,嫌麻烦就清空吧,关于记录清理也是个比较大的问题,后续单独说</span><br><span class="line">尝试利用静态文件(比如,各类图片,css,js,html,txt文件等等)隐藏一句话,然后用.htaccess 进行解析,不这过需要目标开启重写才行,例如.htaccess实现自解析,确实比较老套了,基于.htaccess实现的变种其实还有非常多,这里就不一一说了</span><br><span class="line">利用php.ini或者user.ini来解析你的webshell,想必大家也已经用的比较多了,烂大街了</span><br><span class="line">如果是大马的话,尽量把里面的一些注释和作者信息全部都去掉,比如intitle能搜到的各种信息等等,最好先通读代码,把里面的webshell箱子剔除一下,推荐用开源的大马,方便定制,记住,我们的webshell尽量不要编码,因为编码也并不能很好解决waf的问题,你知道的,正常的脚本文件是绝对不会编码的,一旦稍微有经验的程序员或者管理看到这些东西,肯定就会被发现,还有,大马中一般都会带有pass或者password类的字符,建议把这些敏感字段全部换成别的,因为管理依然可以通过这种方式快速定位到我们的webshell</span><br><span class="line">养成好习惯,为了防止权限很快丢失,最好再上传几个备用webshell到不同的目录位置,注意,每个webshell的路径和名字千万不要都一样更不要在同一个目录下,多跳几层,传上去以后确定shell正常访问就可以了,不到万不得已不用去访问它,防止留的日志太多,暴露自己</span><br><span class="line">在你已经有机器权限的情况下,还可以看看管理员还有没有自己写的一些webshell监测脚本,比如一些非常可疑的硬链接</span><br><span class="line">上传图片马,然后再到另一个不起眼的地方尝试去包含它,也是烂大街的东西了,想必大家也已非常熟悉</span><br><span class="line">如果有可能的话,可以抽空审计下目标代码,尝试在正常的代码中利用回掉的方式构造执行自己的webshell,这种没有任何文件的后门确实比较隐蔽</span><br><span class="line">脚本执行完以后进行自删除,然后直接把webshell代码驻留在内存中,当然,这种方式有个非常大的弊端,一旦目标重启web服务就废了</span><br><span class="line">尝试给webshell文件设置一些特殊属性</span><br><span class="line">更多,待续……</span><br></pre></td></tr></table></figure></p>
 <p><br><br>小结:<br>&nbsp;&nbsp;&nbsp;&nbsp;上面这些都是自己根据实际渗透中的一些经验以及基于前人的基础上,顺手整理的,不过,无疑中发现个很有意思的事情,不知道是哪位朋友拿着自己曾经残缺的笔记,发了出去,然后网上转的到处都是,嘿嘿……不过没关系啦,反正我在乎的只是技术本身,除此之外的东西,不值一提,当然,基于上面思路的变种肯定还会有非常非常多,也期待能和大家一起多交流,待续…</p>
 
-    </div>
+
+    <!-- Social share choices -->
+    
+  <div id="social-share">
+    <a data-url="https://apt404.github.io/2016/10/05/hidden-webshell/" href="https://plus.google.com/share?url=" class="googleplus"><img src="/image/googleplusicon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2016/10/05/hidden-webshell/" href="https://twitter.com/intent/tweet?url=" class="twitter"><img src="/image/twittericon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2016/10/05/hidden-webshell/" href="http://pinterest.com/pin/create/button/?url=" class="pinterest"><img src="/image/pinteresticon.png" alt=""/></a>
+    <a data-url="https://apt404.github.io/2016/10/05/hidden-webshell/" href="https://www.facebook.com/sharer/sharer.php?u=" class="facebook"><img src="/image/facebookicon.png" alt=""/></a>
+  </div>
+
+
+
+
+
+<!--
+
+
+https://www.facebook.com/sharer/sharer.php?u=https://apt404.github.io/2016/10/05/hidden-webshell/
+https://apt404.github.io/2016/10/05/hidden-webshell/
+-->
+
+
+
+    <hr />
+
+
+    <!-- Tags and Categories links -->
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/webshell-hidden/">webshell hidden</a>
+</div>
+
 
     
 
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/webshell-hidden/">#webshell hidden</a>
+</div>
+
+
+
+    <!-- Comment using disqus -->
     
-        <div class="post-tags">
-            <i class="fa fa-tags" aria-hidden="true"></i>
-            <a href="/tags/webshell-hidden/">#webshell hidden</a>
-        </div>
+
+</div>
+</div>
+
+
+  </div>
+  <!-- Footer -->
+  <div id="footer">
+  <div id="footer-social">
     
-
-    <!-- Comments -->
     
-
-</div>
-        </section>
-
-    </div>
-</div>
-
-
+    
+    
+    
+    
 </div>
 
-<!-- Footer -->
-<div class="push"></div>
+  <p id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> -
+    Theme <a href="https://github.com/Suolawangzai/hexo-theme-nebula" target="_blank">nebula</a>
+  </p>
 
-<footer class="footer-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 footer-about">
-                <h2>About</h2>
-                <p>
-                    This theme was developed by <a href="https://github.com/klugjo">Jonathan Klughertz</a>. The source code is available on Github. Create Websites. Make Magic.
-                </p>
-            </div>
-            
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 recent-posts">
-        <h2>Recent Posts</h2>
-        <ul>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-dns/">对 Cobalt Strike DNS隧道的理解与</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/29/cobalt-strike-spawn/">灵活使用 cobalt strike 的 `spa</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/27/powershell-pic-execute/">通过图片免杀执行远程powershell代码</a>
-            </li>
-            
-            <li>
-                <a class="footer-post" href="/2017/12/26/modify-hacked/">用shell对指定站点进行简单的实时入侵预警</a>
-            </li>
-            
-        </ul>
-    </div>
-
-
-
-            
-<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 footer-categories">
-    <h2>Categories</h2>
-    <ul>
-        
-        <li>
-            <a class="footer-post" href="/categories/privilege/">privilege</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/hash-crack/">hash crack</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/LaZagne/">LaZagne</a>
-        </li>
-        
-        <li>
-            <a class="footer-post" href="/categories/NetRipper/">NetRipper</a>
-        </li>
-        
-    </ul>
+  <div id="busuanzi">
+    <span id="busuanzi_container_site_pv">
+      &hearts;
+    Total visits: <span id="busuanzi_value_site_pv"></span>
+    </span>
+  </div>
+  <!--
+  <div id="footer-info">
+    &copy; 2018 APT-404<br>
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+-->
 </div>
 
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <ul class="list-inline footer-social-icons">
-                    
-                    <li class="list-inline-item">
-                        <a href="https://github.com/klugjo/hexo-theme-alpha-dust">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-github"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://twitter.com/?lang=en">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-twitter"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.facebook.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-facebook"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.instagram.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-instagram"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://dribbble.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-dribbble"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://plus.google.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-google-plus"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://www.behance.net/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-behance"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="https://500px.com/">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-500px"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="mailto:test@example.com">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-envelope-o"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="list-inline-item">
-                        <a href="\#">
-                            <span class="footer-icon-container">
-                                <i class="fa fa-rss"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="footer-copyright">
-                    @Untitled. All right reserved | Design & Hexo <a href="http://www.codeblocq.com/">Jonathan Klughertz</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+  <!-- After footer scripts -->
+  <!-- Disqus Comments -->
 
-<!-- After footer scripts -->
 
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-<!-- Tween Max -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenMax.min.js"></script>
-
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-<!-- Custom JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="/js/main.js"></script>
-
-<!-- Disqus Comments -->
-
-
 
 </body>
 

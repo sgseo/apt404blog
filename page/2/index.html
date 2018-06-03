@@ -51,65 +51,6 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
-        <a href="/2017/12/13/samba-sec/">跨平台快速文件共享 Samba</a>
-      </h1>
-    
-    <!-- Date and Author -->
-    <p class="blog-post-meta">
-        2017-12-13
-        
-            by klion
-        
-    </p>
-
-    
-
-    <!-- Content -->
-    <p>0x01 关于smaba<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主要用于实现不同系统平台间的文件共享,配置非常简单,轻量,适合用于常规办公内网环境中</span><br><span class="line">linux &lt;==&gt; windows &lt;==&gt; unix</span><br></pre></td></tr></table></figure></p>
-<p>此次演示环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CentOS6.9 x86_64	ip:192.168.3.55 samba服务器</span><br><span class="line">CentOS6.9 x86_64	ip:192.168.3.57 用来模拟smb客户端进行访问测试</span><br></pre></td></tr></table></figure></p>
-<p>0x02 samba服务默认所监听的端口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">137/udp,138/udp nmb 进程提供netbios解析,以满足基于 CIFS 协议的共享访问环境</span><br><span class="line">138/tcp,445/tcp smb 进程主要为客户端提供文件共享,打印机服务以及用户权限验证</span><br></pre></td></tr></table></figure></p>
-<p>0x03 使用samba客户端工具 <code>smbclient</code>,其实有些类似于ftp的客户端工具,也是一种交互式的访问</p>
-<p><code>在linux下使用smbclient访问windows中的共享目录</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># smbclient -L 192.168.3.23 -U administrator</span><br><span class="line"># smbclient //192.168.3.23/linux_dir -U dcadmin</span><br><span class="line"># mount -t cifs //192.168.3.23/linux_dir /mnt/windows/ -o username=dcadmin 注意,此处要使用cifs协议进行挂载</span><br></pre></td></tr></table></figure></p>
-    <!-- Only display the Read More link if we are displaying an excerpt -->
-    
-        <p id="readmore">
-            <a href="/2017/12/13/samba-sec/">
-                Read More >>>
-            </a>
-        </p>
-    
-
-    <hr />
-
-    
-
-
-<div class="blog-categories-container">
-    <span><img src="/image/categoriesicon.png" alt=""/></span> 
-    <a href="/categories/Samba/">Samba</a>
-</div>
-
-
-    
-
-
-<div class="blog-tags-container">
-    <span><img src="/image/tagsicon.png" alt=""/></span>
-    <a href="/tags/Samba/">#Samba</a>
-</div>
-
-
-
-
-</div>
-</div>
-
-
-    <div class="main">
-<div class="blog-post">
-    <!-- Title -->
-    
-      <h1 class="blog-post-title">
         <a href="/2017/12/12/Dns-tips/">DNS 深度理解 [ 一 ]</a>
       </h1>
     
@@ -612,6 +553,63 @@
 <div class="blog-tags-container">
     <span><img src="/image/tagsicon.png" alt=""/></span>
     <a href="/tags/etherape/">#etherape</a>
+</div>
+
+
+
+
+</div>
+</div>
+
+
+    <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    
+      <h1 class="blog-post-title">
+        <a href="/2017/11/15/hping3/">老旧但不乏经典的高级组包工具 [ Hping3 ]</a>
+      </h1>
+    
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-11-15
+        
+            by klion
+        
+    </p>
+
+    
+
+    <!-- Content -->
+    <p>前言:<br>&nbsp;&nbsp;&nbsp;&nbsp;一款经典的高级组包工具,虽然老旧,但不乏经典,你完全可以利用它任意组装专属的 tcp,udp,icmp 数据报文格式,废话不多说,咱们直奔主题…</p>
+<p>0x01 实验环境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kali 			ip:192.168.3.38</span><br><span class="line">CentOS6.9 [MidLAMP] 	ip:192.168.3.16[eth1]  192.168.3.19[eth0]	在此机器上编译安装hping3</span><br></pre></td></tr></table></figure></p>
+<p>0x02 编译安装 hping3:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># yum install libpcap-devel tcl-devel -y</span><br><span class="line"># wget http://www.hping.org/hping3-20051105.tar.gz</span><br><span class="line"># tar xf hping3-20051105.tar.gz</span><br><span class="line"># cd hping3-20051105</span><br><span class="line"># vi bytesex.h</span><br><span class="line">  || defined(__x86_64__) \	为了防止后续编译出错,需要在第一个判断下添加此句,如下图所示,添加64位系统平台</span><br><span class="line"># ln -s /usr/include/pcap-bpf.h /usr/include/net/bpf.h</span><br><span class="line"># ./configure &amp;&amp; make &amp;&amp; make strip &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
+    <!-- Only display the Read More link if we are displaying an excerpt -->
+    
+        <p id="readmore">
+            <a href="/2017/11/15/hping3/">
+                Read More >>>
+            </a>
+        </p>
+    
+
+    <hr />
+
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/hping3/">hping3</a>
+</div>
+
+
+    
+
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/hping3/">#hping3</a>
 </div>
 
 

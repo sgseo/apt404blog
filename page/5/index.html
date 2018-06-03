@@ -51,63 +51,6 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
-        <a href="/2017/09/22/snortpentest/">入侵检测学习 Snort [一]</a>
-      </h1>
-    
-    <!-- Date and Author -->
-    <p class="blog-post-meta">
-        2017-09-22
-        
-            by klion
-        
-    </p>
-
-    
-
-    <!-- Content -->
-    <p><br><br>0x01 关于Snort<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">业界相对比较出名年头也比较久的一款基于网络的开源入侵检测工具</span><br><span class="line">不过,比较适合中小型网络 [在流量不是非常大的情况下还是很不错的选择],规则配置灵活,实战适用性相对较好</span><br><span class="line">只是,实在不知道为什么要弄一头猪做logo,这文化差异大的有点儿着实让人无法理解 :)</span><br></pre></td></tr></table></figure></p>
-<p>0x02 理解snort的最基本的工作流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">内网中的数据 -&gt; 数据嗅探[让内网中其它机器上的数据流过自己] -&gt; 进行各种预处理[防止数据逃逸] -&gt; 规则检测引擎 -&gt; 处理报警/日志 </span><br><span class="line">											    |		  |</span><br><span class="line">										      匹配规则库	  存到数据库或者写到日志文件中</span><br></pre></td></tr></table></figure></p>
-<p>0x03 模块具体作用简介<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">数据包嗅探,让其它机器上的指定数据包都经过自己,以便snort分析数据,同样,用的也是libpcap库,包括在其它很多linux平台嗅探工具你都能看到它的身影</span><br><span class="line">预处理,包重组预处理器,主要是为了防止攻击包被拆分逃避Snort的检测,另一个是协议编码预处理器,主要负责把数据包协议解码成一个统一的格式,再丢给检测模块,最后一个是协议异常检测预处器</span><br><span class="line">规则匹配检测,也就是当预处理把数据包丢过来以后,规则引擎会将这些数据包逐个和规则库进行匹配,一旦发现数据包内容与某条规则匹配,就丢给报警模块去处理</span><br><span class="line">报警/日志模块,规则引擎将数据丢给报警模块以后,报警模块会根据snort事先定义好的规则动作(alert,log...)对其进行不同的处理(写到数据库或日志文件中)</span><br></pre></td></tr></table></figure></p>
-    <!-- Only display the Read More link if we are displaying an excerpt -->
-    
-        <p id="readmore">
-            <a href="/2017/09/22/snortpentest/">
-                Read More >>>
-            </a>
-        </p>
-    
-
-    <hr />
-
-    
-
-
-<div class="blog-categories-container">
-    <span><img src="/image/categoriesicon.png" alt=""/></span> 
-    <a href="/categories/snort/">snort</a>
-</div>
-
-
-    
-
-
-<div class="blog-tags-container">
-    <span><img src="/image/tagsicon.png" alt=""/></span>
-    <a href="/tags/snort/">#snort</a>
-</div>
-
-
-
-
-</div>
-</div>
-
-
-    <div class="main">
-<div class="blog-post">
-    <!-- Title -->
-    
-      <h1 class="blog-post-title">
         <a href="/2017/09/21/mysql-mul-server/">一分钟部署 MySql 多实例</a>
       </h1>
     
@@ -516,6 +459,123 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
+        <a href="/2017/08/01/https-learn/">深入理解 Https 通信加密过程</a>
+      </h1>
+    
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-08-01
+        
+            by klion
+        
+    </p>
+
+    
+
+    <!-- Content -->
+    <p><br><br>0x01 对<code>对称加密</code>的通俗理解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">即通信的双方都使用同一个秘钥进行加解密</span><br></pre></td></tr></table></figure></p>
+<p>0x02 对非对称加密算法的通俗理解 [ <code>RSA</code> ]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">私钥 + 公钥= 密钥对</span><br><span class="line">即用私钥加密的数据,只有对应的公钥才能解密,用公钥加密的数据,只有对应的私钥才能解密</span><br><span class="line">其实这个很容易理解,因为通信双方的手里都有一套自己的密钥对,通信之前双方会先把自己的公钥都先发给对方</span><br><span class="line">然后对方再拿着这个公钥来加密数据响应给对方,等到到了对方那里,对方再用自己的私钥进行解密,就这么简单</span><br></pre></td></tr></table></figure></p>
+<p>0x03 非对称加密所造成的速度慢的问题解决办法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 先生成一个对称加密算法的密钥,用RSA的方式先安全的发给对方  </span><br><span class="line">(2) 随后就不再用RSA了,只用这个对称加密的密钥来互相通信</span><br></pre></td></tr></table></figure></p>
+<p>0x04 不过,以上方式存在明显的中间人问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设,此时在客户端和服务器之间存在一个中间人,这个中间人只需要把原本双方通信互发的公钥,换成自己的公钥,这样中间人就可以轻松解密通信双方所发送的所有数据</span><br></pre></td></tr></table></figure></p>
+    <!-- Only display the Read More link if we are displaying an excerpt -->
+    
+        <p id="readmore">
+            <a href="/2017/08/01/https-learn/">
+                Read More >>>
+            </a>
+        </p>
+    
+
+    <hr />
+
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/https/">https</a>
+</div>
+
+
+    
+
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/https/">#https</a>
+</div>
+
+
+
+
+</div>
+</div>
+
+
+    <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    
+      <h1 class="blog-post-title">
+        <a href="/2017/08/01/waf-for-modsecurity/">ModSecurity 生产级WAF部署优化 [一]</a>
+      </h1>
+    
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-08-01
+        
+            by klion
+        
+    </p>
+
+    
+
+    <!-- Content -->
+    <p><br><br>0x01 用大白话来简单说明 WAF 最基本的工作流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">捕获客户端的各种请求 -&gt; 匹配WAF拦截规则 -&gt; 命中规则后的处理动作 -&gt; 将整个拦截过程记录到指定的日志文件中 -&gt; 脚本绘制实时攻击图表</span><br></pre></td></tr></table></figure></p>
+<p>0x02 关于modsecurity<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">一款老牌的开源 WAF,相信经常搞渗透的朋友,对市面上经常用的几款WAF,都早已非常熟悉,废话不多说,咱们直奔主题</span><br><span class="line">本次,我们只是单单把它部署到可用的状态,关于规则深度定制,绕过以及白名单设置是我们面的事情</span><br><span class="line">个人非常不建议把modsecurity和nginx一起用,实际测试中,问题还非常的多,关于nginx更推荐用naxsi[后面再单独说]</span><br><span class="line">至于源码包,可自行去 modsecurity 的官方站点下载  www.modsecurity.org</span><br></pre></td></tr></table></figure></p>
+<p>0x03 首先,先编译安装好基本的LAMP环境 [具体编译安装过程,可自行参考博客相关文章] ,这里暂时就直接用之前编译好的环境来演示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpd 2.4.27 + php 5.6.31 + mysql 5.5.57 + centOS6.8_x64</span><br></pre></td></tr></table></figure></p>
+<p>0x04 先停掉apache,因为等会儿要编译modsecurity生成对应的库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># pkill httpd</span><br></pre></td></tr></table></figure></p>
+<p>0x05 开始编译安装 modsecurity,一如往常,务必先装好一些必要的依赖库,不然中间会有很多的麻烦<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># yum install httpd-devel apr apr-util-devel apr-devel pcre pcre-devel libxml2 libxml2-devel curl-devel zlib zlib-devel openssl openssl-devel -y</span><br><span class="line"># cd modsecurity-2.9.2</span><br><span class="line"># ./configure --with-apxs=/usr/local/httpd/bin/apxs   生成modsecurity的so</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
+    <!-- Only display the Read More link if we are displaying an excerpt -->
+    
+        <p id="readmore">
+            <a href="/2017/08/01/waf-for-modsecurity/">
+                Read More >>>
+            </a>
+        </p>
+    
+
+    <hr />
+
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/ModSecurity/">ModSecurity</a>
+</div>
+
+
+    
+
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/ModSecurity/">#ModSecurity</a>
+</div>
+
+
+
+
+</div>
+</div>
+
+
+    <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    
+      <h1 class="blog-post-title">
         <a href="/2017/08/01/socat-meterpreter/">如何利用 Socat 更方便地穿透目标内网</a>
       </h1>
     
@@ -561,64 +621,6 @@
 <div class="blog-tags-container">
     <span><img src="/image/tagsicon.png" alt=""/></span>
     <a href="/tags/socat/">#socat</a>
-</div>
-
-
-
-
-</div>
-</div>
-
-
-    <div class="main">
-<div class="blog-post">
-    <!-- Title -->
-    
-      <h1 class="blog-post-title">
-        <a href="/2017/08/01/https-learn/">深入理解 Https 通信加密过程</a>
-      </h1>
-    
-    <!-- Date and Author -->
-    <p class="blog-post-meta">
-        2017-08-01
-        
-            by klion
-        
-    </p>
-
-    
-
-    <!-- Content -->
-    <p><br><br>0x01 对<code>对称加密</code>的通俗理解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">即通信的双方都使用同一个秘钥进行加解密</span><br></pre></td></tr></table></figure></p>
-<p>0x02 对非对称加密算法的通俗理解 [ <code>RSA</code> ]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">私钥 + 公钥= 密钥对</span><br><span class="line">即用私钥加密的数据,只有对应的公钥才能解密,用公钥加密的数据,只有对应的私钥才能解密</span><br><span class="line">其实这个很容易理解,因为通信双方的手里都有一套自己的密钥对,通信之前双方会先把自己的公钥都先发给对方</span><br><span class="line">然后对方再拿着这个公钥来加密数据响应给对方,等到到了对方那里,对方再用自己的私钥进行解密,就这么简单</span><br></pre></td></tr></table></figure></p>
-<p>0x03 非对称加密所造成的速度慢的问题解决办法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 先生成一个对称加密算法的密钥,用RSA的方式先安全的发给对方  </span><br><span class="line">(2) 随后就不再用RSA了,只用这个对称加密的密钥来互相通信</span><br></pre></td></tr></table></figure></p>
-<p>0x04 不过,以上方式存在明显的中间人问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设,此时在客户端和服务器之间存在一个中间人,这个中间人只需要把原本双方通信互发的公钥,换成自己的公钥,这样中间人就可以轻松解密通信双方所发送的所有数据</span><br></pre></td></tr></table></figure></p>
-    <!-- Only display the Read More link if we are displaying an excerpt -->
-    
-        <p id="readmore">
-            <a href="/2017/08/01/https-learn/">
-                Read More >>>
-            </a>
-        </p>
-    
-
-    <hr />
-
-    
-
-
-<div class="blog-categories-container">
-    <span><img src="/image/categoriesicon.png" alt=""/></span> 
-    <a href="/categories/https/">https</a>
-</div>
-
-
-    
-
-
-<div class="blog-tags-container">
-    <span><img src="/image/tagsicon.png" alt=""/></span>
-    <a href="/tags/https/">#https</a>
 </div>
 
 

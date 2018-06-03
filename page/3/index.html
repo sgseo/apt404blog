@@ -51,63 +51,6 @@
     <!-- Title -->
     
       <h1 class="blog-post-title">
-        <a href="/2017/11/15/hping3/">老旧但不乏经典的高级组包工具 [ Hping3 ]</a>
-      </h1>
-    
-    <!-- Date and Author -->
-    <p class="blog-post-meta">
-        2017-11-15
-        
-            by klion
-        
-    </p>
-
-    
-
-    <!-- Content -->
-    <p>前言:<br>&nbsp;&nbsp;&nbsp;&nbsp;一款经典的高级组包工具,虽然老旧,但不乏经典,你完全可以利用它任意组装专属的 tcp,udp,icmp 数据报文格式,废话不多说,咱们直奔主题…</p>
-<p>0x01 实验环境:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kali 			ip:192.168.3.38</span><br><span class="line">CentOS6.9 [MidLAMP] 	ip:192.168.3.16[eth1]  192.168.3.19[eth0]	在此机器上编译安装hping3</span><br></pre></td></tr></table></figure></p>
-<p>0x02 编译安装 hping3:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># yum install libpcap-devel tcl-devel -y</span><br><span class="line"># wget http://www.hping.org/hping3-20051105.tar.gz</span><br><span class="line"># tar xf hping3-20051105.tar.gz</span><br><span class="line"># cd hping3-20051105</span><br><span class="line"># vi bytesex.h</span><br><span class="line">  || defined(__x86_64__) \	为了防止后续编译出错,需要在第一个判断下添加此句,如下图所示,添加64位系统平台</span><br><span class="line"># ln -s /usr/include/pcap-bpf.h /usr/include/net/bpf.h</span><br><span class="line"># ./configure &amp;&amp; make &amp;&amp; make strip &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
-    <!-- Only display the Read More link if we are displaying an excerpt -->
-    
-        <p id="readmore">
-            <a href="/2017/11/15/hping3/">
-                Read More >>>
-            </a>
-        </p>
-    
-
-    <hr />
-
-    
-
-
-<div class="blog-categories-container">
-    <span><img src="/image/categoriesicon.png" alt=""/></span> 
-    <a href="/categories/hping3/">hping3</a>
-</div>
-
-
-    
-
-
-<div class="blog-tags-container">
-    <span><img src="/image/tagsicon.png" alt=""/></span>
-    <a href="/tags/hping3/">#hping3</a>
-</div>
-
-
-
-
-</div>
-</div>
-
-
-    <div class="main">
-<div class="blog-post">
-    <!-- Title -->
-    
-      <h1 class="blog-post-title">
         <a href="/2017/11/14/ntfs-streams/">文件隐藏 之 NTFS 交换数据流</a>
       </h1>
     
@@ -611,6 +554,63 @@
 <div class="blog-tags-container">
     <span><img src="/image/tagsicon.png" alt=""/></span>
     <a href="/tags/LaZagne/">#LaZagne</a>
+</div>
+
+
+
+
+</div>
+</div>
+
+
+    <div class="main">
+<div class="blog-post">
+    <!-- Title -->
+    
+      <h1 class="blog-post-title">
+        <a href="/2017/10/27/NetRipper/">截获内存中的各类Https明文密码</a>
+      </h1>
+    
+    <!-- Date and Author -->
+    <p class="blog-post-meta">
+        2017-10-27
+        
+            by klion
+        
+    </p>
+
+    
+
+    <!-- Content -->
+    <p>0x01 利用 NetRipper 抓取内存中的https明文密码</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;优点,可以在一个相对较低的系统权限下截获加密的明文,工具已经出了有些年头了,好在作者维护一直比较勤奋,才活到了现在,它支持截获像putty,winscp,mssql,chrome,firefox,outlook中的明文密码,同时也提供了很多类型的版本,如,win cmd下的exe,msf模块,ps脚本,实战中更推荐大家直接用powershell,更多详情请自行参考其github <a href="https://github.com/NytroRST/NetRipper" target="_blank" rel="noopener">https://github.com/NytroRST/NetRipper</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># powershell -exec bypass</span><br><span class="line">PS&gt; Import-Module .\Invoke-NetRipper.ps1</span><br></pre></td></tr></table></figure>
+    <!-- Only display the Read More link if we are displaying an excerpt -->
+    
+        <p id="readmore">
+            <a href="/2017/10/27/NetRipper/">
+                Read More >>>
+            </a>
+        </p>
+    
+
+    <hr />
+
+    
+
+
+<div class="blog-categories-container">
+    <span><img src="/image/categoriesicon.png" alt=""/></span> 
+    <a href="/categories/NetRipper/">NetRipper</a>
+</div>
+
+
+    
+
+
+<div class="blog-tags-container">
+    <span><img src="/image/tagsicon.png" alt=""/></span>
+    <a href="/tags/NetRipper/">#NetRipper</a>
 </div>
 
 
